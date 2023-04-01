@@ -26,6 +26,7 @@ public class Post extends Timestamped{
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+    
 
     private List<String> categoryList;
 }
