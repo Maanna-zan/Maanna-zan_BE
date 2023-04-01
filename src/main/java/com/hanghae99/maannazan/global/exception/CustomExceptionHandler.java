@@ -2,15 +2,12 @@ package com.hanghae99.maannazan.global.exception;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Objects;
-
-import static com.hanghae99.maannazan.global.exception.CustomErrorCode.*;
 
 @Slf4j
 @RestControllerAdvice

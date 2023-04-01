@@ -2,6 +2,8 @@ package com.hanghae99.maannazan.domain.user;
 
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
+import com.hanghae99.maannazan.domain.user.dto.CheckEmailRequestDto;
+import com.hanghae99.maannazan.domain.user.dto.CheckNickNameRequestDto;
 import com.hanghae99.maannazan.domain.user.dto.LoginRequestDto;
 import com.hanghae99.maannazan.domain.user.dto.SignupRequestDto;
 import com.hanghae99.maannazan.global.exception.CustomException;
@@ -56,7 +58,7 @@ public class UserService {
 
     //리턴이 따로 필요없어서 void로 처리
     //로그인 서비스
-    @Transactional(readOnly = true)
+    @Transactional
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
@@ -67,5 +69,20 @@ public class UserService {
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(
                 user.getNickName()));
+    }
+    // 유저이메일 중복 확인 서비스
+    @Transactional
+    public void checkEmail(CheckEmailRequestDto checkEmailRequestDto) {
+        String email = checkEmailRequestDto.getEmail();
+        Optional<User> foundEmail = userRepository.findByEmail(email);
+        if (foundEmail.isPresent()) {
+            throw new CustomException(DUPLICATE_EMAIL);
+        }
+    }
+    // 닉네임 중복 확인 서비스
+    public void checkNickName(CheckNickNameRequestDto checkNickNameRequestDto) {
+        String nickName = checkNickNameRequestDto.getNickName();
+        Optional<User> foundNickName = userRepository.findByNickName(nickName);
+        if (foundNickName.isPresent()) throw new CustomException(DUPLICATE_NICKNAME);
     }
 }

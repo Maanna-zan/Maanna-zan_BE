@@ -19,7 +19,6 @@ public class SignupRequestDto {
     //닉네임 형식
     //2자 이상 16자 이하, 영어 또는 숫자 또는 한글로 구성해야 하며 / 한글 초성 및 모음은 허가하지 않음
     @NotBlank(message = "닉네임은 필수사항 입니다.")
-    @Size(min = 2, max = 10, message = "닉네임은 최소 2글자 최대 10글자로 구성되어야합니다.")
     @Pattern(regexp = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$", message =  "닉네임은 영어, 숫자, 한글로 구성되어야하며 최소 2글자 최대 16글자로 구성되어야합니다.")
     private String nickName;
 
