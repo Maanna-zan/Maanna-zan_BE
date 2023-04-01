@@ -14,6 +14,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long kakaoId;
+
     private String password;
 
     private String username;
@@ -28,5 +30,8 @@ public class User {
     private int phoneNumber;
 
     private LocalDate birth;
+
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
     
 }

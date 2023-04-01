@@ -1,8 +1,10 @@
 package com.hanghae99.maannazan.global.security;
-import com.airbnb.hhairbnbclone.entity.User;
-import com.airbnb.hhairbnbclone.entity.UserRoleEnum;
+
+import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class UserDetailsImpl implements UserDetails {
         this.kakaoId = kakaoId;
     }
 
-    public User getUser() {
+    public com.hanghae99.maannazan.domain.entity.User getUser() {
         return user;
     }
 
