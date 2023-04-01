@@ -12,8 +12,9 @@ import static org.springframework.http.HttpStatus.*;
 public enum CustomErrorCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
     INVALID_TOKEN(UNAUTHORIZED, "토큰이 유효하지 않습니다"),
-    DUPLICATE_USER(BAD_REQUEST, "중복된 사용자가 존재합니다"),
+    DUPLICATE_EMAIL(BAD_REQUEST, "중복된 이메일이 존재합니다"),
     DUPLICATE_NICKNAME(BAD_REQUEST, "중복된 닉네임이 존재합니다"),
+    DUPLICATE_PHONENUMBER(BAD_REQUEST, "중복된 번호가 존재합니다"),
     NOT_PROPER_PASSWORD(BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     NOT_PROPER_INPUTFORM(BAD_REQUEST, "입력한 형식이 맞지 않습니다."),
     NOT_PROPER_URLFORM(BAD_REQUEST, "입력한 URL 형식이 맞지 않습니다."),

@@ -14,19 +14,29 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String password;
 
-    private String username;
+    private String userName;
 
     @Column(unique = true)
-    private String nickname;
+    private String nickName;
 
     @Column(unique = true)
     private String email;
 
     @Column(unique = true)
-    private int phoneNumber;
+    private String phoneNumber;
 
-    private LocalDate birth;
-    
+    private String password;
+
+
+    private String birth;
+
+    public User(String userName, String nickName, String email, String phoneNumber, String password, String birth) {
+        this.userName = userName;
+        this.nickName = nickName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.birth = birth;
+    }
 }

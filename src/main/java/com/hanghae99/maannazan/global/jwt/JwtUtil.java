@@ -53,13 +53,13 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String createToken(String kakaoId, String nickname) {
+    public String createToken(String nickName) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(kakaoId)
-                        .claim(AUTHORIZATION_KEY, nickname)
+                        .setSubject(nickName)
+                        .claim(AUTHORIZATION_KEY, nickName)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
@@ -90,8 +90,8 @@ public class JwtUtil {
     }
 
     @Transactional
-    public Authentication createAuthentication(String kakaoId) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(kakaoId);
+    public Authentication createAuthentication(String nickName) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(nickName);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
