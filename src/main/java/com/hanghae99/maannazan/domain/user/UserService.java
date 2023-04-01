@@ -71,7 +71,7 @@ public class UserService {
                 user.getNickName()));
     }
     // 유저이메일 중복 확인 서비스
-    @Transactional
+    @Transactional(readOnly = true)
     public void checkEmail(CheckEmailRequestDto checkEmailRequestDto) {
         String email = checkEmailRequestDto.getEmail();
         Optional<User> foundEmail = userRepository.findByEmail(email);
@@ -80,6 +80,7 @@ public class UserService {
         }
     }
     // 닉네임 중복 확인 서비스
+    @Transactional(readOnly = true)
     public void checkNickName(CheckNickNameRequestDto checkNickNameRequestDto) {
         String nickName = checkNickNameRequestDto.getNickName();
         Optional<User> foundNickName = userRepository.findByNickName(nickName);
