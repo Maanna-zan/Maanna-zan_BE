@@ -38,9 +38,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
     }
 
-    public void setAuthentication(String kakaoId) {
+    public void setAuthentication(String nickName) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication authentication = jwtUtil.createAuthentication(kakaoId);
+        Authentication authentication = jwtUtil.createAuthentication(nickName);
         context.setAuthentication(authentication);
 
         SecurityContextHolder.setContext(context);
@@ -50,7 +50,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         response.setStatus(statusCode);
         response.setContentType("application/json");
         try {
-            String json = new ObjectMapper().writeValueAsString(new ResponseMessage(msg, statusCode, ""));
+            String json = new ObjectMapper().writeValueAsString(new ResponseMessage<>(msg, statusCode, ""));
             response.getWriter().write(json);
         } catch (Exception e) {
             log.error(e.getMessage());
