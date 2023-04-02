@@ -6,7 +6,6 @@ import com.hanghae99.maannazan.domain.user.dto.LoginRequestDto;
 import com.hanghae99.maannazan.domain.user.dto.SignupRequestDto;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;

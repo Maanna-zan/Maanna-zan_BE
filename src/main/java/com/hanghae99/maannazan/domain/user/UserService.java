@@ -67,8 +67,7 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(NOT_PROPER_PASSWORD);
         }
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(
-                user.getNickName()));
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getNickName()));
     }
     // 유저이메일 중복 확인 서비스
     @Transactional(readOnly = true)
