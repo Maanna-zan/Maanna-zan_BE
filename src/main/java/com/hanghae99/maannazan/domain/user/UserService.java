@@ -1,6 +1,8 @@
 package com.hanghae99.maannazan.domain.user;
 
+import com.hanghae99.maannazan.domain.entity.RefreshToken;
 import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
 import com.hanghae99.maannazan.domain.user.dto.CheckEmailRequestDto;
 import com.hanghae99.maannazan.domain.user.dto.CheckNickNameRequestDto;
@@ -8,6 +10,7 @@ import com.hanghae99.maannazan.domain.user.dto.LoginRequestDto;
 import com.hanghae99.maannazan.domain.user.dto.SignupRequestDto;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import com.hanghae99.maannazan.global.jwt.JwtUtil;
+import com.hanghae99.maannazan.global.jwt.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
 
     //리턴이 따로 필요없어서 void로 처리
@@ -63,11 +68,28 @@ public class UserService {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new CustomException(USER_NOT_FOUND));
+                () -> new CustomException(NOT_PROPER_EMAIL_OR_PASSWORD));
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new CustomException(NOT_PROPER_PASSWORD);
+            throw new CustomException(NOT_PROPER_EMAIL_OR_PASSWORD);
         }
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getNickName()));
+        // 아이디 정보로 Token생성
+        TokenDto tokenDto = jwtUtil.createAllToken(loginRequestDto.getEmail());
+
+        // Refresh토큰 있는지 확인
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserEmail(loginRequestDto.getEmail());
+
+        if(refreshToken.isPresent()) {
+            refreshTokenRepository.save(refreshToken.get().updateToken(tokenDto.getRefreshToken()));
+        }else {
+            RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), loginRequestDto.getEmail());
+            refreshTokenRepository.save(newToken);
+        }
+        setHeader(response, tokenDto);
+    }
+
+    private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
+        response.addHeader(JwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
+        response.addHeader(JwtUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());
     }
     // 유저이메일 중복 확인 서비스
     @Transactional(readOnly = true)

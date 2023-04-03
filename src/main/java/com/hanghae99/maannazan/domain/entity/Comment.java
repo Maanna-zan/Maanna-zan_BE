@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
-
+@Entity
 @Getter
 @NoArgsConstructor
 public class Comment extends Timestamped {
