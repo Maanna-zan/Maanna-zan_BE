@@ -1,44 +1,34 @@
 package com.hanghae99.maannazan.global.security;
 
-import com.hanghae99.maannazan.domain.entity.User;
-import com.hanghae99.maannazan.domain.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
+import com.hanghae99.maannazan.domain.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
-    private final String kakaoId;
+    private final String nickName;
 
-    public UserDetailsImpl(User user, String kakaoId) {
+    public UserDetailsImpl(User user, String nickName) {
         this.user = user;
-        this.kakaoId = kakaoId;
+        this.nickName = nickName;
     }
 
-    public com.hanghae99.maannazan.domain.entity.User getUser() {
+
+
+
+    public User getUser() {
         return user;
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoleEnum role = user.getRole();
-        String authority = role.getAuthority();
-
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(simpleGrantedAuthority);
-
-        return authorities;
-    }
+    public Collection<? extends GrantedAuthority> getAuthorities() {return null;}
 
     @Override
     public String getUsername() {
-        return this.kakaoId;
+        return this.nickName;
     }
 
     @Override
