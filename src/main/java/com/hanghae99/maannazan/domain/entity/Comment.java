@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
-
+@Entity
 @Getter
 @NoArgsConstructor
 @Entity

@@ -1,23 +1,30 @@
 package com.hanghae99.maannazan.domain.entity;
 
+import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
-
+@Entity
 @Getter
 @NoArgsConstructor
-public class Category extends Timestamped {
+public class Category{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private boolean soju;
-    private boolean room;
-
+    private boolean beer;
     @JoinColumn(name = "POST_ID")
-    @ManyToOne
+    @OneToOne
     private Post post;
 
+//    @JoinColumn(name = "ROOM_ID")
+//    @OneToOne
+//    private Room room;
+
+    public Category(PostRequestDto requestDto, Post post) {
+        this.soju = requestDto.isSoju();
+        this.beer = requestDto.isBeer();
+        this.post = post;
+    }
 }

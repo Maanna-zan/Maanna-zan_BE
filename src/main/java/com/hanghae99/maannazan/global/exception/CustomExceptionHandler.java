@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Slf4j
 @RestControllerAdvice
-public class CustomExceptionHandler {
+public class CustomExceptionHandler {    
     @ExceptionHandler(value = { CustomException.class })
     protected ResponseEntity<ResponseMessage<Object>> handleCustomException(CustomException e) {
         log.error("handleCustomException throw CustomException : {}", e.getErrorCode());
