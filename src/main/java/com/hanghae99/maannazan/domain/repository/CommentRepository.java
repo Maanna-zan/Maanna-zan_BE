@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    void deleteAllByPost(Post post);
+ //   void deleteAllByPost(Post post);
 }

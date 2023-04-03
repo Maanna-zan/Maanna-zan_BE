@@ -5,7 +5,6 @@ import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
 import com.hanghae99.maannazan.domain.entity.Comment;
 import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
-import com.hanghae99.maannazan.domain.entity.UserRoleEnum;
 import com.hanghae99.maannazan.domain.repository.CommentRepository;
 import com.hanghae99.maannazan.domain.repository.PostRepository;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
@@ -45,8 +44,8 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
         );
-//        ADMIN이 아닌 멤버가 댓글의 해당 작성자가 아닐때 예외 처리
-        if (!comment.getUser().getId().equals(user.getId()) && !user.getRole().equals(UserRoleEnum.ADMIN)) {
+//        ADMIN이 아닌 멤버가 댓글의 해당 작성자가 아닐때 예외 처리 && !user.getRole().equals(UserRoleEnum.ADMIN
+        if (!comment.getUser().getId().equals(user.getId()) ) {
             throw new IllegalArgumentException("댓글 수정 권한이 없습니다.");
         }
         comment.update(commentRequestDto);
@@ -64,8 +63,8 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
         );
-//        ADMIN이 아닌 멤버가 댓글의 해당 작성자가 아닐때 예외 처리
-        if (!comment.getUser().getId().equals(user.getId()) && !user.getRole().equals(UserRoleEnum.ADMIN)) {
+//        ADMIN이 아닌 멤버가 댓글의 해당 작성자가 아닐때 예외 처리 && !user.getRole().equals(UserRoleEnum.ADMIN)
+        if (!comment.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("댓글 삭제 권한이 없습니다.");
         }
         commentRepository.deleteById(commentId);
