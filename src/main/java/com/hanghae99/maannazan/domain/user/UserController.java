@@ -1,9 +1,6 @@
 package com.hanghae99.maannazan.domain.user;
 
-import com.hanghae99.maannazan.domain.user.dto.CheckEmailRequestDto;
-import com.hanghae99.maannazan.domain.user.dto.CheckNickNameRequestDto;
-import com.hanghae99.maannazan.domain.user.dto.LoginRequestDto;
-import com.hanghae99.maannazan.domain.user.dto.SignupRequestDto;
+import com.hanghae99.maannazan.domain.user.dto.*;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +17,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
+
 
     private final UserService userService;
 
@@ -48,6 +46,13 @@ public class UserController {
     @PostMapping("/confirm-nickname")
     public ResponseEntity<ResponseMessage<String>> checkNickName(@Valid @RequestBody CheckNickNameRequestDto checkNickNameRequestDto) {
         userService.checkNickName(checkNickNameRequestDto);
+        return ResponseMessage.SuccessResponse("pass","");
+    }
+
+    @PostMapping("/check/findPw")
+    public ResponseEntity<ResponseMessage<String>> checkFindPw(@Valid @RequestBody CheckFindPwRequestDto checkFindPw) {
+        MailDto dto = userService.checkFindPw(checkFindPw);
+        userService.mailSend(dto);
         return ResponseMessage.SuccessResponse("pass","");
     }
 }

@@ -1,5 +1,6 @@
 package com.hanghae99.maannazan.domain.comment;
 
+
 import com.hanghae99.maannazan.domain.comment.dto.CommentRequestDto;
 import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
 import com.hanghae99.maannazan.domain.entity.Comment;
