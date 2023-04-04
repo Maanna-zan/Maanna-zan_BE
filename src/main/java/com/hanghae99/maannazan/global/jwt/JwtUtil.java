@@ -107,8 +107,8 @@ public class JwtUtil {
     }
 
     @Transactional
-    public Authentication createAuthentication(String nickname) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(nickname);
+    public Authentication createAuthentication(String email) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 

@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
 @NoArgsConstructor
 @Getter
@@ -51,5 +50,4 @@ public class SignupRequestDto {
     @NotBlank(message = "생년월일은 필수사항 입니다.")
     @Pattern(regexp = "^(19[0-9][0-9]|20\\d{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])$", message = "생년월일 8자리 형식에 맞지 않습니다.")
     private String birth;
-
 }
