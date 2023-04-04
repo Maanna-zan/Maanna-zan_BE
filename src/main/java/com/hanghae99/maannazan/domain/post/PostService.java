@@ -5,6 +5,7 @@ import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.domain.repository.CategoryRepository;
+import com.hanghae99.maannazan.domain.repository.CommentRepository;
 import com.hanghae99.maannazan.domain.repository.PostRepository;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
@@ -12,13 +13,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
-
+//    private final CommentRepository commentRepository;
 
     public String createPost(PostRequestDto postrequestDto, User user) {
         Post post = new Post(postrequestDto, user);
@@ -37,14 +41,15 @@ public class PostService {
         if(category == null){
             return null;
         }
-//        List<Comment> commentList = commentRepository.findByPostId(postId);
-//        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-//        for (Comment comment : commentList) {
-//            commentResponseDtoList.add(new CommentResponseDto(comment));
-//        }
-//        return new PostResponseDto(post, category, commentResponseDtoList);
-
+      /*  List<Comment> comments = post.getCommentList();
+        if(!comments.isEmpty()){
+        for (Comment comment : commentList) {
+            List<CommentResponseDto> commentList = new ArrayList<>();
+            commentResponseDtoList.add(new CommentResponseDto(comment));
+        }*/
         return new PostResponseDto(category);
+
+   //     return new PostResponseDto(category);
     }
 
 

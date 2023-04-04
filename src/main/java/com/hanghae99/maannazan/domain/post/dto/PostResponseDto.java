@@ -1,11 +1,15 @@
 package com.hanghae99.maannazan.domain.post.dto;
 
+import com.hanghae99.maannazan.domain.comment.dto.CommentRequestDto;
+import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
 import com.hanghae99.maannazan.domain.entity.Category;
+import com.hanghae99.maannazan.domain.entity.Comment;
 import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -35,7 +39,7 @@ public class PostResponseDto {
 
     private double x;
     private double y;
-    private List<String> commentList; //만들어만 놨음
+    private List<CommentResponseDto> commentList = new ArrayList<>(); //만들어만 놨음
 
     public PostResponseDto(Category category) {   // 게시물 하나 조회
         this.storename = category.getPost().getStorename();
@@ -51,5 +55,15 @@ public class PostResponseDto {
         this.beer = category.isBeer();
         this.x = category.getPost().getX();
         this.y = category.getPost().getY();
+
+        List<Comment> comments = category.getPost().getCommentList();
+        if (!comments.isEmpty()) {
+            List<CommentResponseDto> commentList = new ArrayList<>();
+            for (Comment comment : comments) {
+                commentList.add(new CommentResponseDto(comment));
+            }
+            this.commentList = commentList;
+        }
     }
+
 }

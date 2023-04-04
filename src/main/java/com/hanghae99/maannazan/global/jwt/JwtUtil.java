@@ -56,8 +56,8 @@ public class JwtUtil {
 
     // 토큰 생성
 
-    public TokenDto createAllToken(String nickname) {
-        return new TokenDto(createToken(nickname, "Access"), createToken(nickname, "Refresh"));
+    public TokenDto createAllToken(String nickName) {
+        return new TokenDto(createToken(nickName, "Access"), createToken(nickName, "Refresh"));
     }
     public String createToken(String nickName, String type) {
         Date date = new Date();
