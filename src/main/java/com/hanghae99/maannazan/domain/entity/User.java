@@ -1,5 +1,7 @@
 package com.hanghae99.maannazan.domain.entity;
 
+import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
+import com.hanghae99.maannazan.domain.user.dto.CheckFindPwRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,5 +40,10 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.birth = birth;
+    }
+
+    public void update(String str, String email) {
+        this.password = str;
+        this.email = email;
     }
 }
