@@ -66,4 +66,25 @@ public class PostResponseDto {
         }
     }
 
+    public PostResponseDto(Post post) {
+        this.storename = post.getStorename();
+        this.title = post.getTitle();
+        this.description = post.getDescription();
+        this.image = post.getImage();
+        this.likecnt = post.getLikecnt();
+        this.checks = post.isChecks();
+        this.nickname = post.getUser().getNickName();
+        this.createAt = post.getCreatedAt();
+        this.modifiedAt = post.getModifiedAt();
+        this.x = post.getX();
+        this.y = post.getY();
+        List<Comment> comments = post.getCommentList();
+        if (!comments.isEmpty()) {
+            List<CommentResponseDto> commentList = new ArrayList<>();
+            for (Comment comment : comments) {
+                commentList.add(new CommentResponseDto(comment));
+            }
+            this.commentList = commentList;
+        }
+    }
 }

@@ -53,6 +53,6 @@ public class UserController {
     public ResponseEntity<ResponseMessage<String>> checkFindPw(@Valid @RequestBody CheckFindPwRequestDto checkFindPw) {
         MailDto dto = userService.checkFindPw(checkFindPw);
         userService.mailSend(dto);
-        return ResponseMessage.SuccessResponse("pass","");
+        return ResponseMessage.SuccessResponse("이메일로 임시 비밀번호를 보내드렸습니다.","");
     }
 }
