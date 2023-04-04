@@ -112,7 +112,7 @@ public class UserService {
         if (foundNickName.isPresent()) throw new CustomException(DUPLICATE_NICKNAME);
     }
 
-    //비밀번호 찾기 이메일 전송
+    //비밀번호 이메일 전송
     @Transactional
     public MailDto checkFindPw(CheckFindPwRequestDto checkFindPw) {
         String email = checkFindPw.getEmail();
