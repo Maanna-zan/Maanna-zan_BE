@@ -1,6 +1,7 @@
 package com.hanghae99.maannazan.domain.post;
 
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
+import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import com.hanghae99.maannazan.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class PostController {
 
     // 게시글 하나 조회
     @GetMapping("/posts/{postId}")
-    public ResponseEntity getPostOne(@PathVariable Long postId){
+    public ResponseEntity<ResponseMessage<PostResponseDto>> getPostOne(@PathVariable Long postId){
         return  ResponseMessage.SuccessResponse("단일 게시글 조회 성공", postService.getPostOne(postId));
     }
 
