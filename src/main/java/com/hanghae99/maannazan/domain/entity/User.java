@@ -46,4 +46,12 @@ public class User {
         this.password = str;
         this.email = email;
     }
+
+    public void changeNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

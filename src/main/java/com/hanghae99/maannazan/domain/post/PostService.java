@@ -1,11 +1,11 @@
 package com.hanghae99.maannazan.domain.post;
+
 import com.hanghae99.maannazan.domain.entity.Category;
 import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.domain.repository.CategoryRepository;
-import com.hanghae99.maannazan.domain.repository.CommentRepository;
 import com.hanghae99.maannazan.domain.repository.PostRepository;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +30,12 @@ public class PostService {
             categoryRepository.saveAndFlush(new Category(postrequestDto, post));
         }
         return "게시물 작성 성공";
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDto> getPosts(){
+        List<Post> posts = postRepository.findAll();
+        return posts.stream().map(PostResponseDto::new).toList();
     }
 
 
