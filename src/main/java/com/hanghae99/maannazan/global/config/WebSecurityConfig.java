@@ -48,6 +48,7 @@ public class WebSecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/users/**").permitAll()
+                .antMatchers("/posts/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/rooms/**").permitAll()
 
                 .anyRequest().authenticated()

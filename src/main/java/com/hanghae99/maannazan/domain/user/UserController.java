@@ -37,22 +37,22 @@ public class UserController {
 
     // 유저이메일 중복
     @PostMapping("/confirm-email")
-    public ResponseEntity<ResponseMessage<String>> checkEmail(@Valid @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
+    public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
         userService.checkEmail(checkEmailRequestDto);
         return ResponseMessage.SuccessResponse("pass","");
     }
 
     // 닉네임 중복
     @PostMapping("/confirm-nickname")
-    public ResponseEntity<ResponseMessage<String>> checkNickName(@Valid @RequestBody CheckNickNameRequestDto checkNickNameRequestDto) {
+    public ResponseEntity<ResponseMessage<String>> checkNickName(@Validated @RequestBody CheckNickNameRequestDto checkNickNameRequestDto) {
         userService.checkNickName(checkNickNameRequestDto);
         return ResponseMessage.SuccessResponse("pass","");
     }
 
     @PostMapping("/check/findPw")
-    public ResponseEntity<ResponseMessage<String>> checkFindPw(@Valid @RequestBody CheckFindPwRequestDto checkFindPw) {
+    public ResponseEntity<ResponseMessage<String>> checkFindPw(@Validated @RequestBody CheckFindPwRequestDto checkFindPw) {
         MailDto dto = userService.checkFindPw(checkFindPw);
         userService.mailSend(dto);
-        return ResponseMessage.SuccessResponse("pass","");
+        return ResponseMessage.SuccessResponse("이메일로 임시 비밀번호를 보내드렸습니다.","");
     }
 }
