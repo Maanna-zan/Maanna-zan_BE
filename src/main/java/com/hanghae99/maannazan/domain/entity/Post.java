@@ -41,6 +41,11 @@ public class Post extends Timestamped{
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "comment_id")
+    //Comment테이블은 연관관계의 주인인 post 테이블의 "comment" 필드에 해당한다
+    private List<Comment> comments = new ArrayList<>();
+
 
     public Post(PostRequestDto postrequestDto, User user) {
         this.storename = postrequestDto.getStorename();
