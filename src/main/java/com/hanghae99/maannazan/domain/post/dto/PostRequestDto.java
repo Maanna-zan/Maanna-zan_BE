@@ -1,6 +1,5 @@
 package com.hanghae99.maannazan.domain.post.dto;
 
-import com.hanghae99.maannazan.domain.entity.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

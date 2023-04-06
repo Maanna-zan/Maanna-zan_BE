@@ -1,7 +1,7 @@
 package com.hanghae99.maannazan.domain.file;
 
 
-import com.hanghae99.maannazan.domain.entity.File;
+import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.file.dto.FileDto;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.global.security.UserDetailsImpl;
@@ -31,17 +31,17 @@ public class S3Controller {
     }
 
     @PostMapping("/api/upload")    //업로드 예시입니다 다른분들 참고하세요
-    public String uploadFile(FileDto fileDto) throws IOException {
-        String url = s3Service.uploadFile(fileDto.getFile());
-        fileDto.setS3url(url);
-        fileService.save(fileDto);
+    public String uploadFile(PostRequestDto postRequestDto) throws IOException {
+        String url = s3Service.uploadFile(postRequestDto.getFile());
+        postRequestDto.setS3Url(url);
+        fileService.save(postRequestDto);
         return "redirect:/posts/1";
     }
 
-    
+
     @GetMapping("/api/list")
     public String listPage(Model model) {
-        List<File> fileList =fileService.getFiles();
+        List<Post> fileList =fileService.getFiles();
         model.addAttribute("fileList", fileList);
         return "list";
     }

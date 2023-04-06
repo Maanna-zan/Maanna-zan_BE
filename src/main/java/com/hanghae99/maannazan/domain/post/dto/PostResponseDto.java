@@ -38,12 +38,11 @@ public class PostResponseDto {
     private double x;
     private double y;
 
-    private String fileTitle;
     private String s3Url;
     private List<CommentResponseDto> commentList = new ArrayList<>();
     private boolean like;
 
-    public PostResponseDto(Category category, File file) {   // 게시물 하나 조회
+    public PostResponseDto(Category category,boolean like) {   // 게시물 하나 조회
         this.id = category.getPost().getId();
         this.storename = category.getPost().getStorename();
         this.title = category.getPost().getTitle();
@@ -55,9 +54,8 @@ public class PostResponseDto {
         this.beer = category.isBeer();
         this.x = category.getPost().getX();
         this.y = category.getPost().getY();
-        this.fileTitle = file.getFileTitle();
-        this.s3Url = file.getS3Url();
-
+        this.s3Url = category.getPost().getS3Url();
+        this.like = like;
         List<Comment> comments = category.getPost().getCommentList();
         if (!comments.isEmpty()) {
             List<CommentResponseDto> commentList = new ArrayList<>();
@@ -67,7 +65,7 @@ public class PostResponseDto {
             this.commentList = commentList;
         }
     }
-    public PostResponseDto(Post post, File file) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
+    public PostResponseDto(Post post) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
         this.storename = post.getStorename();
         this.title = post.getTitle();
@@ -77,8 +75,7 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.x = post.getX();
         this.y = post.getY();
-        this.fileTitle = file.getFileTitle();
-        this.s3Url = file.getS3Url();
+        this.s3Url = post.getS3Url();
 
         List<Comment> comments = post.getCommentList();
         if (!comments.isEmpty()) {
@@ -90,27 +87,8 @@ public class PostResponseDto {
         }
     }
 
-    public PostResponseDto(Post post) {
-        this.id = post.getId();
-        this.storename = post.getStorename();
-        this.title = post.getTitle();
-        this.description = post.getDescription();
-        this.likecnt = post.getLikecnt();
-        this.nickname = post.getUser().getNickName();
-        this.modifiedAt = post.getModifiedAt();
-        this.x = post.getX();
-        this.y = post.getY();
-        List<Comment> comments = post.getCommentList();
-        if (!comments.isEmpty()) {
-            List<CommentResponseDto> commentList = new ArrayList<>();
-            for (Comment comment : comments) {
-                commentList.add(new CommentResponseDto(comment));
-            }
-            this.commentList = commentList;
-        }
-    }
 
-    public PostResponseDto(Post post, boolean like) {    //메인페이지에서 유저 별 좋아요 체크
+    public PostResponseDto(Post post, boolean like) {    //메인페이지에서 유저 별 좋아요 체크 (전체 조회)
         this.id = post.getId();
         this.storename = post.getStorename();
         this.title = post.getTitle();
@@ -121,6 +99,7 @@ public class PostResponseDto {
         this.x = post.getX();
         this.y = post.getY();
         this.like = like;
+        this.s3Url = post.getS3Url();
         List<Comment> comments = post.getCommentList();
         if (!comments.isEmpty()) {
             List<CommentResponseDto> commentList = new ArrayList<>();
