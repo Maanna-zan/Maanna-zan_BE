@@ -15,10 +15,12 @@ public enum CustomErrorCode {
     DUPLICATE_EMAIL(BAD_REQUEST, "중복된 이메일이 존재합니다"),
     DUPLICATE_NICKNAME(BAD_REQUEST, "중복된 닉네임이 존재합니다"),
     DUPLICATE_PHONENUMBER(BAD_REQUEST, "중복된 번호가 존재합니다"),
+    DUPLICATE_PASSWORD(BAD_REQUEST, "현재 비밀번호로 변경이 불가능합니다"),
     NOT_PROPER_EMAIL_OR_PASSWORD(BAD_REQUEST, "이메일 또는 비밀번호가 일치하지 않습니다."),
     NOT_PROPER_INPUTFORM(BAD_REQUEST, "입력한 형식이 맞지 않습니다."),
     NOT_PROPER_URLFORM(BAD_REQUEST, "입력한 URL 형식이 맞지 않습니다."),
     NOT_AUTHOR(BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다."),
+
 
 
 

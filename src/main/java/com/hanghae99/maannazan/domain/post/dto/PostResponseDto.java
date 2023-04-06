@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class PostResponseDto {
+    private Long id;
 
     private String storename;
 
@@ -42,6 +43,7 @@ public class PostResponseDto {
     private List<CommentResponseDto> commentList = new ArrayList<>(); //만들어만 놨음
 
     public PostResponseDto(Category category) {   // 게시물 하나 조회
+        this.id = category.getPost().getId();
         this.storename = category.getPost().getStorename();
         this.title = category.getPost().getTitle();
         this.description = category.getPost().getDescription();
@@ -66,4 +68,26 @@ public class PostResponseDto {
         }
     }
 
+    public PostResponseDto(Post post) {
+        this.id = post.getId();
+        this.storename = post.getStorename();
+        this.title = post.getTitle();
+        this.description = post.getDescription();
+        this.image = post.getImage();
+        this.likecnt = post.getLikecnt();
+        this.checks = post.isChecks();
+        this.nickname = post.getUser().getNickName();
+        this.createAt = post.getCreatedAt();
+        this.modifiedAt = post.getModifiedAt();
+        this.x = post.getX();
+        this.y = post.getY();
+        List<Comment> comments = post.getCommentList();
+        if (!comments.isEmpty()) {
+            List<CommentResponseDto> commentList = new ArrayList<>();
+            for (Comment comment : comments) {
+                commentList.add(new CommentResponseDto(comment));
+            }
+            this.commentList = commentList;
+        }
+    }
 }

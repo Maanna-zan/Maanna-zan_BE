@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +22,11 @@ public class PostController {
     @PostMapping("/posts")
     public ResponseEntity<ResponseMessage<String>> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return  ResponseMessage.SuccessResponse("게시물 작성 성공",postService.createPost(postRequestDto, userDetails.getUser()));
+    }
+
+    @GetMapping("/posts")
+    public List<PostResponseDto> getposts(){
+        return postService.getPosts();
     }
 
     // 게시글 하나 조회
@@ -46,5 +53,4 @@ public class PostController {
         return  ResponseMessage.SuccessResponse("게시글 삭제 완료",postService.deletePost(postId, userDetails.getUser()));
 
     }
-
 }
