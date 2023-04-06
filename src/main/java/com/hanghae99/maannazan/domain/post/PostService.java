@@ -1,18 +1,18 @@
 package com.hanghae99.maannazan.domain.post;
 
-import com.hanghae99.maannazan.domain.entity.Category;
-import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
+import com.hanghae99.maannazan.domain.entity.*;
+import com.hanghae99.maannazan.domain.file.FileRepository;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
-import com.hanghae99.maannazan.domain.repository.CategoryRepository;
-import com.hanghae99.maannazan.domain.repository.PostRepository;
+import com.hanghae99.maannazan.domain.repository.*;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,40 +21,42 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
-//    private final CommentRepository commentRepository;
+    private final FileRepository fileRepository;
+    private final LikeRepository likeRepository;
 
-    public String createPost(PostRequestDto postrequestDto, User user) {
-        Post post = new Post(postrequestDto, user);
-        postRepository.saveAndFlush(post);
-        if (postrequestDto.isBeer() || postrequestDto.isSoju()) {
-            categoryRepository.saveAndFlush(new Category(postrequestDto, post));
+
+    public String createPost(PostRequestDto postRequestDto, User user) {
+        Post post = new Post(postRequestDto, user);
+        post = postRepository.saveAndFlush(post);
+        File file = new File(post, postRequestDto, user);   //
+        fileRepository.save(file);                          //
+        if (postRequestDto.isBeer() || postRequestDto.isSoju()) {
+            categoryRepository.saveAndFlush(new Category(postRequestDto, post));
         }
         return "게시물 작성 성공";
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getPosts(){
+    public List<PostResponseDto> getPosts(User user){
         List<Post> posts = postRepository.findAll();
-        return posts.stream().map(PostResponseDto::new).toList();
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for (Post post : posts) {
+            boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
+            postResponseDtoList.add(new PostResponseDto(post, like));
+        } return postResponseDtoList;
     }
 
 
     @Transactional(readOnly = true)
     public PostResponseDto getPostOne(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND)); //유지 보수땜에 있는게 나은지 db에 2번 접근하기 때문에 category만 찾는게 나을지
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
+        File file = fileRepository.findById(postId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
         Category category = categoryRepository.findByPostId(post.getId());
         if(category == null){
-            return null;
+           return new PostResponseDto(post, file);
         }
-      /*  List<Comment> comments = post.getCommentList();
-        if(!comments.isEmpty()){
-        for (Comment comment : commentList) {
-            List<CommentResponseDto> commentList = new ArrayList<>();
-            commentResponseDtoList.add(new CommentResponseDto(comment));
-        }*/
-        return new PostResponseDto(category);
+        return new PostResponseDto(category, file);
 
-   //     return new PostResponseDto(category);
     }
 
 

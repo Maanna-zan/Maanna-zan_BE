@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Post extends Timestamped{
+public class Post extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +22,9 @@ public class Post extends Timestamped{
 
     private String description;
 
-    private String image;
-
     private int likecnt;
 
-    private boolean checks;
+
 
     private double x;    //위도
 
@@ -46,9 +44,6 @@ public class Post extends Timestamped{
         this.storename = postrequestDto.getStorename();
         this.title = postrequestDto.getTitle();
         this.description = postrequestDto.getDescription();
-        this.image = postrequestDto.getImage();
-        this.likecnt = postrequestDto.getLikecnt();
-        this.checks = postrequestDto.isChecks();
         this.x = postrequestDto.getX();
         this.y = postrequestDto.getY();
         this.user = user;
@@ -58,6 +53,10 @@ public class Post extends Timestamped{
         this.storename = requestDto.getStorename();
         this.title = requestDto.getTitle();
         this.description = requestDto.getDescription();
-        this.image = requestDto.getImage();
     }
+
+    public void likeCount(int plusOrMinus) {  //좋아요 개수
+        this.likecnt = plusOrMinus;
+    }
+
 }
