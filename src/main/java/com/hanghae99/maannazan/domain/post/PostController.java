@@ -1,5 +1,7 @@
 package com.hanghae99.maannazan.domain.post;
 
+import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.file.S3Service;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -17,16 +20,25 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final S3Service s3Service;
 
-    // 게시글 등록
+
     @PostMapping("/posts")
-    public ResponseEntity<ResponseMessage<String>> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return  ResponseMessage.SuccessResponse("게시물 작성 성공",postService.createPost(postRequestDto, userDetails.getUser()));
+    public ResponseEntity<ResponseMessage<String>> uploadPost(PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        String url = s3Service.uploadFile(postRequestDto.getFile());  //s3에 업로드를 먼저하고 url로 저장하는듯?
+        postRequestDto.setS3Url(url);
+        postService.createPost(postRequestDto, userDetails.getUser());
+        return  ResponseMessage.SuccessResponse("게시물 작성 성공","");
     }
 
+
     @GetMapping("/posts")
-    public List<PostResponseDto> getposts(){
-        return postService.getPosts();
+    public List<PostResponseDto> getposts(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        if(userDetails == null){
+            return postService.getPosts(null);
+        } else{
+            return postService.getPosts(userDetails.getUser());
+        }
     }
 
     // 게시글 하나 조회
@@ -53,4 +65,6 @@ public class PostController {
         return  ResponseMessage.SuccessResponse("게시글 삭제 완료",postService.deletePost(postId, userDetails.getUser()));
 
     }
+
+
 }

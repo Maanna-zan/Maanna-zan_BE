@@ -42,7 +42,7 @@ dependencies {
 	implementation 'mysql:mysql-connector-java'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.11.983'
 }
 
 tasks.named('test') {

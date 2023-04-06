@@ -19,6 +19,11 @@ public class Likes {
     @ManyToOne
     @JoinColumn(name = "POST_ID")
     private Post post;
+
+    public Likes(Post post, User user) {
+        this.user= user;
+        this.post= post;
+    }
 }
 
 
