@@ -6,6 +6,7 @@ import com.hanghae99.maannazan.domain.mypage.dto.ChangeNickNameRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangePasswordRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.MyPageResponseDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
+import com.hanghae99.maannazan.domain.repository.LikeRepository;
 import com.hanghae99.maannazan.domain.repository.PostRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
 import com.hanghae99.maannazan.global.exception.CustomException;
@@ -26,11 +27,14 @@ public class MyPageService {
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+
+    private final LikeRepository likeRepository;
     public MyPageResponseDto getMyPage(User user) {
         List<Post> posts = postRepository.findByUserOrderByCreatedAtDesc(user);
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
         for (Post post : posts){
-            postResponseDtos.add(new PostResponseDto(post));
+            boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
+            postResponseDtos.add(new PostResponseDto(post, like));
         }
         return new MyPageResponseDto(user,postResponseDtos);
     }

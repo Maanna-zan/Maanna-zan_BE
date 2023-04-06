@@ -46,7 +46,6 @@ public class PostService {
         } return postResponseDtoList;
     }
 
-
     @Transactional(readOnly = true)
     public PostResponseDto getPostOne(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));

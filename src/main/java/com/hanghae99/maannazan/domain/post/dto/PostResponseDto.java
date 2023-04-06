@@ -89,26 +89,7 @@ public class PostResponseDto {
             this.commentList = commentList;
         }
     }
-
-    public PostResponseDto(Post post) {
-        this.id = post.getId();
-        this.storename = post.getStorename();
-        this.title = post.getTitle();
-        this.description = post.getDescription();
-        this.likecnt = post.getLikecnt();
-        this.nickname = post.getUser().getNickName();
-        this.modifiedAt = post.getModifiedAt();
-        this.x = post.getX();
-        this.y = post.getY();
-        List<Comment> comments = post.getCommentList();
-        if (!comments.isEmpty()) {
-            List<CommentResponseDto> commentList = new ArrayList<>();
-            for (Comment comment : comments) {
-                commentList.add(new CommentResponseDto(comment));
-            }
-            this.commentList = commentList;
-        }
-    }
+    
 
     public PostResponseDto(Post post, boolean like) {    //메인페이지에서 유저 별 좋아요 체크
         this.id = post.getId();
