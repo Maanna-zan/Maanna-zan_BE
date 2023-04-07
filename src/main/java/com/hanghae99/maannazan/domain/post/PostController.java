@@ -52,7 +52,7 @@ public class PostController {
 
 
 //    // 범위 내 게시글 전체 조회
-//    @GetMapping("/posts/{postId}")
+//    @GetMapping("/posts")
 //    public ResponseEntity getPosts(@PathVariable Long postId, @RequestParam(required = false) PostRequestDto postRequestDto){
 //        return  ResponseMessage.SuccessResponse("범위 내 게시글 조회 성공",postService.getPosts(postId));
 //    }

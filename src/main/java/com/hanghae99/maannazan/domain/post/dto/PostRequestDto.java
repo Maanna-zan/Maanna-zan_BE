@@ -21,6 +21,7 @@ public class PostRequestDto {
     private String fileTitle;
     private String s3Url;
     private MultipartFile file;
+    private String fileName;  //이걸로 수정 삭제
 
 
 }

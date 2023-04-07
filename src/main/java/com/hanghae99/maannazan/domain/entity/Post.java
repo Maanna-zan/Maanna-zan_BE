@@ -23,6 +23,7 @@ public class Post extends Timestamped {
     private String description;
 
     private int likecnt;
+    private int DisLikecnt;
 
     private double x;    //위도
 
@@ -31,6 +32,7 @@ public class Post extends Timestamped {
     @Column
     private String s3Url;
 
+    private String fileName;
 
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
@@ -50,6 +52,7 @@ public class Post extends Timestamped {
         this.y = postRequestDto.getY();
         this.user = user;
         this.s3Url = postRequestDto.getS3Url();
+        this.fileName = postRequestDto.getFileName();
 
     }
 
@@ -59,6 +62,8 @@ public class Post extends Timestamped {
         this.description = postRequestDto.getDescription();
         this.s3Url = postRequestDto.getS3Url();
         this.user = user;
+        this.fileName = postRequestDto.getFileName();
+
     }
 
 
@@ -69,6 +74,8 @@ public class Post extends Timestamped {
         this.x = postRequestDto.getX();
         this.y = postRequestDto.getY();
         this.s3Url = postRequestDto.getS3Url();
+        this.fileName = postRequestDto.getFileName();
+
     }
 
 
@@ -76,6 +83,10 @@ public class Post extends Timestamped {
 
     public void likeCount(int plusOrMinus) {  //좋아요 개수
         this.likecnt = plusOrMinus;
+    }
+
+    public void DisLikeCount(int plusOrMinus) {  //좋아요 개수
+        this.DisLikecnt = plusOrMinus;
     }
 
 }
