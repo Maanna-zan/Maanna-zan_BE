@@ -14,6 +14,7 @@ public class Category{
     private Long id;
     private boolean soju;
     private boolean beer;
+
     @JoinColumn(name = "POST_ID")
     @OneToOne
     private Post post;
