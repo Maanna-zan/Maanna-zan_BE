@@ -56,14 +56,14 @@ public class PostResponseDto {
         this.y = category.getPost().getY();
         this.s3Url = category.getPost().getS3Url();
         this.like = like;
-        List<Comment> comments = category.getPost().getCommentList();
+        /*List<Comment> comments = category.getPost().getCommentList();
         if (!comments.isEmpty()) {
             List<CommentResponseDto> commentList = new ArrayList<>();
             for (Comment comment : comments) {
                 commentList.add(new CommentResponseDto(comment));
             }
             this.commentList = commentList;
-        }
+        }*/
     }
     public PostResponseDto(Post post) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
@@ -77,14 +77,14 @@ public class PostResponseDto {
         this.y = post.getY();
         this.s3Url = post.getS3Url();
 
-        List<Comment> comments = post.getCommentList();
+        /*List<Comment> comments = post.getCommentList();
         if (!comments.isEmpty()) {
             List<CommentResponseDto> commentList = new ArrayList<>();
             for (Comment comment : comments) {
                 commentList.add(new CommentResponseDto(comment));
             }
             this.commentList = commentList;
-        }
+        }*/
     }
 
 
@@ -100,14 +100,14 @@ public class PostResponseDto {
         this.y = post.getY();
         this.like = like;
         this.s3Url = post.getS3Url();
-        List<Comment> comments = post.getCommentList();
+        /*List<Comment> comments = post.getCommentList();
         if (!comments.isEmpty()) {
             List<CommentResponseDto> commentList = new ArrayList<>();
             for (Comment comment : comments) {
                 commentList.add(new CommentResponseDto(comment));
             }
             this.commentList = commentList;
-        }
+        }*/
     }
     }
 

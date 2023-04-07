@@ -36,11 +36,8 @@ public class CommentService {
 
     //    2. 댓글 수정 메서드
     @Transactional
-    public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto commentRequestDto, User user) {
-//        게시글 존재 여부 확인. 없으면 예외처리
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
-        );
+    public CommentResponseDto updateComment( Long commentId, CommentRequestDto commentRequestDto, User user) {
+
 //        댓글 존재 여부 확인. 없으면 예외처리
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
@@ -55,11 +52,9 @@ public class CommentService {
 
     //    3. 댓글 삭제 메서드
     @Transactional
-    public ResponseEntity deleteComment(Long postId, Long commentId , User user) {
+    public ResponseEntity deleteComment( Long commentId , User user) {
         //        게시글 존재 여부 확인. 없으면 예외처리
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
-        );
+
 //        댓글 존재 여부 확인. 없으면 예외처리
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
