@@ -20,4 +20,9 @@ public class LikeController {
     public ResponseEntity<ResponseMessage<String>> like(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseMessage.SuccessResponse("클릭 성공",likeService.like(postId, userDetails.getUser()));
     }
+
+    @PutMapping("/comments/like/{commentId}")
+    public ResponseEntity<ResponseMessage<String>> commentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseMessage.SuccessResponse("클릭 성공",likeService.commentLike(commentId, userDetails.getUser()));
+    }
 }

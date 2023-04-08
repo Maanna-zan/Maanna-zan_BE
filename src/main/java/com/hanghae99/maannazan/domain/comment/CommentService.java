@@ -8,6 +8,8 @@ import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.repository.CommentRepository;
 import com.hanghae99.maannazan.domain.repository.PostRepository;
+import com.hanghae99.maannazan.global.exception.CustomErrorCode;
+import com.hanghae99.maannazan.global.exception.CustomException;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 
@@ -67,5 +69,22 @@ public class CommentService {
         return ResponseMessage.SuccessResponse("삭제 성공", "");
     }
 
+    @Transactional
+    public CommentResponseDto createCommentList(CommentRequestDto commentRequestDto, User user, Long parentId) {
+//        Post post = getPost(id);
+        Comment parentComment = null;
+        if(parentId != null) {
+            parentComment = commentRepository.findById(parentId)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND));
+        }
+        Comment comment = new Comment(commentRequestDto, user, parentComment);
+        commentRepository.saveAndFlush(comment);
 
+        if(parentComment != null) {
+            parentComment.getChildren().add(comment);
+            commentRepository.saveAndFlush(parentComment);
+        }
+
+        return new CommentResponseDto(comment);
+    }
 }
