@@ -61,7 +61,7 @@ public class PostResponseDto {
         this.commentList = commentResponseDtoList;
         }
 
-    public PostResponseDto(Post post) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
+    public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
         this.storename = post.getStorename();
         this.title = post.getTitle();
@@ -71,16 +71,9 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.x = post.getX();
         this.y = post.getY();
+        this.like = like;
         this.s3Url = post.getS3Url();
-
-        List<Comment> comments = post.getCommentList();
-        if (!comments.isEmpty()) {
-            List<CommentResponseDto> commentList = new ArrayList<>();
-            for (Comment comment : comments) {
-                commentList.add(new CommentResponseDto(comment));
-            }
-            this.commentList = commentList;
-        }
+        this.commentList = commentResponseDtoList;
     }
 
 
