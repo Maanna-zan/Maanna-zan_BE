@@ -1,6 +1,5 @@
 package com.hanghae99.maannazan.domain.post.dto;
 
-import com.hanghae99.maannazan.domain.entity.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +21,7 @@ public class PostRequestDto {
     private String fileTitle;
     private String s3Url;
     private MultipartFile file;
+    private String fileName;  //이걸로 수정 삭제
 
 
 }

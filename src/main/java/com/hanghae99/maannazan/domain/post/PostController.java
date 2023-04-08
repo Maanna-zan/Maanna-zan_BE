@@ -31,7 +31,7 @@ public class PostController {
         return  ResponseMessage.SuccessResponse("게시물 작성 성공","");
     }
 
-
+    //게시글 전체 조회
     @GetMapping("/posts")
     public List<PostResponseDto> getposts(@AuthenticationPrincipal UserDetailsImpl userDetails){
         if(userDetails == null){
@@ -43,20 +43,26 @@ public class PostController {
 
     // 게시글 하나 조회
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<ResponseMessage<PostResponseDto>> getPostOne(@PathVariable Long postId){
-        return  ResponseMessage.SuccessResponse("단일 게시글 조회 성공", postService.getPostOne(postId));
-    }
+    public ResponseEntity<ResponseMessage<PostResponseDto>> getPostOne(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        if(userDetails==null){
+            return  ResponseMessage.SuccessResponse("단일 게시글 조회 성공", postService.getPostOne(postId, null));
+        } else
+            return  ResponseMessage.SuccessResponse("단일 게시글 조회 성공", postService.getPostOne(postId, userDetails.getUser()));
+        }
+
 
 //    // 범위 내 게시글 전체 조회
-//    @GetMapping("/posts/{postId}")
+//    @GetMapping("/posts")
 //    public ResponseEntity getPosts(@PathVariable Long postId, @RequestParam(required = false) PostRequestDto postRequestDto){
 //        return  ResponseMessage.SuccessResponse("범위 내 게시글 조회 성공",postService.getPosts(postId));
 //    }
 
     // 게시글 수정
     @PatchMapping("/posts/{postId}")
-    public ResponseEntity<ResponseMessage<String>> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return  ResponseMessage.SuccessResponse("게시글 업데이트 성공",postService.updatePost(postId, userDetails.getUser(), requestDto));
+    public ResponseEntity<ResponseMessage<String>> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        String url = s3Service.uploadFile(postRequestDto.getFile());  //s3에 업로드를 먼저하고 url로 저장하는듯?
+        postRequestDto.setS3Url(url);
+        return  ResponseMessage.SuccessResponse("게시글 업데이트 성공",postService.updatePost(postId, userDetails.getUser(), postRequestDto));
     }
 
     // 게시글 삭제

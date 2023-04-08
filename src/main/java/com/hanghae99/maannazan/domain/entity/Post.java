@@ -23,12 +23,16 @@ public class Post extends Timestamped {
     private String description;
 
     private int likecnt;
-
-
+    private int DisLikecnt;
 
     private double x;    //위도
 
     private double y;    //경도
+
+    @Column
+    private String s3Url;
+
+    private String fileName;
 
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
@@ -40,23 +44,49 @@ public class Post extends Timestamped {
     private User user;
 
 
-    public Post(PostRequestDto postrequestDto, User user) {
-        this.storename = postrequestDto.getStorename();
-        this.title = postrequestDto.getTitle();
-        this.description = postrequestDto.getDescription();
-        this.x = postrequestDto.getX();
-        this.y = postrequestDto.getY();
+    public Post(PostRequestDto postRequestDto, User user) {
+        this.storename = postRequestDto.getStorename();
+        this.title = postRequestDto.getTitle();
+        this.description = postRequestDto.getDescription();
+        this.x = postRequestDto.getX();
+        this.y = postRequestDto.getY();
         this.user = user;
+        this.s3Url = postRequestDto.getS3Url();
+        this.fileName = postRequestDto.getFileName();
+
     }
 
-    public void update(PostRequestDto requestDto) {
-        this.storename = requestDto.getStorename();
-        this.title = requestDto.getTitle();
-        this.description = requestDto.getDescription();
+    public void update(PostRequestDto postRequestDto, User user) {
+        this.storename = postRequestDto.getStorename();
+        this.title = postRequestDto.getTitle();
+        this.description = postRequestDto.getDescription();
+        this.s3Url = postRequestDto.getS3Url();
+        this.user = user;
+        this.fileName = postRequestDto.getFileName();
+
     }
+
+
+    public Post(PostRequestDto postRequestDto) {      //S3Controller save 메서드 (없어도 되긴 함)
+        this.storename = postRequestDto.getStorename();
+        this.title = postRequestDto.getTitle();
+        this.description = postRequestDto.getDescription();
+        this.x = postRequestDto.getX();
+        this.y = postRequestDto.getY();
+        this.s3Url = postRequestDto.getS3Url();
+        this.fileName = postRequestDto.getFileName();
+
+    }
+
+
+
 
     public void likeCount(int plusOrMinus) {  //좋아요 개수
         this.likecnt = plusOrMinus;
+    }
+
+    public void DisLikeCount(int plusOrMinus) {  //좋아요 개수
+        this.DisLikecnt = plusOrMinus;
     }
 
 }
