@@ -8,6 +8,8 @@ import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.repository.CommentRepository;
 import com.hanghae99.maannazan.domain.repository.PostRepository;
+import com.hanghae99.maannazan.global.exception.CustomErrorCode;
+import com.hanghae99.maannazan.global.exception.CustomException;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import lombok.RequiredArgsConstructor;
 
@@ -36,11 +38,8 @@ public class CommentService {
 
     //    2. 댓글 수정 메서드
     @Transactional
-    public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto commentRequestDto, User user) {
-//        게시글 존재 여부 확인. 없으면 예외처리
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
-        );
+    public CommentResponseDto updateComment( Long commentId, CommentRequestDto commentRequestDto, User user) {
+
 //        댓글 존재 여부 확인. 없으면 예외처리
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
@@ -55,11 +54,9 @@ public class CommentService {
 
     //    3. 댓글 삭제 메서드
     @Transactional
-    public ResponseEntity deleteComment(Long postId, Long commentId , User user) {
+    public ResponseEntity deleteComment( Long commentId , User user) {
         //        게시글 존재 여부 확인. 없으면 예외처리
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
-        );
+
 //        댓글 존재 여부 확인. 없으면 예외처리
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
@@ -72,5 +69,22 @@ public class CommentService {
         return ResponseMessage.SuccessResponse("삭제 성공", "");
     }
 
+    @Transactional
+    public CommentResponseDto createCommentList(CommentRequestDto commentRequestDto, User user, Long parentId) {
+//        Post post = getPost(id);
+        Comment parentComment = null;
+        if(parentId != null) {
+            parentComment = commentRepository.findById(parentId)
+                    .orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND));
+        }
+        Comment comment = new Comment(commentRequestDto, user, parentComment);
+        commentRepository.saveAndFlush(comment);
 
+        if(parentComment != null) {
+            parentComment.getChildren().add(comment);
+            commentRepository.saveAndFlush(parentComment);
+        }
+
+        return new CommentResponseDto(comment);
+    }
 }
