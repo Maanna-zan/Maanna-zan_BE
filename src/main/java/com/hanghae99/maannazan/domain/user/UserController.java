@@ -43,7 +43,7 @@ public class UserController {
     }
 
     // 닉네임 중복
-    @PostMapping("/confirm-nickname")
+    @PostMapping("/confirm-nickName")
     public ResponseEntity<ResponseMessage<String>> checkNickName(@Validated @RequestBody CheckNickNameRequestDto checkNickNameRequestDto) {
         userService.checkNickName(checkNickNameRequestDto);
         return ResponseMessage.SuccessResponse("pass","");

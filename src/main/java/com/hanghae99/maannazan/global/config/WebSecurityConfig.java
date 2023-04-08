@@ -50,6 +50,7 @@ public class WebSecurityConfig {
                 .antMatchers("/users/**").permitAll()
                 .antMatchers("/posts/**").permitAll()
                 .antMatchers("/posts").permitAll()
+                .antMatchers("/kakaoApi").permitAll()
                 .antMatchers(HttpMethod.GET, "/posts/**").permitAll()
 
                 .anyRequest().authenticated()
