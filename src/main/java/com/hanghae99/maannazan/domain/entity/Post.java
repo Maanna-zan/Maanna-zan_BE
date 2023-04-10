@@ -23,6 +23,7 @@ public class Post extends Timestamped {
     private String description;
 
     private int likecnt;
+
     private int DisLikecnt;
 
     private double x;    //위도
@@ -33,7 +34,6 @@ public class Post extends Timestamped {
     private String s3Url;
 
     private String fileName;
-
 
 
     // 게시글에 위도 경도가 있어야하는게 좀 이상한것 같다  위치나 술집에 대한 table 있어야 할듯.
@@ -81,8 +81,6 @@ public class Post extends Timestamped {
         this.fileName = postRequestDto.getFileName();
 
     }
-
-
 
 
     public void likeCount(int plusOrMinus) {  //좋아요 개수

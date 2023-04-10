@@ -1,6 +1,7 @@
 package com.hanghae99.maannazan.domain.comment;
 
 import com.hanghae99.maannazan.domain.comment.dto.CommentRequestDto;
+import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import com.hanghae99.maannazan.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class CommentController {
                                                                  @RequestBody @Valid CommentRequestDto commentRequestDto,
                                                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.createComment(postId, commentRequestDto, userDetails.getUser());
-        return ResponseMessage.SuccessResponse("가입 성공", "");
+        return ResponseMessage.SuccessResponse("작성 성공", "");
     }
 
     //    2. 댓글 수정 API
@@ -43,4 +44,11 @@ public class CommentController {
         return ResponseMessage.SuccessResponse("삭제 성공", "");
     }
 
+    @PostMapping("/comments/{commentId}")
+    public ResponseEntity<ResponseMessage<String>> createCommentList(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto,
+                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        commentService.createCommentList(commentRequestDto ,  userDetails.getUser(), commentId);
+        return ResponseMessage.SuccessResponse("작성 성공", "");
+    }
 }
