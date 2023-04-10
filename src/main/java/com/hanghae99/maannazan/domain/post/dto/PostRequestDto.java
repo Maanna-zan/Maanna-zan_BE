@@ -22,5 +22,5 @@ public class PostRequestDto {
     private MultipartFile file;
     private String fileName;  //이걸로 수정 삭제
 
-
+    private Long apiId;
 }

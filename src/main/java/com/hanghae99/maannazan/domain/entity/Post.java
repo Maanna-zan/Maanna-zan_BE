@@ -24,12 +24,12 @@ public class Post extends Timestamped {
 
     private int likecnt;
 
-    private int DisLikecnt;
-
     @Column
     private String s3Url;
 
     private String fileName;
+
+    private Long apiId;
 
 
     // 게시글에 위도 경도가 있어야하는게 좀 이상한것 같다  위치나 술집에 대한 table 있어야 할듯.
@@ -38,10 +38,8 @@ public class Post extends Timestamped {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "comment_id")
-    //Comment테이블은 연관관계의 주인인 post 테이블의 "comment" 필드에 해당한다
-    private List<Comment> comments = new ArrayList<>();
+
+
 
 
     public Post(PostRequestDto postRequestDto, User user) {
@@ -51,7 +49,7 @@ public class Post extends Timestamped {
         this.user = user;
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
-
+        this.apiId = postRequestDto.getApiId();
     }
 
     public void update(PostRequestDto postRequestDto, User user) {
@@ -79,8 +77,5 @@ public class Post extends Timestamped {
         this.likecnt = plusOrMinus;
     }
 
-    public void DisLikeCount(int plusOrMinus) {  //좋아요 개수
-        this.DisLikecnt = plusOrMinus;
-    }
 
 }
