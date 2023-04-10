@@ -48,6 +48,11 @@ public class User {
         this.email = email;
     }
 
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
+
     public void changeNickName(String nickName) {
         this.nickName = nickName;
     }

@@ -1,14 +1,15 @@
 package com.hanghae99.maannazan.domain.kakaologin;
 
-import com.example.cloneburgerking.entity.User;
-import com.example.cloneburgerking.entity.UserEnum;
-import com.example.cloneburgerking.jwt.JwtUtil;
-import com.example.cloneburgerking.repository.UserRepository;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.http.HttpServletResponse;
+
+import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.repository.UserRepository;
+import com.hanghae99.maannazan.global.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -43,8 +44,8 @@ public class KakaoService {
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-        String createToken =  jwtUtil.createToken(kakaoUser.getUsername(), kakaoUser.getNickname() ,kakaoUser.getRole());
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
+        String createToken =  jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+        response.addHeader("Access_Token", createToken);
 
         return createToken;
     }
@@ -131,7 +132,7 @@ public class KakaoService {
                 // email: kakao email
                 String email = kakaoUserInfo.getEmail();
 
-                kakaoUser = new User(kakaoUserInfo.getNickname(), kakaoUserInfo.getNickname(),kakaoId, encodedPassword, email, UserEnum.USER);
+                kakaoUser = new User(kakaoUserInfo.getNickname(), kakaoUserInfo.getNickname(),kakaoId, encodedPassword, email);
             }
 
             userRepository.save(kakaoUser);
