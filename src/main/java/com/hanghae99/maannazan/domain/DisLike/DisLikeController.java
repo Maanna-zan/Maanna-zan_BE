@@ -1,6 +1,5 @@
 package com.hanghae99.maannazan.domain.DisLike;
 
-import com.hanghae99.maannazan.domain.entity.DisLike;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import com.hanghae99.maannazan.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;

@@ -25,7 +25,6 @@ public class PostResponseDto {
 
     private int likecnt;
 
-
     private String nickname;   //Post 작성자
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
@@ -34,9 +33,6 @@ public class PostResponseDto {
 
     private boolean soju;
     private boolean beer;
-
-    private double x;
-    private double y;
 
     private String s3Url;
     private List<CommentResponseDto> commentList = new ArrayList<>();
@@ -53,8 +49,6 @@ public class PostResponseDto {
         this.modifiedAt = category.getPost().getModifiedAt();
         this.soju = category.isSoju();
         this.beer = category.isBeer();
-        this.x = category.getPost().getX();
-        this.y = category.getPost().getY();
         this.s3Url = category.getPost().getS3Url();
         this.like = like;
         this.disLike = disLike;
@@ -69,8 +63,6 @@ public class PostResponseDto {
         this.likecnt = post.getLikecnt();
         this.nickname = post.getUser().getNickName();
         this.modifiedAt = post.getModifiedAt();
-        this.x = post.getX();
-        this.y = post.getY();
         this.like = like;
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
@@ -85,8 +77,6 @@ public class PostResponseDto {
         this.likecnt = post.getLikecnt();
         this.nickname = post.getUser().getNickName();
         this.modifiedAt = post.getModifiedAt();
-        this.x = post.getX();
-        this.y = post.getY();
         this.like = like;
         this.disLike = disLike;
         this.s3Url = post.getS3Url();
