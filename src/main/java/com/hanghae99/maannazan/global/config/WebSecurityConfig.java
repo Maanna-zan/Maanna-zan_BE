@@ -48,10 +48,13 @@ public class WebSecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/users/**").permitAll()
-                .antMatchers("/posts/**").permitAll()
-                .antMatchers("/posts").permitAll()
                 .antMatchers("/kakaoApi").permitAll()
+                .antMatchers("/find").permitAll()
+                .antMatchers("/find/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/posts/**").permitAll()
+                .antMatchers("/swagger-ui/index.html").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+
 
                 .anyRequest().authenticated()
                 //JWT 인증/인가를 사용하기 위한 설정

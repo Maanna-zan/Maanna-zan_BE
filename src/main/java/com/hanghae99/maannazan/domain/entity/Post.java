@@ -26,10 +26,6 @@ public class Post extends Timestamped {
 
     private int DisLikecnt;
 
-    private double x;    //위도
-
-    private double y;    //경도
-
     @Column
     private String s3Url;
 
@@ -52,8 +48,6 @@ public class Post extends Timestamped {
         this.storename = postRequestDto.getStorename();
         this.title = postRequestDto.getTitle();
         this.description = postRequestDto.getDescription();
-        this.x = postRequestDto.getX();
-        this.y = postRequestDto.getY();
         this.user = user;
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
@@ -75,8 +69,6 @@ public class Post extends Timestamped {
         this.storename = postRequestDto.getStorename();
         this.title = postRequestDto.getTitle();
         this.description = postRequestDto.getDescription();
-        this.x = postRequestDto.getX();
-        this.y = postRequestDto.getY();
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
 

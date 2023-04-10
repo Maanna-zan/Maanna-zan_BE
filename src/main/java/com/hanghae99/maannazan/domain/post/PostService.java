@@ -57,6 +57,7 @@ public class PostService {
                 for (Comment comment : commentList) {
                     commentResponseDtoList.add(new CommentResponseDto(comment));
                 }
+
                 Category category = categoryRepository.findByPostId(post.getId());
                 if(category!=null){
                     postResponseDtoList.add(new PostResponseDto(category, like, disLike, commentResponseDtoList));
