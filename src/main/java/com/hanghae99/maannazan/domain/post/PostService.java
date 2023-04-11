@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
 import com.hanghae99.maannazan.domain.entity.*;
 
+import com.hanghae99.maannazan.domain.post.dto.ApiPostResponseDto;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.domain.repository.*;
@@ -29,7 +30,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
     private final LikeRepository likeRepository;
-    private final DisLikeRepository disLikeRepository;
     private final CommentRepository commentRepository;
     private final AmazonS3 amazonS3;
 
@@ -51,7 +51,6 @@ public class PostService {
         for (Post post : posts) {
             if(user!=null) {
                 boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
-                boolean disLike = disLikeRepository.existsByPostIdAndUser(post.getId(), user);
                 List<Comment> commentList = commentRepository.findByPost(post);
                 List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
                 for (Comment comment : commentList) {
@@ -59,11 +58,12 @@ public class PostService {
                 }
                 Category category = categoryRepository.findByPostId(post.getId());
                 if(category!=null){
-                    postResponseDtoList.add(new PostResponseDto(category, like, disLike, commentResponseDtoList));
+                    postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList));
                 } else {
-                    postResponseDtoList.add(new PostResponseDto(post, like, disLike ,commentResponseDtoList));
+                    postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList));
                 }
             }
+
         } return postResponseDtoList;
     }
 
@@ -72,16 +72,15 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
         Category category = categoryRepository.findByPostId(post.getId());
         boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
-        boolean disLike = disLikeRepository.existsByPostIdAndUser(post.getId(), user);
         List<Comment> commentList = commentRepository.findByPost(post);
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : commentList) {
             commentResponseDtoList.add(new CommentResponseDto(comment));
         }
         if(category == null){
-           return new PostResponseDto(post, like, disLike, commentResponseDtoList);
+           return new PostResponseDto(post, like, commentResponseDtoList);
         }
-        return new PostResponseDto(category, like, disLike, commentResponseDtoList);
+        return new PostResponseDto(category, like, commentResponseDtoList);
     }
 
 
@@ -114,4 +113,15 @@ public class PostService {
         return "게시글 삭제 완료";
 
     }
+
+// 술집 리스트 조회
+    @Transactional(readOnly = true)
+    public List<ApiPostResponseDto> getPostApi(Long apiId) {
+        List<Post> posts = postRepository.findByApiId(apiId);
+        List<ApiPostResponseDto> postResponseDtoList = new ArrayList<>();
+        for (Post post : posts) {
+            postResponseDtoList.add(new ApiPostResponseDto(post));
+        }return postResponseDtoList;
+    }
+
 }

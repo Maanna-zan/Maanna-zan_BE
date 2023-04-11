@@ -1,5 +1,6 @@
 package com.hanghae99.maannazan.domain.kakaoapi;
 
+import com.hanghae99.maannazan.domain.post.PostService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,12 +20,14 @@ public class KakaoApi {
     private String key;
     private String url = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
+    private PostService postService;
+
 
 
     @GetMapping("/kakaoApi")
     public Map callApi(
-            @RequestParam String y,
-            @RequestParam String x,
+            @RequestParam(required = false) String y,
+            @RequestParam(required = false) String x,
             @RequestParam String query,
             @RequestParam Integer radius,
             @RequestParam Integer page,

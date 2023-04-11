@@ -37,9 +37,13 @@ public class PostResponseDto {
     private String s3Url;
     private List<CommentResponseDto> commentList = new ArrayList<>();
     private boolean like;
-    private boolean disLike;
 
-    public PostResponseDto(Category category,boolean like, boolean disLike, List<CommentResponseDto> commentResponseDtoList) {   // 게시물 하나 조회
+    private Long apiId;
+
+    private String placeName;
+
+
+    public PostResponseDto(Category category,boolean like, List<CommentResponseDto> commentResponseDtoList) {   // 게시물 하나 조회
         this.id = category.getPost().getId();
         this.storename = category.getPost().getStorename();
         this.title = category.getPost().getTitle();
@@ -51,8 +55,9 @@ public class PostResponseDto {
         this.beer = category.isBeer();
         this.s3Url = category.getPost().getS3Url();
         this.like = like;
-        this.disLike = disLike;
         this.commentList = commentResponseDtoList;
+        this.apiId = category.getPost().getApiId();
+        this.placeName = category.getPost().getPlaceName();
         }
 
     public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
@@ -66,22 +71,11 @@ public class PostResponseDto {
         this.like = like;
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
+        this.apiId = post.getApiId();
+        this.placeName = post.getPlaceName();
     }
 
 
-    public PostResponseDto(Post post, boolean like, boolean disLike, List<CommentResponseDto> commentResponseDtoList) {    //메인페이지에서 유저 별 좋아요 체크 (전체 조회)
-        this.id = post.getId();
-        this.storename = post.getStorename();
-        this.title = post.getTitle();
-        this.description = post.getDescription();
-        this.likecnt = post.getLikecnt();
-        this.nickname = post.getUser().getNickName();
-        this.modifiedAt = post.getModifiedAt();
-        this.like = like;
-        this.disLike = disLike;
-        this.s3Url = post.getS3Url();
-        this.commentList = commentResponseDtoList;
-        }
-    }
+}
 
 
