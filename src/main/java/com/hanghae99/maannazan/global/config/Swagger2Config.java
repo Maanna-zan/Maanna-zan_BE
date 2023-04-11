@@ -15,6 +15,8 @@ public class Swagger2Config {
         return GroupedOpenApi.builder()
                 .group("Maanna-zan_BE")
                 .pathsToMatch("**")
+                .pathsToMatch("/**")
+                .pathsToMatch("/*")
                 .build();
     }
     @Bean

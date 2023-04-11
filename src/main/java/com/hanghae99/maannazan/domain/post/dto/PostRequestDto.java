@@ -16,7 +16,6 @@ public class PostRequestDto {
     private String description;
     private boolean soju;
     private boolean beer;
-
     private String fileTitle;
     private String s3Url;
     private MultipartFile file;

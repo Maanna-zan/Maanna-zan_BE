@@ -57,7 +57,6 @@ public class PostService {
                 for (Comment comment : commentList) {
                     commentResponseDtoList.add(new CommentResponseDto(comment));
                 }
-
                 Category category = categoryRepository.findByPostId(post.getId());
                 if(category!=null){
                     postResponseDtoList.add(new PostResponseDto(category, like, disLike, commentResponseDtoList));
@@ -101,13 +100,13 @@ public class PostService {
     @Transactional
     public String deletePost(Long postId, User user) {
         Post post = postRepository.findByUserIdAndId(user.getId(), postId);
-        if(!(user.getId().equals(post.getUser().getId()))){
-            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
-        }
+//        if(!(user.getId().equals(post.getUser().getId()))){
+//            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
+//        }
         Category category = categoryRepository.findByPostId(post.getId());
         Likes likes = likeRepository.findByPostIdAndUserId(post.getId(), user.getId());
 
-//        amazonS3.deleteObject(bucket, post.getFileName());   //s3에 올라간 데이터 삭제
+//        amazonS3.deleteObject(bucket, post.getS3Url());   //s3에 올라간 데이터 삭제
 
         categoryRepository.delete(category);
         postRepository.delete(post);
