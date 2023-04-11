@@ -27,7 +27,7 @@ public class PostController {
 
     @Operation(summary = "uploadPost", description = "게시글 작성 + S3이미지 업로드")
     @PostMapping("/posts")
-    public ResponseEntity<ResponseMessage<String>> uploadPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    public ResponseEntity<ResponseMessage<String>> uploadPost(PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         String url = s3Service.uploadFile(postRequestDto.getFile());  //s3에 업로드를 먼저하고 url로 저장하는듯?
         postRequestDto.setS3Url(url);
         postService.createPost(postRequestDto, userDetails.getUser());

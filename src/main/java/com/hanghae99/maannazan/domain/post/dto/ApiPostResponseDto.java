@@ -31,6 +31,8 @@ public class ApiPostResponseDto {
 
     private Long apiId;
 
+    private String placeName;
+
 
     public ApiPostResponseDto(Post post) {
         this.id = post.getId();
@@ -40,6 +42,7 @@ public class ApiPostResponseDto {
         this.nickname = post.getUser().getNickName();
         this.modifiedAt = post.getModifiedAt();
         this.apiId = post.getApiId();
+        this.placeName = post.getPlaceName();
         this.s3Url = post.getS3Url();
     }
 }
