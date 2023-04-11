@@ -31,6 +31,9 @@ public class Post extends Timestamped {
 
     private Long apiId;
 
+    private String placeName;
+
+
 
     // 게시글에 위도 경도가 있어야하는게 좀 이상한것 같다  위치나 술집에 대한 table 있어야 할듯.
     //  ManyToOne으로 술집 공공데이터에 연결하는 방법 찾아봐야할듯
@@ -50,6 +53,7 @@ public class Post extends Timestamped {
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
         this.apiId = postRequestDto.getApiId();
+        this.placeName = postRequestDto.getPlaceName();
     }
 
     public void update(PostRequestDto postRequestDto, User user) {
@@ -59,7 +63,6 @@ public class Post extends Timestamped {
         this.s3Url = postRequestDto.getS3Url();
         this.user = user;
         this.fileName = postRequestDto.getFileName();
-
     }
 
 
@@ -69,7 +72,6 @@ public class Post extends Timestamped {
         this.description = postRequestDto.getDescription();
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
-
     }
 
 

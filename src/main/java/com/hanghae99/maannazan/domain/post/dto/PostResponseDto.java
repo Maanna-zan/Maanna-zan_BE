@@ -40,6 +40,9 @@ public class PostResponseDto {
 
     private Long apiId;
 
+    private String placeName;
+
+
     public PostResponseDto(Category category,boolean like, List<CommentResponseDto> commentResponseDtoList) {   // 게시물 하나 조회
         this.id = category.getPost().getId();
         this.storename = category.getPost().getStorename();
@@ -54,6 +57,7 @@ public class PostResponseDto {
         this.like = like;
         this.commentList = commentResponseDtoList;
         this.apiId = category.getPost().getApiId();
+        this.placeName = category.getPost().getPlaceName();
         }
 
     public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
@@ -68,6 +72,7 @@ public class PostResponseDto {
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
         this.apiId = post.getApiId();
+        this.placeName = post.getPlaceName();
     }
 
 
