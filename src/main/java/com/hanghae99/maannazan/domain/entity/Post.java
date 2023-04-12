@@ -29,7 +29,7 @@ public class Post extends Timestamped {
 
     private String fileName;
 
-    private Long apiId;
+    private String apiId;
 
     private String placeName;
 
@@ -40,6 +40,10 @@ public class Post extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
+    @JoinColumn(name = "KAKAO_ID")
+    @ManyToOne
+    private Kakao kakao;
 
 
 
@@ -53,7 +57,6 @@ public class Post extends Timestamped {
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
         this.apiId = postRequestDto.getApiId();
-        this.placeName = postRequestDto.getPlaceName();
     }
 
     public void update(PostRequestDto postRequestDto, User user) {
@@ -63,6 +66,8 @@ public class Post extends Timestamped {
         this.s3Url = postRequestDto.getS3Url();
         this.user = user;
         this.fileName = postRequestDto.getFileName();
+        this.apiId = postRequestDto.getApiId();
+
     }
 
 
@@ -72,6 +77,8 @@ public class Post extends Timestamped {
         this.description = postRequestDto.getDescription();
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
+        this.apiId = postRequestDto.getApiId();
+
     }
 
 

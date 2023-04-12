@@ -51,9 +51,9 @@ public class WebSecurityConfig {
                 .antMatchers("/kakaoApi").permitAll()
                 .antMatchers("/find").permitAll()
                 .antMatchers("/find/**").permitAll()
+                .antMatchers("/alkol").permitAll()
                 .antMatchers(HttpMethod.GET, "/posts/**").permitAll()
-                .antMatchers("/swagger-ui/index.html").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()// Swagger 리소스에 대한 접근 허용
 
 
                 .anyRequest().authenticated()
