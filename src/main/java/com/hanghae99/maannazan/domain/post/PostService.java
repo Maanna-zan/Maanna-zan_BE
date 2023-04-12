@@ -49,20 +49,24 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         for (Post post : posts) {
+            List<Comment> commentList = commentRepository.findByPost(post);
+            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+            Category category = categoryRepository.findByPostId(post.getId());
             if(user!=null) {
                 boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
-                List<Comment> commentList = commentRepository.findByPost(post);
-                List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
                 for (Comment comment : commentList) {
                     commentResponseDtoList.add(new CommentResponseDto(comment));
                 }
-
-                Category category = categoryRepository.findByPostId(post.getId());
                 if(category!=null){
                     postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList));
                 } else {
                     postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList));
                 }
+            }
+            if(category!=null){
+                postResponseDtoList.add(new PostResponseDto(category,commentResponseDtoList));
+            } else {
+                postResponseDtoList.add(new PostResponseDto(post,commentResponseDtoList));
             }
         } return postResponseDtoList;
     }

@@ -40,6 +40,9 @@ public class PostResponseDto {
 
     private Long apiId;
 
+    private String placeName;
+
+
     public PostResponseDto(Category category,boolean like, List<CommentResponseDto> commentResponseDtoList) {   // 게시물 하나 조회
         this.id = category.getPost().getId();
         this.storename = category.getPost().getStorename();
@@ -54,6 +57,7 @@ public class PostResponseDto {
         this.like = like;
         this.commentList = commentResponseDtoList;
         this.apiId = category.getPost().getApiId();
+        this.placeName = category.getPost().getPlaceName();
         }
 
     public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
@@ -68,7 +72,34 @@ public class PostResponseDto {
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
         this.apiId = post.getApiId();
+        this.placeName = post.getPlaceName();
     }
+    public PostResponseDto(Category category, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
+        this.id = category.getPost().getId();
+        this.storename = category.getPost().getStorename();
+        this.title = category.getPost().getTitle();
+        this.description = category.getPost().getDescription();
+        this.likecnt = category.getPost().getLikecnt();
+        this.nickname = category.getPost().getUser().getNickName();
+        this.modifiedAt = category.getPost().getModifiedAt();
+        this.s3Url = category.getPost().getS3Url();
+        this.commentList = commentResponseDtoList;
+        this.apiId = category.getPost().getApiId();
+        this.placeName = category.getPost().getPlaceName();
+    }public PostResponseDto(Post post, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
+        this.id = post.getId();
+        this.storename = post.getStorename();
+        this.title = post.getTitle();
+        this.description = post.getDescription();
+        this.likecnt = post.getLikecnt();
+        this.nickname = post.getUser().getNickName();
+        this.modifiedAt = post.getModifiedAt();
+        this.s3Url = post.getS3Url();
+        this.commentList = commentResponseDtoList;
+        this.apiId = post.getApiId();
+        this.placeName = post.getPlaceName();
+    }
+
 
 
 }
