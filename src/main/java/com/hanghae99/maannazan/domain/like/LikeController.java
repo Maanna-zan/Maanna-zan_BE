@@ -21,9 +21,9 @@ public class LikeController {
     public ResponseEntity<ResponseMessage<String>> like(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseMessage.SuccessResponse("클릭 성공",likeService.like(postId, userDetails.getUser()));
     }
-    @Operation(summary = "commentLike", description = "댓글 좋아요 토글")
-    @PutMapping("/comments/like/{commentId}")
-    public ResponseEntity<ResponseMessage<String>> commentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseMessage.SuccessResponse("클릭 성공",likeService.commentLike(commentId, userDetails.getUser()));
-    }
+//    @Operation(summary = "commentLike", description = "댓글 좋아요 토글")
+//    @PutMapping("/comments/like/{commentId}")
+//    public ResponseEntity<ResponseMessage<String>> commentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        return ResponseMessage.SuccessResponse("클릭 성공",likeService.commentLike(commentId, userDetails.getUser()));
+//    }
 }

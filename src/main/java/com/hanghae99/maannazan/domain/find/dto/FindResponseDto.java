@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class FindResponseDto {
-    private double midPointX;
-    private double midPointY;
+    private double lat;
+    private double lng;
 
-    public FindResponseDto(double midPointX, double midPointY) {
-        this.midPointX = midPointX;
-        this.midPointY = midPointY;
+    public FindResponseDto(double lat, double lng) {
+        this.lat = lat;
+        this.lng = lng;
     }
 }
