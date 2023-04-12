@@ -31,6 +31,7 @@ public class User {
 
     private String password;
 
+    private String profile_image;
 
     private String birth;
 
@@ -41,6 +42,14 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.birth = birth;
+    }
+
+    public User(String nickName,Long kakaoId, String password, String email, String profile_image){
+        this.nickName = nickName;
+        this.kakaoId = kakaoId;
+        this.password = password;
+        this.email = email;
+        this.profile_image= profile_image;
     }
 
     public void update(String str, String email) {

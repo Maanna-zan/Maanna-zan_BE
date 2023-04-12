@@ -23,7 +23,6 @@ public class KakaoApi {
     private PostService postService;
 
 
-
     @GetMapping("/kakaoApi")
     public Map callApi(
             @RequestParam(required = false) String y,

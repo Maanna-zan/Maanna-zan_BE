@@ -8,9 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
 import com.hanghae99.maannazan.global.jwt.JwtUtil;
+import com.hanghae99.maannazan.global.jwt.TokenDto;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,35 +34,38 @@ import java.util.UUID;
 public class KakaoService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
-    public String kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
+    public String[] kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
-        String accessToken = getToken(code);
+        String[] token = getToken(code);
 
         // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
-        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
+        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(token[0]);
 
         // 3. 필요시에 회원가입
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-        String createToken =  jwtUtil.createToken(kakaoUser.getNickName(), "Access");
-        response.addHeader("Access_Token", createToken);
-
-        return createToken;
+        String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+        String refreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
+        response.addHeader("Authorization", createToken);
+        response.addHeader("RefreshToken", refreshToken);
+        return new String[] {createToken, refreshToken};
     }
     // 1. "인가 코드"로 "액세스 토큰" 요청
-    private String getToken(String code) throws JsonProcessingException {
+    private String[] getToken(String code) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
+
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "be4ee63d708fcb09d6d2eebb9607c489");
-        body.add("redirect_uri", "http://cloneburgerking.s3-website.ap-northeast-2.amazonaws.com/OAuth/Kakao");
+        body.add("client_id", "88832d163b34d11f1659cc1e290ba326");
+        body.add("redirect_uri", "http://localhost:8080/OAuth/Kakao");
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -77,17 +83,23 @@ public class KakaoService {
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
-        return jsonNode.get("access_token").asText();
+        String accessToken = jsonNode.get("access_token").asText();
+        String refreshToken = jsonNode.get("refresh_token").asText();
+        return new String[] {accessToken, refreshToken};
     }
     // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
     private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("Authorization",  "Bearer " + accessToken);
+
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // HTTP 요청 보내기
-        HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(headers);
+        MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+        requestBody.add("property_keys", "[\"kakao_account.email\", \"properties.nickname\", \"properties.profile_image\"]");
+
+        HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(requestBody, headers);
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> response = rt.exchange(
                 "https://kapi.kakao.com/v2/user/me",
@@ -104,9 +116,11 @@ public class KakaoService {
                 .get("nickname").asText();
         String email = jsonNode.get("kakao_account")
                 .get("email").asText();
+        String profile_image = jsonNode.get("properties")
+                .get("profile_image").asText();
 
-        log.info("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
-        return new KakaoUserInfoDto(id, nickname, email);
+        log.info("카카오 사용자 정보: " + id + ", " + nickname + ", " + email+", "+profile_image);
+        return new KakaoUserInfoDto(id, nickname, email, profile_image);
     }
     // 3. 필요시에 회원가입
     private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
@@ -132,11 +146,64 @@ public class KakaoService {
                 // email: kakao email
                 String email = kakaoUserInfo.getEmail();
 
-                kakaoUser = new User(kakaoUserInfo.getNickname(), kakaoUserInfo.getNickname(),kakaoId, encodedPassword, email);
+                kakaoUser = new User(kakaoUserInfo.getNickName(),kakaoId, encodedPassword, email, kakaoUserInfo.getProfile_image());
             }
 
             userRepository.save(kakaoUser);
         }
         return kakaoUser;
     }
+
+    public String[] getRefresh(String refreshToken, HttpServletResponse response) throws JsonProcessingException {
+        // 1. "인가 코드"로 "액세스 토큰" 요청
+        String[] tokens = getNewAccessToken(refreshToken);
+
+        // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
+        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(tokens[0]);
+
+        // 3. 필요시에 회원가입
+        User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
+
+        // 4. JWT 토큰 반환
+        String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+        String newrefreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
+
+
+        response.addHeader("Authorization", createToken);
+        response.addHeader("RefreshToken", newrefreshToken);
+        return new String[] {createToken, refreshToken};
+    }
+
+    private String[] getNewAccessToken(String refreshToken) throws JsonProcessingException {
+        // HTTP Header 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        // HTTP Body 생성
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "refresh_token");
+        body.add("client_id", "88832d163b34d11f1659cc1e290ba326");
+        body.add("refresh_token", refreshToken);
+
+        // HTTP 요청 보내기
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
+        RestTemplate rt = new RestTemplate();
+        ResponseEntity<String> response = rt.exchange(
+                "https://kauth.kakao.com/oauth/token",
+                HttpMethod.POST,
+                kakaoTokenRequest,
+                String.class
+        );
+
+        // HTTP 응답 (JSON) -> 새로운 액세스 토큰 파싱
+        String responseBody = response.getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(responseBody);
+        String newAccessToken = jsonNode.get("access_token").asText();
+        String newRefreshToken = jsonNode.get("refresh_token").asText();
+
+        return new String[] {newAccessToken, newRefreshToken};
+    }
+
+
 }

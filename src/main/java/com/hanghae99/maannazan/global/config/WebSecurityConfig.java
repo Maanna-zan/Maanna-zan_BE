@@ -34,7 +34,7 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         // h2-console 사용 및 resources 접근 허용 설정
         return (web) -> web.ignoring()
-//                .requestMatchers(PathRequest.toH2Console())
+                .requestMatchers(PathRequest.toH2Console())
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
@@ -51,6 +51,9 @@ public class WebSecurityConfig {
                 .antMatchers("/kakaoApi").permitAll()
                 .antMatchers("/find").permitAll()
                 .antMatchers("/find/**").permitAll()
+                .antMatchers("/login-page").permitAll()
+                .antMatchers("/OAuth/Kakao/**").permitAll()
+                .antMatchers("/home").permitAll()
                 .antMatchers(HttpMethod.GET, "/posts/**").permitAll()
                 .antMatchers("/swagger-ui/index.html").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
