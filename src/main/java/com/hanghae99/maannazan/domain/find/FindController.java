@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Find", description = "위치조회 API")
 @RestController
-@RequestMapping("/api")
 @RequiredArgsConstructor
 public class FindController {
 

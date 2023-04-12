@@ -37,6 +37,7 @@ public class PostResponseDto {
     private String s3Url;
     private List<CommentResponseDto> commentList = new ArrayList<>();
     private boolean like;
+    private int viewCount;
 
 
 
@@ -52,8 +53,10 @@ public class PostResponseDto {
         this.soju = category.isSoju();
         this.beer = category.isBeer();
         this.s3Url = category.getPost().getS3Url();
+        this.viewCount = category.getPost().getViewCount();
         this.like = like;
         this.commentList = commentResponseDtoList;
+
         }
 
     public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
@@ -67,6 +70,7 @@ public class PostResponseDto {
         this.like = like;
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
+        this.viewCount = post.getViewCount();
     }
     public PostResponseDto(Category category, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = category.getPost().getId();
@@ -78,7 +82,7 @@ public class PostResponseDto {
         this.modifiedAt = category.getPost().getModifiedAt();
         this.s3Url = category.getPost().getS3Url();
         this.commentList = commentResponseDtoList;
-
+        this.viewCount = category.getPost().getViewCount();
     }
     public PostResponseDto(Post post, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
@@ -90,6 +94,8 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
+        this.viewCount = post.getViewCount();
+
     }
 
     public PostResponseDto(Post post){

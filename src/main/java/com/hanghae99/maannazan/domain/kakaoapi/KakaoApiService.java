@@ -55,6 +55,7 @@ public class KakaoApiService {
         kakaoApiRepository.saveAll(kakaos);
     }
 
+
     //술집 리스트
     public List<KakaoResponseDto> getAlkol(String apiId, User user) {
         List<Kakao> kakaos = kakaoApiRepository.findAllByApiId(apiId);

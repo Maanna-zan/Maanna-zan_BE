@@ -33,6 +33,8 @@ public class Post extends Timestamped {
 
     private String placeName;
 
+    private int viewCount;
+
 
 
     // 게시글에 위도 경도가 있어야하는게 좀 이상한것 같다  위치나 술집에 대한 table 있어야 할듯.
@@ -81,10 +83,12 @@ public class Post extends Timestamped {
 
     }
 
-
     public void likeCount(int plusOrMinus) {  //좋아요 개수
         this.likecnt = plusOrMinus;
     }
 
+    public void viewCount(int plusCount) {  //좋아요 개수
+        this.viewCount = plusCount;
+    }
 
 }

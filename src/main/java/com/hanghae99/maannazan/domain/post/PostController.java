@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @Tag(name = "Post", description = "게시글 관련 API")
@@ -27,7 +28,8 @@ public class PostController {
     @Operation(summary = "uploadPost", description = "게시글 작성 + S3이미지 업로드")
     @PostMapping("/posts")
     public ResponseEntity<ResponseMessage<String>> uploadPost(PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        String url = s3Service.uploadFile(postRequestDto.getFile());  //s3에 업로드를 먼저하고 url로 저장하는듯?
+//        String fileName = postRequestDto.getFile().getOriginalFilename();
+        String url = s3Service.uploadFile(postRequestDto.getFile());
         postRequestDto.setS3Url(url);
         postService.createPost(postRequestDto, userDetails.getUser());
         return  ResponseMessage.SuccessResponse("게시물 작성 성공","");
@@ -66,7 +68,7 @@ public class PostController {
     // 게시글 삭제
     @Operation(summary = "deletePost", description = "게시글 삭제")
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<ResponseMessage<String>> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<ResponseMessage<String>> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) throws UnsupportedEncodingException {
         return  ResponseMessage.SuccessResponse("게시글 삭제 완료",postService.deletePost(postId, userDetails.getUser()));
 
     }
