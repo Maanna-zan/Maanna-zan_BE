@@ -1,13 +1,10 @@
 package com.hanghae99.maannazan.domain.post;
 
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
 import com.hanghae99.maannazan.domain.entity.*;
 
-import com.hanghae99.maannazan.domain.post.dto.ApiPostResponseDto;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.domain.repository.*;
@@ -62,11 +59,12 @@ public class PostService {
                 } else {
                     postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList));
                 }
-            }
-            if(category!=null){
-                postResponseDtoList.add(new PostResponseDto(category,commentResponseDtoList));
-            } else {
-                postResponseDtoList.add(new PostResponseDto(post,commentResponseDtoList));
+            }else {
+                if (category != null) {
+                    postResponseDtoList.add(new PostResponseDto(category, commentResponseDtoList));
+                } else {
+                    postResponseDtoList.add(new PostResponseDto(post, commentResponseDtoList));
+                }
             }
         } return postResponseDtoList;
     }
@@ -118,14 +116,5 @@ public class PostService {
 
     }
 
-// 술집 리스트 조회
-    @Transactional(readOnly = true)
-    public List<ApiPostResponseDto> getPostApi(Long apiId) {
-        List<Post> posts = postRepository.findByApiId(apiId);
-        List<ApiPostResponseDto> postResponseDtoList = new ArrayList<>();
-        for (Post post : posts) {
-            postResponseDtoList.add(new ApiPostResponseDto(post));
-        }return postResponseDtoList;
-    }
 
 }

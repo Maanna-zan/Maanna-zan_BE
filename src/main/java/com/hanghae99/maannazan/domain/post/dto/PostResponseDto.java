@@ -1,9 +1,9 @@
 package com.hanghae99.maannazan.domain.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hanghae99.maannazan.domain.comment.dto.CommentRequestDto;
 import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
-import com.hanghae99.maannazan.domain.entity.*;
+import com.hanghae99.maannazan.domain.entity.Category;
+import com.hanghae99.maannazan.domain.entity.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,9 +38,7 @@ public class PostResponseDto {
     private List<CommentResponseDto> commentList = new ArrayList<>();
     private boolean like;
 
-    private Long apiId;
 
-    private String placeName;
 
 
     public PostResponseDto(Category category,boolean like, List<CommentResponseDto> commentResponseDtoList) {   // 게시물 하나 조회
@@ -56,8 +54,6 @@ public class PostResponseDto {
         this.s3Url = category.getPost().getS3Url();
         this.like = like;
         this.commentList = commentResponseDtoList;
-        this.apiId = category.getPost().getApiId();
-        this.placeName = category.getPost().getPlaceName();
         }
 
     public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
@@ -71,8 +67,6 @@ public class PostResponseDto {
         this.like = like;
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
-        this.apiId = post.getApiId();
-        this.placeName = post.getPlaceName();
     }
     public PostResponseDto(Category category, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = category.getPost().getId();
@@ -84,9 +78,9 @@ public class PostResponseDto {
         this.modifiedAt = category.getPost().getModifiedAt();
         this.s3Url = category.getPost().getS3Url();
         this.commentList = commentResponseDtoList;
-        this.apiId = category.getPost().getApiId();
-        this.placeName = category.getPost().getPlaceName();
-    }public PostResponseDto(Post post, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
+
+    }
+    public PostResponseDto(Post post, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
         this.storename = post.getStorename();
         this.title = post.getTitle();
@@ -96,8 +90,29 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
-        this.apiId = post.getApiId();
-        this.placeName = post.getPlaceName();
+    }
+
+    public PostResponseDto(Post post){
+        this.id = post.getId();
+        this.storename = post.getStorename();
+        this.title = post.getTitle();
+        this.description = post.getDescription();
+        this.likecnt = post.getLikecnt();
+        this.nickname = post.getUser().getNickName();
+        this.modifiedAt = post.getModifiedAt();
+        this.s3Url = post.getS3Url();
+    }
+    public PostResponseDto(Post post, boolean like){
+        this.id = post.getId();
+        this.storename = post.getStorename();
+        this.title = post.getTitle();
+        this.description = post.getDescription();
+        this.likecnt = post.getLikecnt();
+        this.nickname = post.getUser().getNickName();
+        this.modifiedAt = post.getModifiedAt();
+        this.s3Url = post.getS3Url();
+        this.likecnt = post.getLikecnt();
+        this.like = like;
     }
 
 

@@ -1,7 +1,6 @@
 package com.hanghae99.maannazan.domain.post;
 
 import com.hanghae99.maannazan.domain.file.S3Service;
-import com.hanghae99.maannazan.domain.post.dto.ApiPostResponseDto;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
@@ -55,12 +54,6 @@ public class PostController {
             return  ResponseMessage.SuccessResponse("단일 게시글 조회 성공", postService.getPostOne(postId, userDetails.getUser()));
         }
 
-    //술집 게시글 조회
-    @Operation(summary = "getPostApi", description = "술집 게시글 조회")
-    @GetMapping("/posts/api")
-    public List<ApiPostResponseDto> getPostApi(@RequestParam Long apiId){
-            return  postService.getPostApi(apiId);
-    }
 
     // 게시글 수정
     @Operation(summary = "updatePost", description = "게시글 업데이트")

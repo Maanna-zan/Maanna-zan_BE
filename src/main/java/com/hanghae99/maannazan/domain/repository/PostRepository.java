@@ -1,5 +1,6 @@
 package com.hanghae99.maannazan.domain.repository;
 
+import com.hanghae99.maannazan.domain.entity.Kakao;
 import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +16,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUserOrderByCreatedAtDesc(User user);
 
 
-    List<Post> findByApiId(Long apiId);
+
+    List<Post> findByApiId(String apiId);
 }
