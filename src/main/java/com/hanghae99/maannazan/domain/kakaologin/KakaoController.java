@@ -6,12 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @Validated
@@ -22,39 +23,30 @@ public class KakaoController {
 
 
     @GetMapping("/OAuth/Kakao")
-    public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    public String kakaoLogin(@RequestParam String code, HttpSession session) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
-        String[] Tokens = kakaoService.kakaoLogin(code, response);
+        String[] tokens = kakaoService.kakaoLogin(code, session);
 
-        // Cookie 생성 및 직접 브라우저에 Set
-        Cookie accessCookie = new Cookie("Authorization", Tokens[0].substring(7));
-        Cookie refreshCookie = new Cookie("RefreshToken", Tokens[1]);
-
-        accessCookie.setPath("/");
-        refreshCookie.setPath("/");
-
-        response.addCookie(accessCookie);
-        response.addCookie(refreshCookie);
+        // 세션에 액세스 토큰과 리프레시 토큰 저장
+        session.setAttribute("accessToken", tokens[0]);
+        session.setAttribute("refreshToken", tokens[1]);
 
         return "home";
     }
 
-    @GetMapping("/OAuth/Kakao")
-    public String getRefresh(@RequestParam String refreshToken, HttpServletResponse response) throws JsonProcessingException {
-        // code: 카카오 서버로부터 받은 인가 코드
-        String[] Tokens = kakaoService.getRefresh(refreshToken, response);
+    @PostMapping("/OAuth/Kakao")
+    public String getRefresh(HttpSession session) throws JsonProcessingException {
 
-        // Cookie 생성 및 직접 브라우저에 Set
-        Cookie accessCookie = new Cookie("Authorization", Tokens[0].substring(7));
-        Cookie refreshCookie = new Cookie("RefreshToken", Tokens[1]);
+        String refreshToken = (String) session.getAttribute("refreshToken");
 
-        accessCookie.setPath("/");
-        refreshCookie.setPath("/");
+        String[] Tokens = kakaoService.getRefresh(refreshToken, session);
 
-        response.addCookie(accessCookie);
-        response.addCookie(refreshCookie);
+
+        session.setAttribute("accessToken", Tokens[0]);
+        session.setAttribute("refreshToken", Tokens[1]);
 
         return "home";
+
     }
 
         @GetMapping("/home")
