@@ -7,83 +7,84 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
-import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class S3Service {    //FIXME  S3버킷에 object를 업로드 하는 Service
-                            //FIXME Controller에서 전달받은 MultipartFile을 형식에 맞춰 S3 업로드 해주면 됨.
+    //FIXME Controller에서 전달받은 MultipartFile을 형식에 맞춰 S3 업로드 해주면 됨.
 
 
-        @Value("${cloud.aws.s3.bucket}")
-        //sanha--test
-        private String bucket;
-        private final AmazonS3 amazonS3;
+    @Value("${cloud.aws.s3.bucket}")
+    //sanha--test
+    private String bucket;
+    private final AmazonS3 amazonS3;
 
 
-        public String uploadFile(MultipartFile multipartFile) throws IOException {
-            if (multipartFile == null) {
-                return null;
-            } else {
-                String fileName = multipartFile.getOriginalFilename();
+    public String uploadFile(MultipartFile multipartFile) throws IOException {
+        if (multipartFile == null) {
+            return null;
+        } else {
+            String now = LocalDateTime.now().toString();
+            String fileName =  now + "_" +multipartFile.getOriginalFilename();
 
-                //파일 형식 구하기
-                String ext = fileName.split("\\.")[1];
-                String contentType = "";
+            //파일 형식 구하기
+            String ext = fileName.split("\\.")[1];
+            String contentType = "";
 
-                //content type을 지정해서 올려주지 않으면 자동으로 "application/octet-stream"으로 고정이 되서 링크 클릭시 웹에서 열리는게 아니라 자동 다운이 시작됨.
-                switch (ext) {
-                    case "jpeg":
-                        contentType = "image/jpeg";
-                        break;
-                    case "png":
-                        contentType = "image/png";
-                        break;
-                    case "txt":
-                        contentType = "text/plain";
-                        break;
-                    case "csv":
-                        contentType = "text/csv";
-                        break;
+            //content type을 지정해서 올려주지 않으면 자동으로 "application/octet-stream"으로 고정이 되서 링크 클릭시 웹에서 열리는게 아니라 자동 다운이 시작됨.
+            switch (ext) {
+                case "jpeg":
+                    contentType = "image/jpeg";
+                    break;
+                case "png":
+                    contentType = "image/png";
+                    break;
+                case "txt":
+                    contentType = "text/plain";
+                    break;
+                case "csv":
+                    contentType = "text/csv";
+                    break;
 
-                } 
+            }
 
-                try {
-                    ObjectMetadata metadata = new ObjectMetadata();
-                    metadata.setContentType(contentType);
+            try {
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentType(contentType);
 
-                    amazonS3.putObject(new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), metadata));
+                amazonS3.putObject(new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), metadata));
 //                        .withCannedAcl(CannedAccessControlList.PublicRead));    //
-                } catch (AmazonServiceException e) {
-                    e.printStackTrace();
-                } catch (SdkClientException e) {
-                    e.printStackTrace();
-                }
-
-
-                //object 정보 가져오기
-                ListObjectsV2Result listObjectsV2Result = amazonS3.listObjectsV2(bucket);
-                List<S3ObjectSummary> objectSummaries = listObjectsV2Result.getObjectSummaries();
-
-                for (S3ObjectSummary object : objectSummaries) {
-                    System.out.println("object = " + object.toString());
-                }
-                return amazonS3.getUrl(bucket, fileName).toString();
+            } catch (AmazonServiceException e) {
+                e.printStackTrace();
+            } catch (SdkClientException e) {
+                e.printStackTrace();
             }
 
 
+            //object 정보 가져오기
+            ListObjectsV2Result listObjectsV2Result = amazonS3.listObjectsV2(bucket);
+            List<S3ObjectSummary> objectSummaries = listObjectsV2Result.getObjectSummaries();
+
+            for (S3ObjectSummary object : objectSummaries) {
+                System.out.println("object = " + object.toString());
+            }
+            return amazonS3.getUrl(bucket, fileName).toString();
         }
 
+
     }
+
+}
 
 
 

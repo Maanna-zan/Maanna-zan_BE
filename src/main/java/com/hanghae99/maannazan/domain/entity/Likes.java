@@ -29,10 +29,10 @@ public class Likes {
         this.post= post;
     }
 
-    public Likes(Comment comment, User user) {
-        this.user= user;
-        this.comment= comment;
-    }
+//    public Likes(Comment comment, User user) {
+//        this.user= user;
+//        this.comment= comment;
+//    }
 
 }
 

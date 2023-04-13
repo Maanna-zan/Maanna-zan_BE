@@ -16,13 +16,12 @@ public class PostRequestDto {
     private String description;
     private boolean soju;
     private boolean beer;
-
     private String fileTitle;
     private String s3Url;
     private MultipartFile file;
     private String fileName;  //이걸로 수정 삭제
 
-    private Long apiId;
+    private String apiId;
 
     private String placeName;
 
