@@ -2,15 +2,20 @@ package com.hanghae99.maannazan.domain.find;
 
 
 
+import com.hanghae99.maannazan.domain.entity.Station;
 import com.hanghae99.maannazan.domain.find.dto.FindRequestDto;
 import com.hanghae99.maannazan.domain.find.dto.FindResponseDto;
+import com.hanghae99.maannazan.domain.repository.StationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class FindService {
+    private final StationRepository stationRepository;
 
 @Transactional
 //    public FindResponseDto getCenterPlace(double x,double y,double x2,double y2,double x3,double y3,double x4,double y4) {
@@ -24,20 +29,52 @@ public class FindService {
         double x4 = findRequestDto.getX4(); // 네번째 사람
         double y4 = findRequestDto.getY4();
 
+        List<Station> StationList = stationRepository.findAll();
+        Station nearestStation = null;
+        double shortestDistance = Double.MAX_VALUE;
+
 
         if(x==0.0 || x2==0.0){
-            throw new NullPointerException("한명 이상 검색해주세요");
+            throw new NullPointerException("두명 이상 검색해주세요");
         }
         //몇명인지 구분하고 중간 위치 구해서 db에 저장하고 가까운 지하철역 찾아주는 쿼리문
         if(x3 == 0.0 && x4 == 0.0){   //두명일 때 공식
-            double midPointX = Math.round((x + x2) / 2);
-            double midPointY = ((y + y2) / 2);
+            double midPointX = (x + x2) / 2;
+            double midPointY = (y + y2) / 2;
+            //
+            for (Station station : StationList) {
+                double stationLatitude = Double.parseDouble(station.getX());
+                double stationLongitude = Double.parseDouble(station.getY());
+                double distance = Math.sqrt(Math.pow(midPointX - stationLatitude, 2) + Math.pow(midPointY - stationLongitude, 2));
+                // ((중간x좌표 - 지하철역x값 의 )2제곱  +  (중간y좌표 - 지하철역y값 의 )2제곱) 의 제곱근
+                if (distance < shortestDistance) {
+                    shortestDistance = distance;
+                    nearestStation = station;
+                }
+            }
+            midPointX = Double.parseDouble(nearestStation.getX());
+            midPointY = Double.parseDouble(nearestStation.getY());
+            //
+            return new FindResponseDto(midPointX,midPointY);
 
 
-            return new FindResponseDto(midPointX, midPointY);
-        } else if(x4 == 0.0 && y4 == 1.0){        //세명일 때 공식
-            double midPointX = ((x + x2 + x3) / 3);
-            double midPointY = ((y + y2 + y3) / 3);
+        } else if(x4 == 0.0 && y4 == 0.0){        //세명일 때 공식
+            double midPointX = (x + x2 + x3) / 3;
+            double midPointY = (y + y2 + y3) / 3;
+
+            for (Station station : StationList) {
+                double stationLatitude = Double.parseDouble(station.getX());
+                double stationLongitude = Double.parseDouble(station.getY());
+                double distance = Math.sqrt(Math.pow(midPointX - stationLatitude, 2) + Math.pow(midPointY - stationLongitude, 2));
+                // ((중간x좌표 - 지하철역x값 의 )2제곱  +  (중간y좌표 - 지하철역y값 의 )2제곱) 의 제곱근
+                if (distance < shortestDistance) {
+                    shortestDistance = distance;
+                    nearestStation = station;
+                }
+            }
+            midPointX = Double.parseDouble(nearestStation.getX());
+            midPointY = Double.parseDouble(nearestStation.getY());
+
             return new FindResponseDto(midPointX, midPointY);
         }else{                    //네명일 때 공식    //FIXME   chatGpt 안썼습니다~     주멘 지분 3%
             x = (x+x2+x3)/3;
@@ -142,36 +179,43 @@ public class FindService {
             System.out.println(midPointX);
             System.out.println(midPointY);
 
-            return new FindResponseDto(midPointX, midPointY);
+            
 
+
+            for (Station station : StationList) {
+                double stationLatitude = Double.parseDouble(station.getX());
+                double stationLongitude = Double.parseDouble(station.getY());
+                double distance = Math.sqrt(Math.pow(midPointX - stationLatitude, 2) + Math.pow(midPointY - stationLongitude, 2));
+                // ((중간x좌표 - 지하철역x값 의 )2제곱  +  (중간y좌표 - 지하철역y값 의 )2제곱) 의 제곱근
+                if (distance < shortestDistance) {
+                    shortestDistance = distance;
+                    nearestStation = station;
+                }
+            }
+            midPointX = Double.parseDouble(nearestStation.getX());
+            midPointY = Double.parseDouble(nearestStation.getY());
+
+            return new FindResponseDto(midPointX,midPointY);
+            }
 
         }
     }
-}
 
 
 
 
-//import org.springframework.beans.factory.annotation.Autowired;
-//        import org.springframework.stereotype.Service;
-//
-//        import java.util.List;
-//
-//@Service
-//public class SubwayStationService {
-//    @Autowired
-//    private SubwayStationRepository subwayStationRepository;
-//
-//    public SubwayStation findNearestSubwayStation(double latitude, double longitude) {
-//        List<SubwayStation> subwayStations = subwayStationRepository.findAll();
-//        SubwayStation nearestStation = null;
+
+
+//    public SubwayStation findNearestSubwayStation(double midPointX, double midPointY) {
+//        List<Station> StationList = stationRepository.findAll();
+//        Station nearestStation = null;
 //        double shortestDistance = Double.MAX_VALUE;
 //
-//        for (SubwayStation station : subwayStations) {
-//            double stationLatitude = station.getLatitude();
-//            double stationLongitude = station.getLongitude();
-//            double distance = Math.sqrt(Math.pow(latitude - stationLatitude, 2) + Math.pow(longitude - stationLongitude, 2));
-//
+//        for (Station station : StationList) {
+//            double stationLatitude = Double.parseDouble(station.getX());
+//            double stationLongitude = Double.parseDouble(station.getY());
+//            double distance = Math.sqrt(Math.pow(midPointX - stationLatitude, 2) + Math.pow(midPointY - stationLongitude, 2));
+//            // ((중간x좌표 - 지하철역x값 의 )2제곱  +  (중간y좌표 - 지하철역y값 의 )2제곱) 의 제곱근
 //            if (distance < shortestDistance) {
 //                shortestDistance = distance;
 //                nearestStation = station;
@@ -180,5 +224,5 @@ public class FindService {
 //
 //        return nearestStation;
 //    }
-//}
+
 

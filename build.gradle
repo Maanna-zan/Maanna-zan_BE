@@ -46,10 +46,12 @@ dependencies {
 
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.11.983'
 
-
 	//그라파나
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
+
+	//공공데이터
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
 }
 
 //tasks.named('test') {

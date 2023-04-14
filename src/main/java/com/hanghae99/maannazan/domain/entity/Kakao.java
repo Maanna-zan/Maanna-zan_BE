@@ -40,9 +40,16 @@ public class Kakao {
 
     private String y;
 
+    private int roomLikecnt;
 
+    private int roomViewCount;
 
+    
+    public void roomViewCount(int plusCount) {  //조회수
+        this.roomViewCount = plusCount;
+    }
 
-
-
+    public void likeCount(int plusOrMinus) {  // 좋아요 count
+        this.roomLikecnt = plusOrMinus;
+    }
 }

@@ -59,7 +59,6 @@ public class PostService {
                 }
                 if(category!=null){
                     postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList));
-
                 } else {
                     postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList));
                 }
@@ -71,7 +70,6 @@ public class PostService {
                     postResponseDtoList.add(new PostResponseDto(post,commentResponseDtoList));
                 }
             }
-
         }  return postResponseDtoList;
     }
 
