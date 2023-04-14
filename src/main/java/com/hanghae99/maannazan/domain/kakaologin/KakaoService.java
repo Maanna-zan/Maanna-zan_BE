@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.hanghae99.maannazan.domain.entity.RefreshToken;
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
@@ -27,6 +28,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -41,7 +43,7 @@ public class KakaoService {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String client_key;
 
-    public String[] kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
+    public void kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String[] token = getToken(code);
 
@@ -52,12 +54,26 @@ public class KakaoService {
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-        String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+        /*String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
         String refreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
         response.setHeader("Authorization", createToken);
-        response.setHeader("refreshToken", refreshToken);
+        response.setHeader("refreshToken", refreshToken);*/
+        TokenDto tokenDto = jwtUtil.createAllToken(kakaoUser.getEmail());
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserEmail(kakaoUser.getEmail());
 
-        return new String[] {createToken, refreshToken};
+        if(refreshToken.isPresent()) {
+            refreshTokenRepository.save(refreshToken.get().updateToken(tokenDto.getRefreshToken()));
+        }else {
+            RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), kakaoUser.getEmail());
+            refreshTokenRepository.save(newToken);
+        }
+        setHeader(response, tokenDto);
+
+
+    }
+    private void setHeader(HttpServletResponse response, TokenDto tokenDto){
+        response.addHeader(jwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
+        response.addHeader(jwtUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());
     }
     // 1. "인가 코드"로 "액세스 토큰" 요청
     private String[] getToken(String code) throws JsonProcessingException {

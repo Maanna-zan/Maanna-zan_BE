@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -26,35 +28,34 @@ public class CommentService {
 
     //    1. 댓글 작성 메서드
     @Transactional
-    public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
+    public void createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
 //        게시글 존재 여부 확인. 없으면 예외처리
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
         );
         Comment comment = new Comment(post, user, commentRequestDto);
         commentRepository.save(comment);
-        return new CommentResponseDto(comment);
     }
 
     //    2. 댓글 수정 메서드
     @Transactional
-    public CommentResponseDto updateComment( Long commentId, CommentRequestDto commentRequestDto, User user) {
+    public void updateComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
 
 //        댓글 존재 여부 확인. 없으면 예외처리
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
         );
 //        ADMIN이 아닌 멤버가 댓글의 해당 작성자가 아닐때 예외 처리 && !user.getRole().equals(UserRoleEnum.ADMIN
-        if (!comment.getUser().getId().equals(user.getId()) ) {
+        if (!comment.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("댓글 수정 권한이 없습니다.");
         }
         comment.update(commentRequestDto);
-        return new CommentResponseDto(comment);
+
     }
 
     //    3. 댓글 삭제 메서드
     @Transactional
-    public ResponseEntity deleteComment( Long commentId , User user) {
+    public ResponseEntity deleteComment(Long commentId, User user) {
         //        게시글 존재 여부 확인. 없으면 예외처리
 
 //        댓글 존재 여부 확인. 없으면 예외처리
@@ -69,22 +70,70 @@ public class CommentService {
         return ResponseMessage.SuccessResponse("삭제 성공", "");
     }
 
+    //대댓글 작성
     @Transactional
     public CommentResponseDto createCommentList(CommentRequestDto commentRequestDto, User user, Long parentId) {
 //        Post post = getPost(id);
         Comment parentComment = null;
-        if(parentId != null) {
+        if (parentId != null) {
             parentComment = commentRepository.findById(parentId)
                     .orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND));
         }
+        System.out.println(user+ user.getUserName());
         Comment comment = new Comment(commentRequestDto, user, parentComment);
         commentRepository.saveAndFlush(comment);
 
-        if(parentComment != null) {
+        if (parentComment != null) {
             parentComment.getChildren().add(comment);
             commentRepository.saveAndFlush(parentComment);
         }
 
         return new CommentResponseDto(comment);
+    }
+
+    @Transactional
+    public void deleteCommentList(Long commentId, User user) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND));
+        Long parentId = null;
+        if (comment.getParent() != null) {
+            parentId = comment.getParent().getId();
+        }
+
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("댓글 삭제 권한이 없습니다.");
+        }
+
+        // 대댓글이면 부모 댓글의 자식 댓글 목록에서 해당 대댓글을 삭제한다
+        if (parentId != null) {
+            Comment parentComment = comment.getParent();
+            parentComment.getChildren().remove(comment);
+            commentRepository.saveAndFlush(parentComment);
+        }
+
+        // 대댓글 또는 루트 댓글을 삭제한다
+        commentRepository.delete(comment);
+    }
+
+    @Transactional
+    public void updateCommentList(Long commentId, User user, CommentRequestDto commentRequestDto) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND));
+
+        // 해당 댓글을 수정할 권한이 있는지 체크.
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("댓글 수정 권한이 없습니다.");
+        }
+
+        // 댓글 내용을 업데이트합니다.
+        comment.update(commentRequestDto);
+
+        // 자식 댓글 리스트를 업데이트합니다.
+        List<Comment> childComments = comment.getChildComments();
+        if (childComments != null) {
+            for (Comment childComment : childComments) {
+                updateComment(childComment.getId(), commentRequestDto, user);
+            }
+        }
     }
 }
