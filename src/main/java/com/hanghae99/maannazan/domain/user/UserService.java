@@ -178,6 +178,7 @@ public class UserService {
         if (user.isEmpty()) {
             return ResponseMessage.ErrorResponse(CustomErrorCode.USER_NOT_FOUND);
         }
+
         if (!passwordEncoder.matches(signoutRequestDto.getPassword(), user.get().getPassword())) {
             return ResponseMessage.ErrorResponse(CustomErrorCode.INVALID_PASSWORD);
         }

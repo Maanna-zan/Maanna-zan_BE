@@ -28,34 +28,18 @@ public class KakaoController {
     @GetMapping("/OAuth/Kakao")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
-        String[] tokens = kakaoService.kakaoLogin(code, response);
+        kakaoService.kakaoLogin(code, response);
 
         // 세션에 액세스 토큰과 리프레시 토큰 저장
-        Cookie access = new Cookie("Authorization", tokens[0].substring(7));
-        Cookie refresh = new Cookie("refreshToken", tokens[1]);
 
-        access.setPath("/");
-        refresh.setPath("/");
-
-        response.addCookie(access);
-        response.addCookie(refresh);
         return "home";
     }
 
     @GetMapping("/OAuth/Kakao/{refreshToken}")
     public String getRefresh(@PathVariable String refreshToken, HttpServletResponse response) throws JsonProcessingException {
 
-        String[] tokens = kakaoService.getRefresh(refreshToken, response);
+      kakaoService.getRefresh(refreshToken, response);
 
-
-        Cookie access = new Cookie("Authorization", tokens[0].substring(7));
-        Cookie refresh = new Cookie("refreshToken", tokens[1]);
-
-        access.setPath("/");
-        refresh.setPath("/");
-
-        response.addCookie(access);
-        response.addCookie(refresh);
 
         return "home";
 
