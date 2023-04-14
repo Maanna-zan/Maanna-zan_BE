@@ -35,7 +35,6 @@ public class KakaoApi {
     private final KakaoApiService kakaoApiService;
 
 
-
     @GetMapping("/kakaoApi")
     public Map callApi(
             @RequestParam(required = false) String y,

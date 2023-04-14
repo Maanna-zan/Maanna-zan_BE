@@ -59,6 +59,7 @@ public class JwtUtil {
     public TokenDto createAllToken(String nickName) {
         return new TokenDto(createToken(nickName, "Access"), createToken(nickName, "Refresh"));
     }
+
     public String createToken(String nickName, String type) {
         Date date = new Date();
         long time = type.equals("Access") ? ACCESS_TIME : REFRESH_TIME;
