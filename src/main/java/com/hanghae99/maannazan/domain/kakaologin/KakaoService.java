@@ -14,8 +14,8 @@ import com.hanghae99.maannazan.domain.repository.UserRepository;
 import com.hanghae99.maannazan.global.jwt.JwtUtil;
 import com.hanghae99.maannazan.global.jwt.TokenDto;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -38,7 +38,10 @@ public class KakaoService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
-    public String[] kakaoLogin(String code, HttpSession session) throws JsonProcessingException {
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String client_key;
+
+    public String[] kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String[] token = getToken(code);
 
@@ -51,8 +54,9 @@ public class KakaoService {
         // 4. JWT 토큰 반환
         String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
         String refreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
-        session.setAttribute("accessToken", createToken);
-        session.setAttribute("refreshToken", refreshToken);
+        response.addHeader("Authorization", createToken);
+        response.addHeader("refreshToken", refreshToken);
+
         return new String[] {createToken, refreshToken};
     }
     // 1. "인가 코드"로 "액세스 토큰" 요청
@@ -62,10 +66,10 @@ public class KakaoService {
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
 
-        // HTTP Body 생성
+            // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "88832d163b34d11f1659cc1e290ba326");
+        body.add("client_id", client_key);
         body.add("redirect_uri", "http://localhost:8080/OAuth/Kakao");
         body.add("code", code);
 
@@ -155,36 +159,30 @@ public class KakaoService {
         return kakaoUser;
     }
 
-    public String[] getRefresh(String refreshToken, HttpSession session) throws JsonProcessingException {
-
+    public String[] getRefresh(String refreshToken ,HttpServletResponse response) throws JsonProcessingException {
         String[] tokens = getNewAccessToken(refreshToken);
-
-
         KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(tokens[0]);
-
-        // 3. 필요시에 회원가입
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
-        // 4. JWT 토큰 반환
-        String newCreateToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+        String newAccessToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
         String newRefreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
 
+        response.addHeader("Authorization", newAccessToken);
+        response.addHeader("refreshToken", newRefreshToken);
 
-        session.setAttribute("accessToken", newCreateToken);
-        session.setAttribute("refreshToken", newRefreshToken);
-        return new String[] {newCreateToken, refreshToken};
+        return new String[] { newAccessToken, newRefreshToken };
     }
 
     private String[] getNewAccessToken(String refreshToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
-//        headers.add("RefreshToken",  "Bearer " + refreshToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        System.out.println(refreshToken);
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "refresh_token");
-        body.add("client_id", "88832d163b34d11f1659cc1e290ba326");
+        body.add("client_id", client_key);
         body.add("refresh_token", refreshToken);
 
         // HTTP 요청 보내기

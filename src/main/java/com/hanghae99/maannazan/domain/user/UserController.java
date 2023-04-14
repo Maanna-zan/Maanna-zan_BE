@@ -1,6 +1,10 @@
 package com.hanghae99.maannazan.domain.user;
 
+import com.hanghae99.maannazan.domain.entity.Comment;
+import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.repository.CommentRepository;
+import com.hanghae99.maannazan.domain.repository.PostRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
 import com.hanghae99.maannazan.domain.user.dto.*;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Tag(name = "User", description = "회원 관련 API")
@@ -28,6 +33,8 @@ public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     //회원가입
     @Operation(summary = "signup", description = "회원가입")
@@ -69,18 +76,9 @@ public class UserController {
         return ResponseMessage.SuccessResponse("이메일로 임시 비밀번호를 보내드렸습니다.","");
     }
 
-
-    @Transactional
+    @Operation(summary = "SignOut", description = "회원 탈퇴")
     @DeleteMapping("/signout/{id}")
     public ResponseEntity<ResponseMessage<Object>> signout(@PathVariable Long id, @RequestBody SignoutRequestDto signoutRequestDto) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isEmpty()) {
-            return ResponseMessage.ErrorResponse(CustomErrorCode.USER_NOT_FOUND);
-        }
-        if (!passwordEncoder.matches(signoutRequestDto.getPassword(), user.get().getPassword())) {
-            return ResponseMessage.ErrorResponse(CustomErrorCode.INVALID_PASSWORD);
-        }
-        userRepository.deleteById(id);
-        return ResponseMessage.SuccessResponse("회원탈퇴 성공", "");
+        return userService.deleteUser(id, signoutRequestDto);
     }
 }

@@ -54,6 +54,7 @@ public class WebSecurityConfig {
                 .antMatchers("/login-page").permitAll()
                 .antMatchers("/OAuth/Kakao/**").permitAll()
                 .antMatchers("/home").permitAll()
+                .antMatchers("/getAccessToken/**").permitAll()
                 .antMatchers("/alkol").permitAll()
                 .antMatchers(HttpMethod.GET, "/posts/**").permitAll()
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()// Swagger 리소스에 대한 접근 허용
