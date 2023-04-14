@@ -38,8 +38,12 @@ public class KakaoResponseDto {
 
     private List<PostResponseDto> postList = new ArrayList<>();
     private int numberOfPosts;
+    private int roomViewCount;
+    private int roomLikecnt;
+    private boolean roomLike;
 
-    public KakaoResponseDto(Kakao kakao, List<PostResponseDto> postResponseDtoList){
+
+    public KakaoResponseDto(Kakao kakao, List<PostResponseDto> postResponseDtoList, boolean roomLike){
         this.apiId = kakao.getApiId();
         this.address_name = kakao.getAddress_name();
         this.category_group_code = kakao.getCategory_group_code();
@@ -53,9 +57,12 @@ public class KakaoResponseDto {
         this.x = kakao.getX();
         this.y = kakao.getY();
         this.postList = postResponseDtoList;
+        this.roomViewCount = kakao.getRoomViewCount();
+        this.roomLikecnt = kakao.getRoomLikecnt();
+        this.roomLike = roomLike;
     }
 
-    public KakaoResponseDto(Kakao kakao, List<PostResponseDto> postResponseDtoList, int numberOfPosts){
+    public KakaoResponseDto(Kakao kakao, List<PostResponseDto> postResponseDtoList, int numberOfPosts, boolean roomLike){
         this.apiId = kakao.getApiId();
         this.address_name = kakao.getAddress_name();
         this.category_group_code = kakao.getCategory_group_code();
@@ -70,6 +77,9 @@ public class KakaoResponseDto {
         this.y = kakao.getY();
         this.postList = postResponseDtoList;
         this.numberOfPosts = numberOfPosts;
+        this.roomViewCount = kakao.getRoomViewCount();
+        this.roomLikecnt = kakao.getRoomLikecnt();
+        this.roomLike = roomLike;
     }
 
     public int getNumberOfPosts() {
