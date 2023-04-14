@@ -16,6 +16,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    Long kakaoId;
 
     private String userName;
 
@@ -30,6 +31,7 @@ public class User {
 
     private String password;
 
+    private String profile_image;
 
     private String birth;
 
@@ -42,12 +44,25 @@ public class User {
         this.birth = birth;
     }
 
+    public User(String nickName,Long kakaoId, String password, String email, String profile_image){
+        this.nickName = nickName;
+        this.kakaoId = kakaoId;
+        this.password = password;
+        this.email = email;
+        this.profile_image= profile_image;
+    }
+
     public void update(String str, String email) {
         this.password = str;
         this.email = email;
     }
     public void emailUpdate(String email){
         this.email = email;
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
     }
 
     public void changeNickName(String nickName) {

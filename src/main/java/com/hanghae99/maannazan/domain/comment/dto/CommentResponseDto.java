@@ -15,6 +15,7 @@ public class CommentResponseDto {
     private String content;
     private LocalDateTime createdAt;
     private int likecnt;
+    private Long parentId;
 
     private List<CommentResponseDto> commentList = new ArrayList<>();
 
@@ -24,6 +25,17 @@ public class CommentResponseDto {
         this.content = comment.getContent();
         this.createdAt = comment.getCreatedAt().withNano(0);
         this.likecnt = comment.getLikecnt();
+        for(Comment comments : comment.getChildren()){
+            commentList.add(new CommentResponseDto(comments));
+        }
+    }
+    public CommentResponseDto(Comment comment, Long parentId) {
+        this.id = comment.getId();
+        this.nickName = comment.getUser().getNickName();
+        this.content = comment.getContent();
+        this.createdAt = comment.getCreatedAt().withNano(0);
+        this.likecnt = comment.getLikecnt();
+        this.parentId = parentId;
         for(Comment comments : comment.getChildren()){
             commentList.add(new CommentResponseDto(comments));
         }

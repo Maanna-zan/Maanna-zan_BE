@@ -8,8 +8,11 @@ import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.domain.repository.KakaoApiRepository;
 import com.hanghae99.maannazan.domain.repository.LikeRepository;
 import com.hanghae99.maannazan.domain.repository.PostRepository;
+import com.hanghae99.maannazan.global.exception.CustomErrorCode;
+import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -56,10 +59,13 @@ public class KakaoApiService {
     }
 
 
-    //술집 리스트
+    @Transactional
     public List<KakaoResponseDto> getAlkol(String apiId, User user) {
+        Kakao kakaoView = kakaoApiRepository.findByApiId(apiId).orElseThrow(() -> new CustomException(CustomErrorCode.ALKOL_NOT_FOUND));
+        kakaoView.roomViewCount(kakaoView.getRoomViewCount()+1);
         List<Kakao> kakaos = kakaoApiRepository.findAllByApiId(apiId);
         List<KakaoResponseDto> kakaoResponseDtoList = new ArrayList<>();
+        boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(apiId, user);
         for (Kakao kakao : kakaos){
             List<Post> posts = postRepository.findByApiId(kakao.getApiId());
             List<PostResponseDto> postResponseDtoList = new ArrayList<>();
@@ -72,7 +78,7 @@ public class KakaoApiService {
                     postResponseDtoList.add(new PostResponseDto(post));
                 }
             }
-            kakaoResponseDtoList.add(new KakaoResponseDto(kakao, postResponseDtoList));
+            kakaoResponseDtoList.add(new KakaoResponseDto(kakao, postResponseDtoList, roomLike));
         }return kakaoResponseDtoList;
 
     }
@@ -82,17 +88,18 @@ public class KakaoApiService {
         List<Kakao> kakaos = kakaoApiRepository.findAll();
         List<KakaoResponseDto> kakaoResponseDtoList = new ArrayList<>();
         for (Kakao kakao : kakaos){
+            boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(kakao.getApiId(), user);
             List<Post> posts = postRepository.findByApiId(kakao.getApiId());
             int numberOfPosts = posts.size();
             List<PostResponseDto> postResponseDtoList = new ArrayList<>();
             for (Post post : posts){
-                boolean like = false;
+                boolean postLike = false;
                 if (user != null) {
-                    like = likeRepository.existsByPostIdAndUser(post.getId(), user);
+                    postLike = likeRepository.existsByPostIdAndUser(post.getId(), user);
                 }
-                postResponseDtoList.add(new PostResponseDto(post, like));
+                postResponseDtoList.add(new PostResponseDto(post, postLike));
             }
-            kakaoResponseDtoList.add(new KakaoResponseDto(kakao, postResponseDtoList, numberOfPosts));
+            kakaoResponseDtoList.add(new KakaoResponseDto(kakao, postResponseDtoList, numberOfPosts, roomLike));
         }
         kakaoResponseDtoList.sort(Comparator.comparingInt(KakaoResponseDto::getNumberOfPosts).reversed());
         return kakaoResponseDtoList;

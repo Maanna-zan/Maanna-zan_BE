@@ -24,18 +24,22 @@ public class Likes {
     @JoinColumn(name = "COMMENT_ID")
     private Comment comment;
 
+    @ManyToOne
+    @JoinColumn(name = "KAKAO_ID")
+    private Kakao kakao;
+
     public Likes(Post post, User user) {
         this.user= user;
         this.post= post;
     }
 
-//    public Likes(Comment comment, User user) {
-//        this.user= user;
-//        this.comment= comment;
-//    }
+    public Likes(Comment comment, User user) {
+        this.user= user;
+        this.comment= comment;
+    }
 
+    public Likes(Kakao kakao, User user) {
+        this.user= user;
+        this.kakao= kakao;
+    }
 }
-
-
-
-

@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
+
 @Tag(name = "User", description = "회원 관련 API")
 @RestController
 @RequiredArgsConstructor
@@ -56,11 +59,17 @@ public class UserController {
     }
 
     @PostMapping("/check/findPw")
-    @Operation(summary = "checkFindPw", description = "비밀번호 찾기")
+    @Operation(summary = "checkFindPw", description = "비밀번호 중복확인")
     public ResponseEntity<ResponseMessage<String>> checkFindPw(@Validated @RequestBody CheckFindPwRequestDto checkFindPw) {
         MailDto dto = userService.checkFindPw(checkFindPw);
         userService.mailSend(dto);
         return ResponseMessage.SuccessResponse("이메일로 임시 비밀번호를 보내드렸습니다.","");
+    }
+
+    @Operation(summary = "SignOut", description = "회원 탈퇴")
+    @DeleteMapping("/signout/{id}")
+    public ResponseEntity<ResponseMessage<Object>> signout(@PathVariable Long id, @RequestBody SignoutRequestDto signoutRequestDto) {
+        return userService.deleteUser(id, signoutRequestDto);
     }
 
     @PostMapping("/check/findEmail")

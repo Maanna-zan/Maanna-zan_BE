@@ -3,6 +3,7 @@ package com.hanghae99.maannazan.domain.entity;
 import com.hanghae99.maannazan.domain.comment.dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.parameters.P;
 
@@ -60,6 +61,10 @@ public class Comment extends Timestamped {
 
     public void likeCount(int plusOrMinus) {  //좋아요 개수
         this.likecnt = plusOrMinus;
+    }
+
+    public List<Comment> getChildComments() {
+        return this.children;
     }
 
 

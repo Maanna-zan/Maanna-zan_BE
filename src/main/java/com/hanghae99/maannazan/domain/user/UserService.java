@@ -25,6 +25,8 @@ import static com.hanghae99.maannazan.global.exception.CustomErrorCode.*;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -159,6 +161,27 @@ public class UserService {
         message.setFrom(FROM_ADDRESS);
         message.setReplyTo(FROM_ADDRESS);
         mailSender.send(message);
+    }
+
+
+    @Transactional
+    public ResponseEntity<ResponseMessage<Object>> deleteUser(Long id, SignoutRequestDto signoutRequestDto) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            return ResponseMessage.ErrorResponse(CustomErrorCode.USER_NOT_FOUND);
+        }
+
+        if (!passwordEncoder.matches(signoutRequestDto.getPassword(), user.get().getPassword())) {
+            return ResponseMessage.ErrorResponse(CustomErrorCode.INVALID_PASSWORD);
+        }
+        List<Post> posts = postRepository.findByUserId(id);
+        List<Comment> comments = commentRepository.findByUserId(id);
+
+        postRepository.deleteAll(posts);
+        commentRepository.deleteAll(comments);
+        userRepository.deleteById(id);
+
+        return ResponseMessage.SuccessResponse("회원탈퇴 성공", "");
     }
 
     public String checkFindEmail(CheckFindEmailRequestDto checkFindEmailRequestDto) {

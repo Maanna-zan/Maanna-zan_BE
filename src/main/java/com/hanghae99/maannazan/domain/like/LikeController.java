@@ -21,9 +21,15 @@ public class LikeController {
     public ResponseEntity<ResponseMessage<String>> like(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseMessage.SuccessResponse("클릭 성공",likeService.like(postId, userDetails.getUser()));
     }
-//    @Operation(summary = "commentLike", description = "댓글 좋아요 토글")
-//    @PutMapping("/comments/like/{commentId}")
-//    public ResponseEntity<ResponseMessage<String>> commentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return ResponseMessage.SuccessResponse("클릭 성공",likeService.commentLike(commentId, userDetails.getUser()));
-//    }
+    @Operation(summary = "commentLike", description = "댓글 좋아요 토글")
+    @PutMapping("/comments/like/{commentId}")
+    public ResponseEntity<ResponseMessage<String>> commentLike(@PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseMessage.SuccessResponse("클릭 성공",likeService.commentLike(commentId, userDetails.getUser()));
+    }
+
+    @Operation(summary = "kakaoApiLike", description = "술집 좋아요 토글")
+    @PutMapping("/kakao/like/{kakaoId}")
+    public ResponseEntity<ResponseMessage<String>> roomLike(@PathVariable String kakaoId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseMessage.SuccessResponse("클릭 성공",likeService.roomLike(kakaoId, userDetails.getUser()));
+    }
 }

@@ -42,9 +42,8 @@ public class PostResponseDto {
 
 
 
-    public PostResponseDto(Category category,boolean like, List<CommentResponseDto> commentResponseDtoList) {   // 게시물 하나 조회
+    public PostResponseDto(Category category,boolean like, List<CommentResponseDto> commentResponseDtoList) {   //산하  게시물 하나 조회
         this.id = category.getPost().getId();
-        this.storename = category.getPost().getStorename();
         this.title = category.getPost().getTitle();
         this.description = category.getPost().getDescription();
         this.likecnt = category.getPost().getLikecnt();
@@ -58,9 +57,8 @@ public class PostResponseDto {
         this.commentList = commentResponseDtoList;
         }
 
-    public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
+    public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) {    //산하 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
-        this.storename = post.getStorename();
         this.title = post.getTitle();
         this.description = post.getDescription();
         this.likecnt = post.getLikecnt();
@@ -71,9 +69,8 @@ public class PostResponseDto {
         this.commentList = commentResponseDtoList;
         this.viewCount = post.getViewCount();
     }
-    public PostResponseDto(Category category, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
+    public PostResponseDto(Category category, List<CommentResponseDto> commentResponseDtoList) {    //산하  게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = category.getPost().getId();
-        this.storename = category.getPost().getStorename();
         this.title = category.getPost().getTitle();
         this.description = category.getPost().getDescription();
         this.likecnt = category.getPost().getLikecnt();
@@ -83,9 +80,8 @@ public class PostResponseDto {
         this.commentList = commentResponseDtoList;
         this.viewCount = category.getPost().getViewCount();
     }
-    public PostResponseDto(Post post, List<CommentResponseDto> commentResponseDtoList) {    // 게시물 하나 조회 (category가 null이라면 이걸 반환)
+    public PostResponseDto(Post post, List<CommentResponseDto> commentResponseDtoList) {    //산하  게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
-        this.storename = post.getStorename();
         this.title = post.getTitle();
         this.description = post.getDescription();
         this.likecnt = post.getLikecnt();
@@ -99,7 +95,6 @@ public class PostResponseDto {
 
     public PostResponseDto(Post post){
         this.id = post.getId();
-        this.storename = post.getStorename();
         this.title = post.getTitle();
         this.description = post.getDescription();
         this.likecnt = post.getLikecnt();
@@ -109,7 +104,6 @@ public class PostResponseDto {
     }
     public PostResponseDto(Post post, boolean like){
         this.id = post.getId();
-        this.storename = post.getStorename();
         this.title = post.getTitle();
         this.description = post.getDescription();
         this.likecnt = post.getLikecnt();

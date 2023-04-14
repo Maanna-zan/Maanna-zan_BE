@@ -16,8 +16,6 @@ public class Post extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String storename;
-
     private String title;
 
     private String description;
@@ -30,8 +28,6 @@ public class Post extends Timestamped {
     private String fileName;
 
     private String apiId;
-
-    private String placeName;
 
     private int viewCount;
 
@@ -52,7 +48,6 @@ public class Post extends Timestamped {
 
 
     public Post(PostRequestDto postRequestDto, User user) {
-        this.storename = postRequestDto.getStorename();
         this.title = postRequestDto.getTitle();
         this.description = postRequestDto.getDescription();
         this.user = user;
@@ -62,7 +57,6 @@ public class Post extends Timestamped {
     }
 
     public void update(PostRequestDto postRequestDto, User user) {
-        this.storename = postRequestDto.getStorename();
         this.title = postRequestDto.getTitle();
         this.description = postRequestDto.getDescription();
         this.s3Url = postRequestDto.getS3Url();
@@ -74,7 +68,6 @@ public class Post extends Timestamped {
 
 
     public Post(PostRequestDto postRequestDto) {      //S3Controller save 메서드 (없어도 되긴 함)
-        this.storename = postRequestDto.getStorename();
         this.title = postRequestDto.getTitle();
         this.description = postRequestDto.getDescription();
         this.s3Url = postRequestDto.getS3Url();
@@ -87,7 +80,7 @@ public class Post extends Timestamped {
         this.likecnt = plusOrMinus;
     }
 
-    public void viewCount(int plusCount) {  //좋아요 개수
+    public void viewCount(int plusCount) {  //조회수
         this.viewCount = plusCount;
     }
 
