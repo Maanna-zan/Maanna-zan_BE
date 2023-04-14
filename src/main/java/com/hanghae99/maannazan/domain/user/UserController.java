@@ -56,10 +56,16 @@ public class UserController {
     }
 
     @PostMapping("/check/findPw")
-    @Operation(summary = "checkFindPw", description = "비밀번호 중복확인")
+    @Operation(summary = "checkFindPw", description = "비밀번호 찾기")
     public ResponseEntity<ResponseMessage<String>> checkFindPw(@Validated @RequestBody CheckFindPwRequestDto checkFindPw) {
         MailDto dto = userService.checkFindPw(checkFindPw);
         userService.mailSend(dto);
         return ResponseMessage.SuccessResponse("이메일로 임시 비밀번호를 보내드렸습니다.","");
+    }
+
+    @PostMapping("/check/findEmail")
+    @Operation(summary = "checkFindEmail", description = "email 찾기")
+    public ResponseEntity<ResponseMessage<String>> checkFindEmail(@Validated @RequestBody CheckFindEmailRequestDto checkFindEmailRequestDto) {
+        return ResponseMessage.SuccessResponse("email 찾기 성공",userService.checkFindEmail(checkFindEmailRequestDto));
     }
 }

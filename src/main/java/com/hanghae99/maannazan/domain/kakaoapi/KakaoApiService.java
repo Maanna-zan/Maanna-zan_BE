@@ -77,6 +77,7 @@ public class KakaoApiService {
 
     }
 
+    //게시물 많은 술집 리스트
     public List<KakaoResponseDto> getBestAlkol(User user){
         List<Kakao> kakaos = kakaoApiRepository.findAll();
         List<KakaoResponseDto> kakaoResponseDtoList = new ArrayList<>();
