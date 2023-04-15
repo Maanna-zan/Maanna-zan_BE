@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 
@@ -44,7 +42,13 @@ public class Kakao {
 
     private int roomViewCount;
 
-    
+    private int numberOfPosts;
+
+    public void postCount(int i) {
+        this.numberOfPosts = i;
+    }
+
+
     public void roomViewCount(int plusCount) {  //조회수
         this.roomViewCount = plusCount;
     }

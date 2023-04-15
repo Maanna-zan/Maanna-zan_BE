@@ -19,5 +19,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
 
-    List<Post> findByApiId(String apiId);
+    List<Post> findByKakaoApiId(String apiId);
 }

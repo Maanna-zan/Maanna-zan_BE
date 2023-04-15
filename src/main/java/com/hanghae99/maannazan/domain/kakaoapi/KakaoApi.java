@@ -1,6 +1,7 @@
 package com.hanghae99.maannazan.domain.kakaoapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.KakaoResponseDto;
 import com.hanghae99.maannazan.domain.post.PostService;
 import com.hanghae99.maannazan.global.security.UserDetailsImpl;
@@ -72,11 +73,19 @@ public class KakaoApi {
         } else
             return kakaoApiService.getAlkol(apiId,userDetails.getUser());
     }
-    @GetMapping("/alkok/best")
-    public List<KakaoResponseDto>getBestAlkol(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    @GetMapping("/alkol/best")
+    public List<AlkolResponseDto>getBestAlkol(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "3") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
         if(userDetails==null){
-            return kakaoApiService.getBestAlkol(null);
+            return kakaoApiService.getBestAlkol(null,page,size);
         } else
-            return kakaoApiService.getBestAlkol(userDetails.getUser());
+            return kakaoApiService.getBestAlkol(userDetails.getUser(), page,size);
+    }
+
+    @GetMapping("/alkol/all")
+    public List<AlkolResponseDto> getAllAlkol(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        if(userDetails==null){
+            return kakaoApiService.getAllAlkol(null,page,size);
+        } else
+            return kakaoApiService.getAllAlkol(userDetails.getUser(), page,size);
     }
 }
