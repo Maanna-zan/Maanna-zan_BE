@@ -26,12 +26,12 @@ public class PostController {
 
 
     @Operation(summary = "uploadPost", description = "게시글 작성 + S3이미지 업로드")
-    @PostMapping("/posts")
-    public ResponseEntity<ResponseMessage<String>> uploadPost(PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    @PostMapping("/posts/{apiId}")
+    public ResponseEntity<ResponseMessage<String>> uploadPost(@PathVariable String apiId, PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 //        String fileName = postRequestDto.getFile().getOriginalFilename();
         String url = s3Service.uploadFile(postRequestDto.getFile());
         postRequestDto.setS3Url(url);
-        postService.createPost(postRequestDto, userDetails.getUser());
+        postService.createPost(apiId, postRequestDto, userDetails.getUser());
         return  ResponseMessage.SuccessResponse("게시물 작성 성공","");
     }
 

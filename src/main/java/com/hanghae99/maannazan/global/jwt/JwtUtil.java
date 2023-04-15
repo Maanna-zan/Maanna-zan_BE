@@ -64,8 +64,7 @@ public class JwtUtil {
         Date date = new Date();
         long time = type.equals("Access") ? ACCESS_TIME : REFRESH_TIME;
 
-        return
-                Jwts.builder()
+        return Jwts.builder()
                         .setSubject(nickName)
                         .setExpiration(new Date(date.getTime() + time))
                         .setIssuedAt(date)

@@ -16,7 +16,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    Long kakaoId;
+    private Long kakaoId;
 
     private String userName;
 
@@ -54,6 +54,9 @@ public class User {
 
     public void update(String str, String email) {
         this.password = str;
+        this.email = email;
+    }
+    public void emailUpdate(String email){
         this.email = email;
     }
 
