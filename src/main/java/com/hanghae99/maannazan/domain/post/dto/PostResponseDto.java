@@ -106,7 +106,6 @@ public class PostResponseDto {
         this.id = post.getId();
         this.title = post.getTitle();
         this.description = post.getDescription();
-        this.likecnt = post.getLikecnt();
         this.nickname = post.getUser().getNickName();
         this.modifiedAt = post.getModifiedAt();
         this.s3Url = post.getS3Url();

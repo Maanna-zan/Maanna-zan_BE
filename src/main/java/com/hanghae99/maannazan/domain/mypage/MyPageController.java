@@ -1,5 +1,6 @@
 package com.hanghae99.maannazan.domain.mypage;
 
+import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangeNickNameRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangePasswordRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.MyPageResponseDto;
@@ -12,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @Tag(name = "Mypage", description = "마이페이지 관련 API")
 @RestController
 @RequiredArgsConstructor
@@ -21,8 +25,20 @@ public class MyPageController {
     private final MyPageService myPageService;
     @Operation(summary = "getMyPage", description = "마이페이지 조회")
     @GetMapping
-    public ResponseEntity<ResponseMessage<MyPageResponseDto>> getMyPage(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseMessage.SuccessResponse("성공", myPageService.getMyPage(userDetails.getUser()));
+    public ResponseEntity<ResponseMessage<MyPageResponseDto>> getMyPage(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseMessage.SuccessResponse("성공", myPageService.getMyPage(userDetails.getUser(),page,size));
+    }
+
+    @Operation(summary = "getMyPageLikePost", description = "마이페이지(내가 좋아요한 게시글) 조회")
+    @GetMapping("/likePost")
+    public ResponseEntity<ResponseMessage<MyPageResponseDto>> getMyPagelikePost(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseMessage.SuccessResponse("성공", myPageService.getMyPagelikePost(userDetails.getUser(),page,size));
+    }
+
+    @Operation(summary = "getMyPageLikeAlkol", description = "마이페이지(내가 좋아요한 술집) 조회")
+    @GetMapping("/likeAlkol")
+    public List<AlkolResponseDto> getMyPagelikeAlkol(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return myPageService.getMyPagelikeAlkol(userDetails.getUser(),page,size);
     }
     @Operation(summary = "changeNickName", description = "닉네임 변경")
     @PatchMapping("/change-nickname")
