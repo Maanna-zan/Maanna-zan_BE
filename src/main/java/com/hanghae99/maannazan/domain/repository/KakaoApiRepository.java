@@ -4,9 +4,11 @@ import com.hanghae99.maannazan.domain.entity.Kakao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 public interface KakaoApiRepository extends JpaRepository<Kakao, Long> {
@@ -16,4 +18,7 @@ public interface KakaoApiRepository extends JpaRepository<Kakao, Long> {
     Page<Kakao> findAll(Pageable pageable);
 
     Optional<Kakao> findByApiId(String apiId);
+
+    @Query("SELECT DISTINCT k.apiId FROM Kakao k")
+    Set<String> findAllApiIds();
 }

@@ -1,8 +1,11 @@
 package com.hanghae99.maannazan.domain.kakaoapi.dto;
 
 import com.hanghae99.maannazan.domain.entity.Kakao;
+import com.hanghae99.maannazan.domain.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -36,6 +39,7 @@ public class AlkolResponseDto {
     private int roomViewCount;
     private int roomLikecnt;
     private boolean roomLike;
+
 
     public AlkolResponseDto(Kakao kakao, boolean roomLike){
         this.apiId = kakao.getApiId();
@@ -73,6 +77,7 @@ public class AlkolResponseDto {
         this.roomLikecnt = kakao.getRoomLikecnt();
         this.roomLike = roomLike;
     }
+
 
 
 }
