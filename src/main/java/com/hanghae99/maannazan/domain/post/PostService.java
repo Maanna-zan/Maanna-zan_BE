@@ -21,6 +21,8 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hanghae99.maannazan.global.exception.CustomErrorCode.ALKOL_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -32,11 +34,14 @@ public class PostService {
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
     private final AmazonS3 amazonS3;
+    private final KakaoApiRepository kakaoApiRepository;
 
 
     @Transactional
-    public String createPost(PostRequestDto postRequestDto, User user) {
-        Post post = new Post(postRequestDto, user);
+    public String createPost(String apiId, PostRequestDto postRequestDto, User user) {
+        Kakao kakao = kakaoApiRepository.findByApiId(apiId).orElseThrow(()->new CustomException(ALKOL_NOT_FOUND));
+        kakao.postCount(kakao.getNumberOfPosts()+1);
+        Post post = new Post(kakao, postRequestDto, user);
         post = postRepository.saveAndFlush(post);
         if (postRequestDto.isBeer() || postRequestDto.isSoju()) {
             categoryRepository.saveAndFlush(new Category(postRequestDto, post));

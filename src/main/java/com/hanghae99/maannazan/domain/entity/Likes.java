@@ -42,4 +42,8 @@ public class Likes {
         this.user= user;
         this.kakao= kakao;
     }
+
+    public Post getPost() {
+        return this.post;
+    }
 }

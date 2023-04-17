@@ -1,25 +1,25 @@
 package com.hanghae99.maannazan.domain.mypage;
 
 import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
-import com.hanghae99.maannazan.domain.entity.Comment;
-import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.entity.User;
-import com.hanghae99.maannazan.domain.mypage.dto.ChangeNickNameRequestDto;
-import com.hanghae99.maannazan.domain.mypage.dto.ChangePasswordRequestDto;
-import com.hanghae99.maannazan.domain.mypage.dto.MyPageResponseDto;
+import com.hanghae99.maannazan.domain.entity.*;
+import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
+import com.hanghae99.maannazan.domain.mypage.dto.*;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
-import com.hanghae99.maannazan.domain.repository.CommentRepository;
-import com.hanghae99.maannazan.domain.repository.LikeRepository;
-import com.hanghae99.maannazan.domain.repository.PostRepository;
-import com.hanghae99.maannazan.domain.repository.UserRepository;
+import com.hanghae99.maannazan.domain.repository.*;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.hanghae99.maannazan.global.exception.CustomErrorCode.*;
 
@@ -32,22 +32,56 @@ public class MyPageService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
-    public MyPageResponseDto getMyPage(User user) {
-        List<Post> posts = postRepository.findByUserOrderByCreatedAtDesc(user);
-        List<PostResponseDto> postResponseDtos = new ArrayList<>();
-        for (Post post : posts){
-            boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
-            List<Comment> commentList = commentRepository.findByPost(post);
-            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-            for (Comment comment : commentList) {
-                commentResponseDtoList.add(new CommentResponseDto(comment));
-            }
-            postResponseDtos.add(new PostResponseDto(post, like, commentResponseDtoList));
-        }
 
-        return new MyPageResponseDto(user,postResponseDtos);
+    private final KakaoApiRepository kakaoApiRepository;
+
+    //마이페이지 메인 (내가쓴 게시글 + 유저 정보)
+    @Transactional
+    public MyPageResponseDto getMyPage(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Post> entityPage = postRepository.findByUserOrderByCreatedAtDesc(user,pageable);
+        List<Post> entityList = entityPage.getContent();
+        List<MyPagePostResponseDto> myPagePostResponseDtos = new ArrayList<>();
+        for (Post post : entityList){
+            boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
+            myPagePostResponseDtos.add(new MyPagePostResponseDto(post, like));
+        }
+        return new MyPageResponseDto(user,myPagePostResponseDtos);
     }
 
+    @Transactional
+    public MyPageResponseDto getMyPagelikePost(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Post> entityPage = postRepository.findAll(pageable);
+        List<Post> entityList = entityPage.getContent();
+        List<MyPagePostResponseDto> myPagePostResponseDtos = new ArrayList<>();
+        for (Post post : entityList){
+            boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
+            if (like){
+                myPagePostResponseDtos.add(new MyPagePostResponseDto(post, true));
+            }
+
+        }
+        return new MyPageResponseDto(user,myPagePostResponseDtos);
+    }
+
+    @Transactional
+    public List<AlkolResponseDto> getMyPagelikeAlkol(User user, int page, int size){
+        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Order.desc("roomLike")));
+        Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
+        List<Kakao> entityList = entityPage.getContent();
+        List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
+        for (Kakao kakao : entityList){
+            boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(kakao.getApiId(), user);
+            if (roomLike){
+                AlkolResponseDtoList.add(new AlkolResponseDto(kakao, true));
+            }
+
+        }
+        return AlkolResponseDtoList;
+    }
+
+    @Transactional
     public void changeNickName(User user, ChangeNickNameRequestDto changeNickNameRequestDto) {
         String nickName = changeNickNameRequestDto.getNickName();
         Optional<User> foundNickName = userRepository.findByNickName(nickName);
@@ -57,9 +91,12 @@ public class MyPageService {
     }
 
 
+    @Transactional
     public void changePassword(User user, ChangePasswordRequestDto changePasswordRequestDto) {
         String password = passwordEncoder.encode(changePasswordRequestDto.getPassword());
         user.changePassword(password);
         userRepository.save(user);
     }
+
+
 }

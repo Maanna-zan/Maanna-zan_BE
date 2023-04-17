@@ -1,17 +1,16 @@
 package com.hanghae99.maannazan.domain.kakaoapi.dto;
 
 import com.hanghae99.maannazan.domain.entity.Kakao;
-import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
+import com.hanghae99.maannazan.domain.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class KakaoResponseDto {
+public class AlkolResponseDto {
+
     private String apiId;
     private String address_name;
 
@@ -36,15 +35,13 @@ public class KakaoResponseDto {
 
     private String y;
 
-    private List<PostResponseDto> postList = new ArrayList<>();
     private int numberOfPosts;
     private int roomViewCount;
     private int roomLikecnt;
     private boolean roomLike;
 
 
-
-    public KakaoResponseDto(Kakao kakao, List<PostResponseDto> postResponseDtoList, int numberOfPosts, boolean roomLike){
+    public AlkolResponseDto(Kakao kakao, boolean roomLike){
         this.apiId = kakao.getApiId();
         this.address_name = kakao.getAddress_name();
         this.category_group_code = kakao.getCategory_group_code();
@@ -57,12 +54,30 @@ public class KakaoResponseDto {
         this.road_address_name = kakao.getRoad_address_name();
         this.x = kakao.getX();
         this.y = kakao.getY();
-        this.postList = postResponseDtoList;
+        this.roomViewCount = kakao.getRoomViewCount();
+        this.roomLikecnt = kakao.getRoomLikecnt();
+        this.roomLike = roomLike;
+    }
+
+    public AlkolResponseDto(Kakao kakao, int numberOfPosts, boolean roomLike){
+        this.apiId = kakao.getApiId();
+        this.address_name = kakao.getAddress_name();
+        this.category_group_code = kakao.getCategory_group_code();
+        this.category_group_name = kakao.getCategory_group_name();
+        this.category_name = kakao.getCategory_name();
+        this.distance = kakao.getDistance();
+        this.phone = kakao.getPhone();
+        this.place_name = kakao.getPlace_name();
+        this.place_url = kakao.getPlace_url();
+        this.road_address_name = kakao.getRoad_address_name();
+        this.x = kakao.getX();
+        this.y = kakao.getY();
         this.numberOfPosts = numberOfPosts;
         this.roomViewCount = kakao.getRoomViewCount();
         this.roomLikecnt = kakao.getRoomLikecnt();
         this.roomLike = roomLike;
     }
+
 
 
 }

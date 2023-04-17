@@ -27,9 +27,9 @@ public class Post extends Timestamped {
 
     private String fileName;
 
-    private String apiId;
-
     private int viewCount;
+
+
 
 
 
@@ -47,13 +47,13 @@ public class Post extends Timestamped {
 
 
 
-    public Post(PostRequestDto postRequestDto, User user) {
+    public Post(Kakao kakao, PostRequestDto postRequestDto, User user) {
         this.title = postRequestDto.getTitle();
         this.description = postRequestDto.getDescription();
         this.user = user;
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
-        this.apiId = postRequestDto.getApiId();
+        this.kakao = kakao;
     }
 
     public void update(PostRequestDto postRequestDto, User user) {
@@ -62,7 +62,6 @@ public class Post extends Timestamped {
         this.s3Url = postRequestDto.getS3Url();
         this.user = user;
         this.fileName = postRequestDto.getFileName();
-        this.apiId = postRequestDto.getApiId();
 
     }
 
@@ -72,8 +71,6 @@ public class Post extends Timestamped {
         this.description = postRequestDto.getDescription();
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
-        this.apiId = postRequestDto.getApiId();
-
     }
 
     public void likeCount(int plusOrMinus) {  //좋아요 개수

@@ -1,27 +1,15 @@
 package com.hanghae99.maannazan.domain.user;
 
-import com.hanghae99.maannazan.domain.entity.Comment;
-import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.entity.User;
-import com.hanghae99.maannazan.domain.repository.CommentRepository;
-import com.hanghae99.maannazan.domain.repository.PostRepository;
-import com.hanghae99.maannazan.domain.repository.UserRepository;
 import com.hanghae99.maannazan.domain.user.dto.*;
-import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
 
 @Tag(name = "User", description = "회원 관련 API")
 @RestController
@@ -31,10 +19,6 @@ public class UserController {
 
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
 
     //회원가입
     @Operation(summary = "signup", description = "회원가입")
@@ -80,5 +64,11 @@ public class UserController {
     @DeleteMapping("/signout/{id}")
     public ResponseEntity<ResponseMessage<Object>> signout(@PathVariable Long id, @RequestBody SignoutRequestDto signoutRequestDto) {
         return userService.deleteUser(id, signoutRequestDto);
+    }
+
+    @PostMapping("/check/findEmail")
+    @Operation(summary = "checkFindEmail", description = "email 찾기")
+    public ResponseEntity<ResponseMessage<String>> checkFindEmail(@Validated @RequestBody CheckFindEmailRequestDto checkFindEmailRequestDto) {
+        return ResponseMessage.SuccessResponse("email 찾기 성공",userService.checkFindEmail(checkFindEmailRequestDto));
     }
 }

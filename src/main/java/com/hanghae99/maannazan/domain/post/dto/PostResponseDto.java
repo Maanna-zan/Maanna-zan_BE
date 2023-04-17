@@ -55,7 +55,6 @@ public class PostResponseDto {
         this.viewCount = category.getPost().getViewCount();
         this.like = like;
         this.commentList = commentResponseDtoList;
-
         }
 
     public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) {    //산하 게시물 하나 조회 (category가 null이라면 이걸 반환)
@@ -107,7 +106,6 @@ public class PostResponseDto {
         this.id = post.getId();
         this.title = post.getTitle();
         this.description = post.getDescription();
-        this.likecnt = post.getLikecnt();
         this.nickname = post.getUser().getNickName();
         this.modifiedAt = post.getModifiedAt();
         this.s3Url = post.getS3Url();

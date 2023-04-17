@@ -1,12 +1,12 @@
 package com.hanghae99.maannazan.domain.repository;
 
-import com.hanghae99.maannazan.domain.entity.Kakao;
 import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -15,9 +15,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByUserId(Long id);
 
-    List<Post> findByUserOrderByCreatedAtDesc(User user);
+    Page<Post> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
 
 
-
-    List<Post> findByApiId(String apiId);
+    List<Post> findByKakaoApiId(String apiId);
 }

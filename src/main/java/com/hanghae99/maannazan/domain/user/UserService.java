@@ -192,4 +192,10 @@ public class UserService {
         return ResponseMessage.SuccessResponse("회원탈퇴 성공", "");
     }
 
+    public String checkFindEmail(CheckFindEmailRequestDto checkFindEmailRequestDto) {
+        String userName = checkFindEmailRequestDto.getUserName();
+        String phoneNumber = checkFindEmailRequestDto.getPhoneNumber();
+        User user = userRepository.findByUserNameAndPhoneNumber(userName,phoneNumber).orElseThrow(() ->new CustomException(EMAIL_AND_PHONENUMBER_NOT_FOUND));
+        return user.getEmail();
+    }
 }

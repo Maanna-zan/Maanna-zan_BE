@@ -3,6 +3,7 @@ package com.hanghae99.maannazan.domain.kakaoapi;
 import com.hanghae99.maannazan.domain.entity.Kakao;
 import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.KakaoResponseDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.domain.repository.KakaoApiRepository;
@@ -11,6 +12,10 @@ import com.hanghae99.maannazan.domain.repository.PostRepository;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +38,13 @@ public class KakaoApiService {
     //카카오 검색 api 저장
     public void apiSave(Map<String, Object> body) {
         List<Map<String, Object>> documents = (List<Map<String, Object>>) body.get("documents");
+        Set<String> existingApiIds = kakaoApiRepository.findAllApiIds();
         List<Kakao> kakaos = new ArrayList<>();
         for (Map<String, Object> document : documents) {
+            String apiId = document.get("id").toString();
+            if (existingApiIds.contains(apiId)){
+                continue;
+            }
             Kakao kakao = new Kakao();
             kakao.setAddress_name(document.get("address_name").toString());
             kakao.setCategory_group_code(document.get("category_group_code").toString());
@@ -48,17 +58,13 @@ public class KakaoApiService {
             kakao.setRoad_address_name(document.get("road_address_name").toString());
             kakao.setX(document.get("x").toString());
             kakao.setY(document.get("y").toString());
-            Optional<Kakao> foundKakao = kakaoApiRepository.findByApiId(kakao.getApiId());
-            if (foundKakao.isPresent()){
-                return;
-            }else {
-                kakaos.add(kakao);
-            }
+            kakaos.add(kakao);
+            existingApiIds.add(apiId);
         }
         kakaoApiRepository.saveAll(kakaos);
     }
 
-
+    // 상세 술집 페이지
     @Transactional
     public List<KakaoResponseDto> getAlkol(String apiId, User user) {
         Kakao kakaoView = kakaoApiRepository.findByApiId(apiId).orElseThrow(() -> new CustomException(CustomErrorCode.ALKOL_NOT_FOUND));
@@ -67,7 +73,8 @@ public class KakaoApiService {
         List<KakaoResponseDto> kakaoResponseDtoList = new ArrayList<>();
         boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(apiId, user);
         for (Kakao kakao : kakaos){
-            List<Post> posts = postRepository.findByApiId(kakao.getApiId());
+            List<Post> posts = postRepository.findByKakaoApiId(kakao.getApiId());
+            int numberOfPosts = posts.size();
             List<PostResponseDto> postResponseDtoList = new ArrayList<>();
             for (Post post : posts){
                 if(user!=null) {
@@ -78,31 +85,57 @@ public class KakaoApiService {
                     postResponseDtoList.add(new PostResponseDto(post));
                 }
             }
-            kakaoResponseDtoList.add(new KakaoResponseDto(kakao, postResponseDtoList, roomLike));
+            kakaoResponseDtoList.add(new KakaoResponseDto(kakao, postResponseDtoList,numberOfPosts, roomLike));
         }return kakaoResponseDtoList;
 
     }
 
-    public List<KakaoResponseDto> getBestAlkol(User user){
-        List<Kakao> kakaos = kakaoApiRepository.findAll();
-        List<KakaoResponseDto> kakaoResponseDtoList = new ArrayList<>();
-        for (Kakao kakao : kakaos){
+
+    // 모든 술집 조회
+    public List<AlkolResponseDto> getAllAlkol(User user, int page, int size){
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
+        List<Kakao> entityList = entityPage.getContent();
+        List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
+        for (Kakao kakao : entityList){
             boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(kakao.getApiId(), user);
-            List<Post> posts = postRepository.findByApiId(kakao.getApiId());
-            int numberOfPosts = posts.size();
-            List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-            for (Post post : posts){
-                boolean postLike = false;
-                if (user != null) {
-                    postLike = likeRepository.existsByPostIdAndUser(post.getId(), user);
-                }
-                postResponseDtoList.add(new PostResponseDto(post, postLike));
-            }
-            kakaoResponseDtoList.add(new KakaoResponseDto(kakao, postResponseDtoList, numberOfPosts, roomLike));
+            AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike));
         }
-        kakaoResponseDtoList.sort(Comparator.comparingInt(KakaoResponseDto::getNumberOfPosts).reversed());
-        return kakaoResponseDtoList;
+        return AlkolResponseDtoList;
     }
 
+    //    게시물 많은 순으로 술집 조회
+    @Transactional
+    public List<AlkolResponseDto> getBestAlkol(User user, int page, int size){
+        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "numberOfPosts"));
+        return getAlkolResponseDtos(user, pageable);
+    }
+
+    //조회수 많은 순으로 술집 조회
+    @Transactional
+    public List<AlkolResponseDto> getViewAlkol(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "roomViewCount"));
+        return getAlkolResponseDtos(user, pageable);
+    }
+
+    //좋아요 많은 순으로 술집 조회
+    public List<AlkolResponseDto> getLikeAlkol(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "roomLikecnt"));
+        return getAlkolResponseDtos(user, pageable);
+    }
+
+    // 공통 부분 메서드화
+    private List<AlkolResponseDto> getAlkolResponseDtos(User user, Pageable pageable) {
+        Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
+        List<Kakao> entityList = entityPage.getContent();
+        List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
+        for (Kakao kakao : entityList){
+            List<Post> posts = postRepository.findByKakaoApiId(kakao.getApiId());
+            int numberOfPosts = posts.size();
+            boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(kakao.getApiId(), user);
+            AlkolResponseDtoList.add(new AlkolResponseDto(kakao, numberOfPosts, roomLike));
+        }
+        return AlkolResponseDtoList;
+    }
 
 }
