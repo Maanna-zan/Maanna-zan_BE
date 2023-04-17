@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hanghae99.maannazan.domain.entity.RefreshToken;
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
@@ -25,7 +24,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -104,17 +102,17 @@ public class KakaoService {
         /*JsonNode jsonNode = objectMapper.readTree(responseBody);
         String accessToken = jsonNode.get("access_token").asText();
         String refreshToken = jsonNode.get("refresh_token").asText();*/
-        OAuthToken oAuthToken = null;
+        OAuthTokenResponseDto oAuthTokenResponseDto = null;
         try {
-             oAuthToken =objectMapper.readValue(responseBody, OAuthToken.class);
+             oAuthTokenResponseDto =objectMapper.readValue(responseBody, OAuthTokenResponseDto.class);
         }catch(JsonMappingException e){
             e.printStackTrace();
         }catch(JsonProcessingException e){
             e.printStackTrace();
         }
-        System.out.println(oAuthToken.getAccess_token());
-        System.out.println(oAuthToken.getRefresh_token());
-        return new String[] {oAuthToken.getAccess_token(), oAuthToken.getRefresh_token()};
+        System.out.println(oAuthTokenResponseDto.getAccess_token());
+        System.out.println(oAuthTokenResponseDto.getRefresh_token());
+        return new String[] {oAuthTokenResponseDto.getAccess_token(), oAuthTokenResponseDto.getRefresh_token()};
 
     }
     // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
@@ -223,19 +221,19 @@ public class KakaoService {
         String responseBody = response.getBody();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        OAuthToken oAuthToken = null;
+        OAuthTokenResponseDto oAuthTokenResponseDto = null;
         try {
-            oAuthToken =objectMapper.readValue(responseBody, OAuthToken.class);
+            oAuthTokenResponseDto =objectMapper.readValue(responseBody, OAuthTokenResponseDto.class);
         }catch(JsonMappingException e){
             e.printStackTrace();
         }catch(JsonProcessingException e){
             e.printStackTrace();
         }
-        System.out.println(oAuthToken.getAccess_token());
-        System.out.println(oAuthToken.getExpires_in());
-        System.out.println(oAuthToken.getRefresh_token());
-        System.out.println(oAuthToken.getToken_type());
-        return new String[] {oAuthToken.getAccess_token(), oAuthToken.getRefresh_token()};
+        System.out.println(oAuthTokenResponseDto.getAccess_token());
+        System.out.println(oAuthTokenResponseDto.getExpires_in());
+        System.out.println(oAuthTokenResponseDto.getRefresh_token());
+        System.out.println(oAuthTokenResponseDto.getToken_type());
+        return new String[] {oAuthTokenResponseDto.getAccess_token(), oAuthTokenResponseDto.getRefresh_token()};
 
     }
 
