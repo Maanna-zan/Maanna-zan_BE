@@ -28,8 +28,8 @@ public class LikeController {
     }
 
     @Operation(summary = "kakaoApiLike", description = "술집 좋아요 토글")
-    @PutMapping("/kakao/like/{kakaoId}")
-    public ResponseEntity<ResponseMessage<String>> roomLike(@PathVariable String kakaoId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseMessage.SuccessResponse("클릭 성공",likeService.roomLike(kakaoId, userDetails.getUser()));
+    @PutMapping("/bar/like/{apiId}")
+    public ResponseEntity<ResponseMessage<String>> roomLike(@PathVariable String apiId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseMessage.SuccessResponse("클릭 성공",likeService.roomLike(apiId, userDetails.getUser()));
     }
 }
