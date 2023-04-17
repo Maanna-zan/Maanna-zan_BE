@@ -31,7 +31,7 @@ public class CommentService {
     public void createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
 //        게시글 존재 여부 확인. 없으면 예외처리
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
+                () -> new CustomException(CustomErrorCode.POST_NOT_FOUND)
         );
         Comment comment = new Comment(post, user, commentRequestDto);
         commentRepository.save(comment);
@@ -43,11 +43,11 @@ public class CommentService {
 
 //        댓글 존재 여부 확인. 없으면 예외처리
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
+                () -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND)
         );
 //        ADMIN이 아닌 멤버가 댓글의 해당 작성자가 아닐때 예외 처리 && !user.getRole().equals(UserRoleEnum.ADMIN
         if (!comment.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("댓글 수정 권한이 없습니다.");
+            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
         comment.update(commentRequestDto);
 
@@ -60,11 +60,11 @@ public class CommentService {
 
 //        댓글 존재 여부 확인. 없으면 예외처리
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("댓글을 찾을 수 없습니다.")
+                () -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND)
         );
 //        ADMIN이 아닌 멤버가 댓글의 해당 작성자가 아닐때 예외 처리 && !user.getRole().equals(UserRoleEnum.ADMIN)
         if (!comment.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("댓글 삭제 권한이 없습니다.");
+            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
         commentRepository.deleteById(commentId);
         return ResponseMessage.SuccessResponse("삭제 성공", "");
@@ -73,7 +73,7 @@ public class CommentService {
     //대댓글 작성
     @Transactional
     public CommentResponseDto createCommentList(CommentRequestDto commentRequestDto, User user, Long parentId) {
-//        Post post = getPost(id);
+
         Comment parentComment = null;
         if (parentId != null) {
             parentComment = commentRepository.findById(parentId)

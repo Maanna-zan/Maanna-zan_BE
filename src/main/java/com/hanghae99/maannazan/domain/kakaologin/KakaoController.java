@@ -7,13 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.servlet.ModelAndView;
 
 
-import javax.servlet.http.Cookie;
+
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -44,7 +44,7 @@ public class KakaoController {
         return "home";
 
     }
-
+        // 프론트 배포 되면 지울 것들
         @GetMapping("/home")
         public ModelAndView homePage() {
             return new ModelAndView("index");

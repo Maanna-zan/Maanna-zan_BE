@@ -54,6 +54,7 @@ public class WebSecurityConfig {
                 .antMatchers("/OAuth/Kakao/**").permitAll()
                 .antMatchers("/posts/**").permitAll()
                 .antMatchers("/home").permitAll()
+                .antMatchers("/login-page").permitAll()
                 .antMatchers("/getAccessToken/**").permitAll()
                 .antMatchers("/alkol/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/posts/**").permitAll()
