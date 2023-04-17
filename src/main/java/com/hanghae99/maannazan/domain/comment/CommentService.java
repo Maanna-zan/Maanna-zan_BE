@@ -101,7 +101,7 @@ public class CommentService {
         }
 
         if (!comment.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("댓글 삭제 권한이 없습니다.");
+            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
 
         // 대댓글이면 부모 댓글의 자식 댓글 목록에서 해당 대댓글을 삭제한다
@@ -122,7 +122,7 @@ public class CommentService {
 
         // 해당 댓글을 수정할 권한이 있는지 체크.
         if (!comment.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("댓글 수정 권한이 없습니다.");
+            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
 
         // 댓글 내용을 업데이트합니다.

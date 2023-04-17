@@ -48,17 +48,17 @@ public class KakaoService {
         String[] token = getToken(code);
 
         // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
-        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(token[0]);
+        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(token[1]);
 
         // 3. 필요시에 회원가입
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-        /*String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+        String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
         String refreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
         response.setHeader("Authorization", createToken);
-        response.setHeader("refreshToken", refreshToken);*/
-        TokenDto tokenDto = jwtUtil.createAllToken(kakaoUser.getEmail());
+        response.setHeader("refreshToken", refreshToken);
+        /*TokenDto tokenDto = jwtUtil.createAllToken(kakaoUser.getEmail());
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserEmail(kakaoUser.getEmail());
 
         if(refreshToken.isPresent()) {
@@ -67,7 +67,7 @@ public class KakaoService {
             RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), kakaoUser.getEmail());
             refreshTokenRepository.save(newToken);
         }
-        setHeader(response, tokenDto);
+        setHeader(response, tokenDto);*/
 
 
     }
@@ -107,6 +107,7 @@ public class KakaoService {
         String accessToken = jsonNode.get("access_token").asText();
         String refreshToken = jsonNode.get("refresh_token").asText();
         return new String[] {accessToken, refreshToken};
+
     }
     // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
     private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
@@ -184,7 +185,7 @@ public class KakaoService {
         String newRefreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
 
         response.setHeader("Authorization", newAccessToken);
-        response.setHeader("refreshToken", newRefreshToken);
+        response.setHeader("Authorization", newRefreshToken);
 
         return new String[] { newAccessToken, newRefreshToken };
     }
@@ -192,7 +193,7 @@ public class KakaoService {
     private String[] getNewAccessToken(String refreshToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
-
+        headers.add("Authorization", "Bearer "+refreshToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
         System.out.println(refreshToken);
         // HTTP Body 생성
