@@ -2,9 +2,9 @@ package com.hanghae99.maannazan.domain.kakaologin;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hanghae99.maannazan.domain.entity.RefreshToken;
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
@@ -24,7 +24,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -50,11 +49,11 @@ public class KakaoService {
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-        /*String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
-        String refreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
-        response.setHeader("Authorization", createToken);
-        response.setHeader("refreshToken", refreshToken);*/
-        TokenDto tokenDto = jwtUtil.createAllToken(kakaoUser.getEmail());
+//        String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+//        String refreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
+        response.setHeader("Authorization", token[0]);
+        response.setHeader("refreshToken", token[1]);
+        /*TokenDto tokenDto = jwtUtil.createAllToken(kakaoUser.getEmail());
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserEmail(kakaoUser.getEmail());
 
         if(refreshToken.isPresent()) {
@@ -63,7 +62,7 @@ public class KakaoService {
             RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), kakaoUser.getEmail());
             refreshTokenRepository.save(newToken);
         }
-        setHeader(response, tokenDto);
+        setHeader(response, tokenDto);*/
 
 
     }
@@ -98,11 +97,23 @@ public class KakaoService {
 
         // HTTP 응답 (JSON) -> 액세스 토큰 파싱
         String responseBody = response.getBody();
+
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(responseBody);
+        /*JsonNode jsonNode = objectMapper.readTree(responseBody);
         String accessToken = jsonNode.get("access_token").asText();
-        String refreshToken = jsonNode.get("refresh_token").asText();
-        return new String[] {accessToken, refreshToken};
+        String refreshToken = jsonNode.get("refresh_token").asText();*/
+        OAuthTokenResponseDto oAuthTokenResponseDto = null;
+        try {
+             oAuthTokenResponseDto =objectMapper.readValue(responseBody, OAuthTokenResponseDto.class);
+        }catch(JsonMappingException e){
+            e.printStackTrace();
+        }catch(JsonProcessingException e){
+            e.printStackTrace();
+        }
+        System.out.println(oAuthTokenResponseDto.getAccess_token());
+        System.out.println(oAuthTokenResponseDto.getRefresh_token());
+        return new String[] {oAuthTokenResponseDto.getAccess_token(), oAuthTokenResponseDto.getRefresh_token()};
+
     }
     // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
     private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
@@ -171,26 +182,25 @@ public class KakaoService {
         return kakaoUser;
     }
 
-    public String[] getRefresh(String refreshToken ,HttpServletResponse response) throws JsonProcessingException {
+    public void getRefresh(String refreshToken ,HttpServletResponse response) throws JsonProcessingException {
         String[] tokens = getNewAccessToken(refreshToken);
-        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(tokens[0]);
-        User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
+//        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(tokens[0]);
+//        User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
-        String newAccessToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
-        String newRefreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
+ /*       String newAccessToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+        String newRefreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");*/
 
-        response.setHeader("Authorization", newAccessToken);
-        response.setHeader("refreshToken", newRefreshToken);
+        response.setHeader("Authorization", tokens[0]);
+        response.setHeader("refreshToken", tokens[1]);
 
-        return new String[] { newAccessToken, newRefreshToken };
     }
 
     private String[] getNewAccessToken(String refreshToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
-
+        headers.add("Authorization", "Bearer "+refreshToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-        System.out.println(refreshToken);
+
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "refresh_token");
@@ -209,12 +219,22 @@ public class KakaoService {
 
         // HTTP 응답 (JSON) -> 새로운 액세스 토큰 파싱
         String responseBody = response.getBody();
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(responseBody);
-        String newAccessToken = jsonNode.get("access_token").asText();
-        String newRefreshToken = jsonNode.get("refresh_token").asText();
 
-        return new String[] {newAccessToken, newRefreshToken};
+        ObjectMapper objectMapper = new ObjectMapper();
+        OAuthTokenResponseDto oAuthTokenResponseDto = null;
+        try {
+            oAuthTokenResponseDto =objectMapper.readValue(responseBody, OAuthTokenResponseDto.class);
+        }catch(JsonMappingException e){
+            e.printStackTrace();
+        }catch(JsonProcessingException e){
+            e.printStackTrace();
+        }
+        System.out.println(oAuthTokenResponseDto.getAccess_token());
+        System.out.println(oAuthTokenResponseDto.getExpires_in());
+        System.out.println(oAuthTokenResponseDto.getRefresh_token());
+        System.out.println(oAuthTokenResponseDto.getToken_type());
+        return new String[] {oAuthTokenResponseDto.getAccess_token(), oAuthTokenResponseDto.getRefresh_token()};
+
     }
 
 

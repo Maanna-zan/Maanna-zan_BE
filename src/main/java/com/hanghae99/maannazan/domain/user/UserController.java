@@ -61,8 +61,8 @@ public class UserController {
     }
 
     @Operation(summary = "SignOut", description = "회원 탈퇴")
-    @DeleteMapping("/signout/{id}")
-    public ResponseEntity<ResponseMessage<Object>> signout(@PathVariable Long id, @RequestBody SignoutRequestDto signoutRequestDto) {
+    @PutMapping("/signout/{id}")
+    public ResponseEntity<ResponseMessage<Object>> signout(@PathVariable Long id,@RequestBody SignoutRequestDto signoutRequestDto) {
         return userService.deleteUser(id, signoutRequestDto);
     }
 
