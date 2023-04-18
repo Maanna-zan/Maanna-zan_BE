@@ -175,6 +175,7 @@ public class UserService {
     @Transactional
     public ResponseEntity<ResponseMessage<Object>> deleteUser(Long id, SignoutRequestDto signoutRequestDto) {
         Optional<User> user = userRepository.findById(id);
+        System.out.println(user.get().getId());
         if (user.isEmpty()) {
             return ResponseMessage.ErrorResponse(CustomErrorCode.USER_NOT_FOUND);
         }
