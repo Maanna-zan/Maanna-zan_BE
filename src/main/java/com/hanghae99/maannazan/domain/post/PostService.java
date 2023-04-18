@@ -2,6 +2,7 @@ package com.hanghae99.maannazan.domain.post;
 
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
 import com.hanghae99.maannazan.domain.entity.*;
@@ -78,7 +79,36 @@ public class PostService {
         }  return postResponseDtoList;
     }
 
-    
+
+    public List<PostResponseDto> getpostsOrderByLikeCnt(User user) {
+        List<Post> posts = postRepository.findAllOrderByLikecnt();
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for (Post post : posts) {
+            List<Comment> commentList = commentRepository.findByPost(post);
+            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+            Category category = categoryRepository.findByPostId(post.getId());
+            if(user!=null) {
+                boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
+                for (Comment comment : commentList) {
+                    commentResponseDtoList.add(new CommentResponseDto(comment));
+                }
+                if(category!=null){
+                    postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList));
+                } else {
+                    postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList));
+                }
+            }
+            else {
+                if (category != null) {
+                    postResponseDtoList.add(new PostResponseDto(category,commentResponseDtoList));
+                } else {
+                    postResponseDtoList.add(new PostResponseDto(post,commentResponseDtoList));
+                }
+            }
+        }  return postResponseDtoList;
+    }
+
+
 
 
     @Transactional
@@ -120,19 +150,11 @@ public class PostService {
         Category category = categoryRepository.findByPostId(post.getId());
         Likes likes = likeRepository.findByPostIdAndUserId(post.getId(), user.getId());
 
-//        String realName = post.getS3Url().split("/")[3];
-//        String decodedObjectPath = URLDecoder.decode(realName, "UTF-8");  //디코딩
+        String realName = post.getS3Url().split("/")[3];
+        String decodedObjectPath =  URLDecoder.decode(realName, "UTF-8");  //디코딩
 
-        String s3Url = post.getS3Url();
-        String encodedFileName = s3Url.substring(s3Url.lastIndexOf("/") + 1); // URL에서 파일 이름 추출
-        String decodedFileName = URLDecoder.decode(encodedFileName, "UTF-8"); // 파일 이름 디코딩
-
-        String decodedObjectPath = "sanha--test/" + decodedFileName; // 디코딩된 파일 이름과 버킷 이름을 합쳐서 파일 경로 설정
-
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, decodedObjectPath));
 //        amazonS3.deleteObject(new DeleteObjectRequest(bucket, decodedObjectPath));
-//            amazonS3.deleteObject(bucket, realName);   //s3에 올라간 데이터 삭제
-
+            amazonS3.deleteObject(bucket, decodedObjectPath);   //s3에 올라간 데이터 삭제
 
         categoryRepository.delete(category);
         postRepository.delete(post);
@@ -140,5 +162,4 @@ public class PostService {
         return "게시글 삭제 완료";
 
     }
-
 }

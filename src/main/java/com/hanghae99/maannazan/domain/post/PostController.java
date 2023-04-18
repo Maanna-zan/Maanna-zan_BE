@@ -46,6 +46,17 @@ public class PostController {
         }
     }
 
+    //게시글 좋아요순 조회
+    @Operation(summary = "getposts", description = "게시글 리스트 조회")
+    @GetMapping("/posts")
+    public List<PostResponseDto> getpostsOrderByLikeCnt(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        if(userDetails == null){
+            return postService.getpostsOrderByLikeCnt(null);
+        } else{
+            return postService.getpostsOrderByLikeCnt(userDetails.getUser());
+        }
+    }
+
     // 게시글 하나 조회
     @Operation(summary = "getPostOne", description = "게시글 상세조회")
     @GetMapping("/posts/{postId}")
