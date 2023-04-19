@@ -2,11 +2,8 @@ package com.hanghae99.maannazan.domain.post;
 
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
 import com.hanghae99.maannazan.domain.entity.*;
-
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.domain.repository.*;
@@ -17,8 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +78,36 @@ public class PostService {
 
 
     public List<PostResponseDto> getpostsOrderByLikeCnt(User user) {
-        List<Post> posts = postRepository.findAllOrderByLikecnt();
+        List<Post> posts = postRepository.findAllByOrderByLikecntDesc();
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for (Post post : posts) {
+            List<Comment> commentList = commentRepository.findByPost(post);
+            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+            Category category = categoryRepository.findByPostId(post.getId());
+            if(user!=null) {
+                boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
+                for (Comment comment : commentList) {
+                    commentResponseDtoList.add(new CommentResponseDto(comment));
+                }
+                if(category!=null){
+                    postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList));
+                } else {
+                    postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList));
+                }
+            }
+            else {
+                if (category != null) {
+                    postResponseDtoList.add(new PostResponseDto(category,commentResponseDtoList));
+                } else {
+                    postResponseDtoList.add(new PostResponseDto(post,commentResponseDtoList));
+                }
+            }
+        }  return postResponseDtoList;
+    }
+
+
+    public List<PostResponseDto> getpostsOrderByViewCount(User user) {
+        List<Post> posts = postRepository.findAllByOrderByViewCountDesc();
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         for (Post post : posts) {
             List<Comment> commentList = commentRepository.findByPost(post);
@@ -142,24 +168,35 @@ public class PostService {
     }
 
     @Transactional
-    public String deletePost(Long postId, User user) throws UnsupportedEncodingException {
+    public String deletePost(Long postId, User user)  {
         Post post = postRepository.findByUserIdAndId(user.getId(), postId);
-//        if(!(user.getId().equals(post.getUser().getId()))){
-//            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
-//        }
+        if(!(user.getId().equals(post.getUser().getId()))){
+            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
+        }
         Category category = categoryRepository.findByPostId(post.getId());
         Likes likes = likeRepository.findByPostIdAndUserId(post.getId(), user.getId());
 
-        String realName = post.getS3Url().split("/")[3];
-        String decodedObjectPath =  URLDecoder.decode(realName, "UTF-8");  //디코딩
-
-//        amazonS3.deleteObject(new DeleteObjectRequest(bucket, decodedObjectPath));
-            amazonS3.deleteObject(bucket, decodedObjectPath);   //s3에 올라간 데이터 삭제
-
-        categoryRepository.delete(category);
+        try{
+            String realName = post.getS3Url().split("/")[3];
+            boolean isObjectExist = amazonS3.doesObjectExist(bucket,realName);
+            if(isObjectExist) {
+                amazonS3.deleteObject(bucket, realName);   //s3에 올라간 데이터 삭제
+            } else {
+                throw new CustomException(CustomErrorCode.S3_NOT_FOUND);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        if(category != null){
+            categoryRepository.delete(category);
+        }
         postRepository.delete(post);
-        likeRepository.delete(likes);
+        if(likes!=null){
+            likeRepository.delete(likes);
+        }
         return "게시글 삭제 완료";
 
     }
+
+
 }

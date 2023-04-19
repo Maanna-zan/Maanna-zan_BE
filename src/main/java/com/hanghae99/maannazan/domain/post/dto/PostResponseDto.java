@@ -17,8 +17,6 @@ import java.util.List;
 public class PostResponseDto {
     private Long id;
 
-    private String storename;
-
     private String title;
 
     private String description;
@@ -30,6 +28,10 @@ public class PostResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern="yyyyMMdd")
     private LocalDateTime modifiedAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern="yyyyMMdd")
+    private LocalDateTime createAt;
 
     private boolean soju;
     private boolean beer;
@@ -49,6 +51,7 @@ public class PostResponseDto {
         this.likecnt = category.getPost().getLikecnt();
         this.nickname = category.getPost().getUser().getNickName();
         this.modifiedAt = category.getPost().getModifiedAt();
+        this.createAt = category.getPost().getCreatedAt();
         this.soju = category.isSoju();
         this.beer = category.isBeer();
         this.s3Url = category.getPost().getS3Url();
@@ -64,6 +67,7 @@ public class PostResponseDto {
         this.likecnt = post.getLikecnt();
         this.nickname = post.getUser().getNickName();
         this.modifiedAt = post.getModifiedAt();
+        this.createAt = post.getCreatedAt();
         this.like = like;
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
@@ -76,6 +80,7 @@ public class PostResponseDto {
         this.likecnt = category.getPost().getLikecnt();
         this.nickname = category.getPost().getUser().getNickName();
         this.modifiedAt = category.getPost().getModifiedAt();
+        this.createAt = category.getPost().getCreatedAt();
         this.s3Url = category.getPost().getS3Url();
         this.commentList = commentResponseDtoList;
         this.viewCount = category.getPost().getViewCount();
@@ -87,6 +92,7 @@ public class PostResponseDto {
         this.likecnt = post.getLikecnt();
         this.nickname = post.getUser().getNickName();
         this.modifiedAt = post.getModifiedAt();
+        this.createAt = post.getCreatedAt();
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
         this.viewCount = post.getViewCount();
@@ -100,6 +106,7 @@ public class PostResponseDto {
         this.likecnt = post.getLikecnt();
         this.nickname = post.getUser().getNickName();
         this.modifiedAt = post.getModifiedAt();
+        this.createAt = post.getCreatedAt();
         this.s3Url = post.getS3Url();
     }
     public PostResponseDto(Post post, boolean like){
@@ -108,6 +115,7 @@ public class PostResponseDto {
         this.description = post.getDescription();
         this.nickname = post.getUser().getNickName();
         this.modifiedAt = post.getModifiedAt();
+        this.createAt = post.getCreatedAt();
         this.s3Url = post.getS3Url();
         this.likecnt = post.getLikecnt();
         this.like = like;
