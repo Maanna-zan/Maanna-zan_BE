@@ -55,7 +55,7 @@ public class FindService {
             midPointX = Double.parseDouble(nearestStation.getX());
             midPointY = Double.parseDouble(nearestStation.getY());
             //
-            return new FindResponseDto(midPointX,midPointY);
+            return new FindResponseDto(midPointX,midPointY, nearestStation.getStationName(), nearestStation.getStationLine());
 
 
         } else if(x4 == 0.0 && y4 == 0.0){        //세명일 때 공식
@@ -75,7 +75,7 @@ public class FindService {
             midPointX = Double.parseDouble(nearestStation.getX());
             midPointY = Double.parseDouble(nearestStation.getY());
 
-            return new FindResponseDto(midPointX, midPointY);
+            return new FindResponseDto(midPointX,midPointY, nearestStation.getStationName(), nearestStation.getStationLine());
         }else{                    //네명일 때 공식    //FIXME   chatGpt 안썼습니다~     주멘 지분 3%
             x = (x+x2+x3)/3;
             y = (y+y2+y3)/3;
@@ -195,7 +195,7 @@ public class FindService {
             midPointX = Double.parseDouble(nearestStation.getX());
             midPointY = Double.parseDouble(nearestStation.getY());
 
-            return new FindResponseDto(midPointX,midPointY);
+            return new FindResponseDto(midPointX,midPointY, nearestStation.getStationName(), nearestStation.getStationLine());
             }
 
         }
