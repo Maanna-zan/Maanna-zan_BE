@@ -46,6 +46,28 @@ public class PostController {
         }
     }
 
+    //게시글 좋아요순 조회
+    @Operation(summary = "getposts", description = "게시글 좋아요순 리스트 조회")
+    @GetMapping("/posts/likeCount")
+    public List<PostResponseDto> getpostsOrderByLikeCnt(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        if(userDetails == null){
+            return postService.getpostsOrderByLikeCnt(null);
+        } else{
+            return postService.getpostsOrderByLikeCnt(userDetails.getUser());
+        }
+    }
+
+    //게시글 조회순 조회
+    @Operation(summary = "getposts", description = "게시글 조회순 리스트 조회")
+        @GetMapping("/posts/viewCount")
+    public List<PostResponseDto> getpostsOrderByViewCount(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        if(userDetails == null){
+            return postService.getpostsOrderByViewCount(null);
+        } else{
+            return postService.getpostsOrderByViewCount(userDetails.getUser());
+        }
+    }
+
     // 게시글 하나 조회
     @Operation(summary = "getPostOne", description = "게시글 상세조회")
     @GetMapping("/posts/{postId}")
@@ -60,15 +82,16 @@ public class PostController {
     // 게시글 수정
     @Operation(summary = "updatePost", description = "게시글 업데이트")
     @PatchMapping("/posts/{postId}")
-    public ResponseEntity<ResponseMessage<String>> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    public ResponseEntity<ResponseMessage<String>> updatePost(@PathVariable Long postId,  PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         String url = s3Service.uploadFile(postRequestDto.getFile());  //s3에 업로드를 먼저하고 url로 저장하는듯?
         postRequestDto.setS3Url(url);
         return  ResponseMessage.SuccessResponse("게시글 업데이트 성공",postService.updatePost(postId, userDetails.getUser(), postRequestDto));
     }
+
     // 게시글 삭제
     @Operation(summary = "deletePost", description = "게시글 삭제")
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<ResponseMessage<String>> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) throws UnsupportedEncodingException {
+    public ResponseEntity<ResponseMessage<String>> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return  ResponseMessage.SuccessResponse("게시글 삭제 완료",postService.deletePost(postId, userDetails.getUser()));
 
     }
