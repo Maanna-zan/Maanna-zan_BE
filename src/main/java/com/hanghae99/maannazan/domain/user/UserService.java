@@ -1,13 +1,7 @@
 package com.hanghae99.maannazan.domain.user;
 
-import com.hanghae99.maannazan.domain.entity.Comment;
-import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.entity.RefreshToken;
-import com.hanghae99.maannazan.domain.entity.User;
-import com.hanghae99.maannazan.domain.repository.CommentRepository;
-import com.hanghae99.maannazan.domain.repository.PostRepository;
-import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
-import com.hanghae99.maannazan.domain.repository.UserRepository;
+import com.hanghae99.maannazan.domain.entity.*;
+import com.hanghae99.maannazan.domain.repository.*;
 import com.hanghae99.maannazan.domain.user.dto.*;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
@@ -35,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -184,7 +179,8 @@ public class UserService {
         }
         List<Post> posts = postRepository.findByUserId(id);
         List<Comment> comments = commentRepository.findByUserId(id);
-
+        List<Likes> likes = likeRepository.findByUserId(id);
+        likeRepository.deleteAll(likes);
         postRepository.deleteAll(posts);
         commentRepository.deleteAll(comments);
         userRepository.deleteById(id);

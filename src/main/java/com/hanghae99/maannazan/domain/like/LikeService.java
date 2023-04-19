@@ -43,9 +43,9 @@ public class LikeService {
     }
 
     @Transactional
-    public String roomLike(String kakaoId, User user) {
+    public String roomLike(String apiId, User user) {
         // 해당 사용자 정보와 게시글 정보를 가져온다.
-        Kakao kakao = kakaoApiRepository.findByApiId(kakaoId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
+        Kakao kakao = kakaoApiRepository.findByApiId(apiId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
         Likes likes = likeRepository.findByUserAndKakao(user, kakao);
         if (likes != null) { // 이미 좋아요를 눌렀다면 좋아요 취소
             likeRepository.delete(likes);
