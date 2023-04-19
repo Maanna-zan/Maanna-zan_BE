@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.hanghae99.maannazan.global.exception.CustomErrorCode.DUPLICATE_NICKNAME;
+import static com.hanghae99.maannazan.global.exception.CustomErrorCode.NOT_PROPER_INPUTFORM;
 
 @RequiredArgsConstructor
 @Service
