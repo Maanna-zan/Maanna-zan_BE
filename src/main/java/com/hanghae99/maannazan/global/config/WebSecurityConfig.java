@@ -50,6 +50,8 @@ public class WebSecurityConfig {
                 .antMatchers("/users/**").permitAll()
                 .antMatchers("/kakaoApi").permitAll()
                 .antMatchers("/find").permitAll()
+                .antMatchers("/comments/**").permitAll()
+                .antMatchers("/recomments/**").permitAll()
                 .antMatchers("/find/**").permitAll()
                 .antMatchers("/OAuth/Kakao/**").permitAll()
                 .antMatchers("/posts/**").permitAll()
