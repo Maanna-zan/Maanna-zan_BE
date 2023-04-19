@@ -101,10 +101,10 @@ public class MyPageService {
 
     @Transactional
     public void changePassword(User user, ChangePasswordRequestDto changePasswordRequestDto) {
-        String password = passwordEncoder.encode(changePasswordRequestDto.getPassword());
-        user.changePassword(password);
-        userRepository.save(user);
+        if(passwordEncoder.matches(changePasswordRequestDto.getOldPassword(),user.getPassword())){
+            String password = passwordEncoder.encode(changePasswordRequestDto.getPassword());
+            user.changePassword(password);
+            userRepository.save(user);
+        }else throw new CustomException(NOT_PROPER_INPUTFORM);
     }
-
-
 }
