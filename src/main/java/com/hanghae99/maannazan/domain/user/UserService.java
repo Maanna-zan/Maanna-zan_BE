@@ -170,7 +170,6 @@ public class UserService {
     @Transactional
     public ResponseEntity<ResponseMessage<Object>> deleteUser(Long id, SignoutRequestDto signoutRequestDto) {
         Optional<User> user = userRepository.findById(id);
-        System.out.println(user.get().getId());
         if (user.isEmpty()) {
             return ResponseMessage.ErrorResponse(CustomErrorCode.USER_NOT_FOUND);
         }
@@ -181,10 +180,9 @@ public class UserService {
         List<Post> posts = postRepository.findByUserId(id);
         List<Comment> comments = commentRepository.findByUserId(id);
         List<Likes> likes = likeRepository.findByUserId(id);
-
         likeRepository.deleteAll(likes);
-        commentRepository.deleteAll(comments);
         postRepository.deleteAll(posts);
+        commentRepository.deleteAll(comments);
         userRepository.deleteById(id);
 
         return ResponseMessage.SuccessResponse("회원탈퇴 성공", "");

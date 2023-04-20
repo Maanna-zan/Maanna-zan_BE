@@ -2,9 +2,11 @@ package com.hanghae99.maannazan.domain.kakaoapi.dto;
 
 import com.hanghae99.maannazan.domain.entity.Kakao;
 import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.post.dto.PostImageResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -40,8 +42,10 @@ public class AlkolResponseDto {
     private int roomLikecnt;
     private boolean roomLike;
 
+    private List<PostImageResponseDto> postList = new ArrayList<>();
 
-    public AlkolResponseDto(Kakao kakao, boolean roomLike){
+
+    public AlkolResponseDto(Kakao kakao, boolean roomLike,List<PostImageResponseDto> postImageResponseDtoList){
         this.apiId = kakao.getApiId();
         this.address_name = kakao.getAddress_name();
         this.category_group_code = kakao.getCategory_group_code();
@@ -57,9 +61,10 @@ public class AlkolResponseDto {
         this.roomViewCount = kakao.getRoomViewCount();
         this.roomLikecnt = kakao.getRoomLikecnt();
         this.roomLike = roomLike;
+        this.postList = postImageResponseDtoList;
     }
 
-    public AlkolResponseDto(Kakao kakao, int numberOfPosts, boolean roomLike){
+    public AlkolResponseDto(Kakao kakao, int numberOfPosts, boolean roomLike, List<PostImageResponseDto> postImageResponseDtoList){
         this.apiId = kakao.getApiId();
         this.address_name = kakao.getAddress_name();
         this.category_group_code = kakao.getCategory_group_code();
@@ -76,6 +81,7 @@ public class AlkolResponseDto {
         this.roomViewCount = kakao.getRoomViewCount();
         this.roomLikecnt = kakao.getRoomLikecnt();
         this.roomLike = roomLike;
+        this.postList = postImageResponseDtoList;
     }
 
 

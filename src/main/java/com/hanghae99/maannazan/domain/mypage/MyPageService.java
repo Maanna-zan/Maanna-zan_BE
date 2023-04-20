@@ -1,10 +1,14 @@
 package com.hanghae99.maannazan.domain.mypage;
 
-import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
-import com.hanghae99.maannazan.domain.entity.*;
+import com.hanghae99.maannazan.domain.entity.Kakao;
+import com.hanghae99.maannazan.domain.entity.Post;
+import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
-import com.hanghae99.maannazan.domain.mypage.dto.*;
-import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
+import com.hanghae99.maannazan.domain.mypage.dto.ChangeNickNameRequestDto;
+import com.hanghae99.maannazan.domain.mypage.dto.ChangePasswordRequestDto;
+import com.hanghae99.maannazan.domain.mypage.dto.MyPagePostResponseDto;
+import com.hanghae99.maannazan.domain.mypage.dto.MyPageResponseDto;
+import com.hanghae99.maannazan.domain.post.dto.PostImageResponseDto;
 import com.hanghae99.maannazan.domain.repository.*;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static com.hanghae99.maannazan.global.exception.CustomErrorCode.*;
+import static com.hanghae99.maannazan.global.exception.CustomErrorCode.DUPLICATE_NICKNAME;
+import static com.hanghae99.maannazan.global.exception.CustomErrorCode.NOT_PROPER_INPUTFORM;
 
 @RequiredArgsConstructor
 @Service
@@ -73,8 +77,13 @@ public class MyPageService {
         List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
         for (Kakao kakao : entityList){
             boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(kakao.getApiId(), user);
+            List<Post> posts = postRepository.findByKakaoApiId(kakao.getApiId());
+            List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
+            for (Post post : posts){
+                postImageResponseDtoList.add(new PostImageResponseDto(post));
+            }
             if (roomLike){
-                AlkolResponseDtoList.add(new AlkolResponseDto(kakao, true));
+                AlkolResponseDtoList.add(new AlkolResponseDto(kakao, true, postImageResponseDtoList));
             }
 
         }
@@ -93,10 +102,10 @@ public class MyPageService {
 
     @Transactional
     public void changePassword(User user, ChangePasswordRequestDto changePasswordRequestDto) {
-        String password = passwordEncoder.encode(changePasswordRequestDto.getPassword());
-        user.changePassword(password);
-        userRepository.save(user);
+        if(passwordEncoder.matches(changePasswordRequestDto.getOldPassword(),user.getPassword())){
+            String password = passwordEncoder.encode(changePasswordRequestDto.getPassword());
+            user.changePassword(password);
+            userRepository.save(user);
+        }else throw new CustomException(NOT_PROPER_INPUTFORM);
     }
-
-
 }

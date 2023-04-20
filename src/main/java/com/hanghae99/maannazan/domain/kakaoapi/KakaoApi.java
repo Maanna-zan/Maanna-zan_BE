@@ -110,7 +110,7 @@ public class KakaoApi {
     //조회수 순으로 술집 조회
     @Operation(summary = "alkolView", description = "조회수 순으로 술집 조회")
     @GetMapping("/alkol/view")
-    public List<AlkolResponseDto> getViewAlkol(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public List<AlkolResponseDto> getViewAlkol(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "3") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
         if(userDetails==null){
             return kakaoApiService.getViewAlkol(null,page,size);
         } else

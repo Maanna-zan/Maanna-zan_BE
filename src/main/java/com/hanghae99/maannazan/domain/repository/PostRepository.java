@@ -19,4 +19,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     List<Post> findByKakaoApiId(String apiId);
+
+//    List<Post> findAllOrderByLikecntDesc();
+
+    List<Post> findAllByOrderByLikecntDesc();
+
+    List<Post> findAllByOrderByViewCountDesc();
 }

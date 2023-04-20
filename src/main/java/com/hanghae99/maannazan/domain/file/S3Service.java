@@ -3,10 +3,7 @@ package com.hanghae99.maannazan.domain.file;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ListObjectsV2Result;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +32,9 @@ public class S3Service {    //FIXME  S3버킷에 object를 업로드 하는 Serv
         if (multipartFile == null) {
             return null;
         } else {
-            String now = LocalDateTime.now().toString();
-            String fileName =  now + "_" +multipartFile.getOriginalFilename();
+            String uuid= UUID.randomUUID().toString();
+            String fileName =  uuid + "_" +multipartFile.getOriginalFilename();
+
 
             //파일 형식 구하기
             String ext = fileName.split("\\.")[1];
@@ -63,7 +62,8 @@ public class S3Service {    //FIXME  S3버킷에 object를 업로드 하는 Serv
                 metadata.setContentType(contentType);
 
                 amazonS3.putObject(new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), metadata));
-//                        .withCannedAcl(CannedAccessControlList.PublicRead));    //
+                //.withCannedAcl(CannedAccessControlList.PublicRead);
+
             } catch (AmazonServiceException e) {
                 e.printStackTrace();
             } catch (SdkClientException e) {

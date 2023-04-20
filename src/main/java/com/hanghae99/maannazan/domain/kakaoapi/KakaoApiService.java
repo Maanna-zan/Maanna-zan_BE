@@ -5,6 +5,7 @@ import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.KakaoResponseDto;
+import com.hanghae99.maannazan.domain.post.dto.PostImageResponseDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.domain.repository.KakaoApiRepository;
 import com.hanghae99.maannazan.domain.repository.LikeRepository;
@@ -99,7 +100,12 @@ public class KakaoApiService {
         List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
         for (Kakao kakao : entityList){
             boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(kakao.getApiId(), user);
-            AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike));
+            List<Post> posts = postRepository.findByKakaoApiId(kakao.getApiId());
+            List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
+            for (Post post : posts){
+                postImageResponseDtoList.add(new PostImageResponseDto(post));
+            }
+            AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
         }
         return AlkolResponseDtoList;
     }
@@ -131,9 +137,13 @@ public class KakaoApiService {
         List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
         for (Kakao kakao : entityList){
             List<Post> posts = postRepository.findByKakaoApiId(kakao.getApiId());
+            List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
+            for (Post post : posts){
+                postImageResponseDtoList.add(new PostImageResponseDto(post));
+            }
             int numberOfPosts = posts.size();
             boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(kakao.getApiId(), user);
-            AlkolResponseDtoList.add(new AlkolResponseDto(kakao, numberOfPosts, roomLike));
+            AlkolResponseDtoList.add(new AlkolResponseDto(kakao, numberOfPosts, roomLike, postImageResponseDtoList));
         }
         return AlkolResponseDtoList;
     }
