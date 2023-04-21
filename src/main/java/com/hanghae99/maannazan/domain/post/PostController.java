@@ -13,7 +13,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @Tag(name = "Post", description = "게시글 관련 API")
@@ -33,6 +32,12 @@ public class PostController {
         postRequestDto.setS3Url(url);
         postService.createPost(apiId, postRequestDto, userDetails.getUser());
         return  ResponseMessage.SuccessResponse("게시물 작성 성공","");
+    }
+
+    @Operation(summary = "getBestPosts", description = "게시글 조회수 베스트 3")
+    @GetMapping("/posts/best")
+    public ResponseEntity<ResponseMessage<List<PostResponseDto>>> getBestPosts() {
+    return ResponseMessage.SuccessResponse("게시물 조회 성공",postService.getBestPosts());
     }
 
     //게시글 전체 조회

@@ -20,14 +20,24 @@ public class FindService {
 @Transactional
 //    public FindResponseDto getCenterPlace(double x,double y,double x2,double y2,double x3,double y3,double x4,double y4) {
     public FindResponseDto getCenterPlace(FindRequestDto findRequestDto) {
-        double x= findRequestDto.getX();   //첫번째 사람
-        double y= findRequestDto.getY();
-        double x2 = findRequestDto.getX2(); // 두번째 사람
-        double y2 = findRequestDto.getY2();
-        double x3 = findRequestDto.getX3(); // 세번째 사람
-        double y3 = findRequestDto.getY3();
-        double x4 = findRequestDto.getX4(); // 네번째 사람
-        double y4 = findRequestDto.getY4();
+//        double x= findRequestDto.getX();   //첫번째 사람
+//        double y= findRequestDto.getY();
+//        double x2 = findRequestDto.getX2(); // 두번째 사람
+//        double y2 = findRequestDto.getY2();
+//        double x3 = findRequestDto.getX3(); // 세번째 사람
+//        double y3 = findRequestDto.getY3();
+//        double x4 = findRequestDto.getX4(); // 네번째 사람
+//        double y4 = findRequestDto.getY4();
+
+
+    double y= findRequestDto.getX();   //첫번째 사람          // 임시로 x랑 y 위치 변경, 프론트에서 반대로 보내주는 중
+    double x= findRequestDto.getY();                        // 프론트 수정 되면 이 코드는 다시 삭제 예정
+    double y2 = findRequestDto.getX2(); // 두번째 사람
+    double x2 = findRequestDto.getY2();
+    double y3 = findRequestDto.getX3(); // 세번째 사람
+    double x3 = findRequestDto.getY3();
+    double y4 = findRequestDto.getX4(); // 네번째 사람
+    double x4 = findRequestDto.getY4();
 
         List<Station> StationList = stationRepository.findAll();
         Station nearestStation = null;
