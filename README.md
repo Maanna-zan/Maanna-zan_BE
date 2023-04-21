@@ -41,7 +41,7 @@
 <br/>
 
 ## 🎅 아키텍쳐 다이어그램
-![image (1)](https://user-images.githubusercontent.com/100390051/233577777-c63d1452-0fce-4bb6-887c-b624658992bf.png)
+![image](https://user-images.githubusercontent.com/100390051/233705862-8f28a344-c138-4c06-b77e-3d5298f1876b.png)
 
 <br/>
 
