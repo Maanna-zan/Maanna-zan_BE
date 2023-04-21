@@ -72,7 +72,7 @@ public class UserService {
     //리턴이 따로 필요없어서 void로 처리
     //로그인 서비스
     @Transactional
-    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public String login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
         User user = userRepository.findByEmail(email).orElseThrow(
@@ -93,6 +93,7 @@ public class UserService {
             refreshTokenRepository.save(newToken);
         }
         setHeader(response, tokenDto);
+        return user.getNickName();
     }
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
