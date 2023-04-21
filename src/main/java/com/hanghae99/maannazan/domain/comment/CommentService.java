@@ -73,13 +73,12 @@ public class CommentService {
     //대댓글 작성
     @Transactional
     public CommentResponseDto createCommentList(CommentRequestDto commentRequestDto, User user, Long parentId) {
-
         Comment parentComment = null;
         if (parentId != null) {
             parentComment = commentRepository.findById(parentId)
                     .orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND));
         }
-        System.out.println(user+ user.getUserName());
+
         Comment comment = new Comment(commentRequestDto, user, parentComment);
         commentRepository.saveAndFlush(comment);
 

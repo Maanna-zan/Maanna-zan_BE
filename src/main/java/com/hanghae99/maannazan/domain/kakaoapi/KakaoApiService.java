@@ -32,10 +32,6 @@ public class KakaoApiService {
     private final LikeRepository likeRepository;
 
 
-
-
-
-
     //카카오 검색 api 저장
     public void apiSave(Map<String, Object> body) {
         List<Map<String, Object>> documents = (List<Map<String, Object>>) body.get("documents");
