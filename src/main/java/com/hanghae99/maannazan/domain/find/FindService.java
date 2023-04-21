@@ -131,14 +131,7 @@ public class FindService {
                     /
                     (((x4 - x) * (y2 - y3)) - ((y4 - y) * (x2 - x3)))) + 0.0001)*100000.0)/100000.0;
 
-            System.out.println(centerX);
-            System.out.println(centerY);
-            System.out.println(centerX2);
-            System.out.println(centerY2);
-            System.out.println(centerX3);
-            System.out.println(centerY3);
-            System.out.println(centerX4);
-            System.out.println(centerY4);
+
 
 
 //           //FIXME 식1
@@ -186,8 +179,7 @@ public class FindService {
             //FIXME 식3
             double midPointX = (centerX + centerX2 + centerX3 + centerX4) /4;
             double midPointY = (centerY + centerY2 + centerY3 + centerY4) /4;
-            System.out.println(midPointX);
-            System.out.println(midPointY);
+
 
             
 

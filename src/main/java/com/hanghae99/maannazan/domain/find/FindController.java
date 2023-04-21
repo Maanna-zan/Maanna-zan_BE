@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FindController {
 
     private final FindService findService;
-    @Operation(summary = "getCenterPlace", description = "중간지점 검색")
+    @Operation(summary = "중간 위치 조회 후 가까운 지하철 역 좌표 출력", description = "중간지점 검색")
     @PostMapping("/find")
     public ResponseEntity<ResponseMessage<FindResponseDto>> getCenterPlace(@RequestBody FindRequestDto findRequestDto){
         return  ResponseMessage.SuccessResponse("중간지점 찾기 성공",findService.getCenterPlace(findRequestDto));
