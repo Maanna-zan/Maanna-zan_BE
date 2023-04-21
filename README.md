@@ -1,6 +1,12 @@
-## Manna-zan
+## 🍷 만나잔
+
 ![Rectangle 570](https://user-images.githubusercontent.com/95731331/233582402-0dc13d1c-4438-45e4-9c61-d98290e38269.png)
-<br/><br/><br/><br/><br/>
+<br/>
+### 우리의 프로젝트를 소개합니다!
+
+### 서로의 위치를 기반으로 중간지점을 찾아주고, 그 지점에 있는 술집들을 찾아주는 사이트입니다. 
+
+<br/><br/><br/>
 
 
 ## 🧙 Team
@@ -8,8 +14,15 @@
 |---|---|---|---|
 |BE / Spring|BE / Spring|BE / Spring|BE / Spring|
 
-<br/><br/><br/><br/><br/>
+<br/><br/><br/>
 
+## 📌 링크
+<div>
+  만나잔 : https://maanna-zan-fe-1.vercel.app/
+  
+  노션 :  https://www.notion.so/b5f8fe8ca53a486b8d0bfb681135f626
+</div>
+<br/><br/><br/>
 
 ## 💻 Stack
 <div>
@@ -25,9 +38,9 @@
   <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
   <img src="https://camo.githubusercontent.com/c0f71772804c86d0f144ce923027aff25e8d761c6b791d2de6698607e21c5465/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f677261646c652d3032333033413f7374796c653d666f722d7468652d6261646765266c6f676f3d677261646c65266c6f676f436f6c6f723d7768697465" data-canonical-src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&amp;logo=gradle&amp;logoColor=white" style="max-width: 100%;">
 </div>
-<br/><br/><br/><br/><br/>
+<br/><br/><br/>
 
-## 아키텍쳐 다이어그램
+## 🎅 아키텍쳐 다이어그램
 ![image (1)](https://user-images.githubusercontent.com/100390051/233577777-c63d1452-0fce-4bb6-887c-b624658992bf.png)
 
 
