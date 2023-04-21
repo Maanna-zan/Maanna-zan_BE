@@ -1,18 +1,19 @@
-# Manna-zan
-
+## Manna-zan
 ![Rectangle 570](https://user-images.githubusercontent.com/95731331/233582402-0dc13d1c-4438-45e4-9c61-d98290e38269.png)
+</br>
+</br>
 
+## 🧙 Team
+|이산하|이용현|이승빈|장동희
+|---|---|---|---|
+|BE / Spring|BE / Spring|BE / Spring|BE / Spring|
+</br>
+</br>
 
-# 아키텍쳐 다이어그램
-
-
+## 아키텍쳐 다이어그램
 ![image (1)](https://user-images.githubusercontent.com/100390051/233577777-c63d1452-0fce-4bb6-887c-b624658992bf.png)
-
-
-
-
-# 기술스택
-
+</br>
+</br>
 
 ## 💻 Stack
 <div>
