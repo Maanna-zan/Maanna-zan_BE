@@ -1,5 +1,7 @@
 package com.hanghae99.maannazan.domain.entity;
 
+import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
+import com.hanghae99.maannazan.domain.user.dto.CheckFindPwRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +16,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long kakaoId;
 
     private String userName;
 
@@ -28,6 +31,7 @@ public class User {
 
     private String password;
 
+    private String profile_image;
 
     private String birth;
 
@@ -38,5 +42,34 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.birth = birth;
+    }
+
+    public User(String nickName,Long kakaoId, String password, String email, String profile_image){
+        this.nickName = nickName;
+        this.kakaoId = kakaoId;
+        this.password = password;
+        this.email = email;
+        this.profile_image= profile_image;
+    }
+
+    public void update(String str, String email) {
+        this.password = str;
+        this.email = email;
+    }
+    public void emailUpdate(String email){
+        this.email = email;
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
+
+    public void changeNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
     }
 }

@@ -34,7 +34,7 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         // h2-console 사용 및 resources 접근 허용 설정
         return (web) -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console())
+//                .requestMatchers(PathRequest.toH2Console())
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
@@ -48,8 +48,17 @@ public class WebSecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/users/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/rooms/**").permitAll()
+                .antMatchers("/kakaoApi").permitAll()
+                .antMatchers("/find").permitAll()
+                .antMatchers("/find/**").permitAll()
+                .antMatchers("/OAuth/Kakao/**").permitAll()
+                .antMatchers("/posts/**").permitAll()
+                .antMatchers("/getAccessToken/**").permitAll()
+                .antMatchers("/alkol/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/posts/**").permitAll()
+                .antMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()// Swagger 리소스에 대한 접근 허용
                 .anyRequest().authenticated()
+                .and().cors()
                 //JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
