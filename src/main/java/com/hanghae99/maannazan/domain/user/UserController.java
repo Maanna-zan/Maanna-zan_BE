@@ -32,8 +32,7 @@ public class UserController {
     @Operation(summary = "login", description = "로그인")
     @PostMapping("/login")
     public ResponseEntity<ResponseMessage<String>> login(@Validated @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        userService.login(loginRequestDto, response);
-        return ResponseMessage.SuccessResponse("로그인 성공", "");
+        return ResponseMessage.SuccessResponse("로그인 성공", userService.login(loginRequestDto, response));
     }
 
     // 유저이메일 중복
