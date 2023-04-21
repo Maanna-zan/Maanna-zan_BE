@@ -1,5 +1,6 @@
 # 아키텍쳐 다이어그램
 
+![Rectangle 570](https://user-images.githubusercontent.com/95731331/233582402-0dc13d1c-4438-45e4-9c61-d98290e38269.png)
 
 ![image (1)](https://user-images.githubusercontent.com/100390051/233577777-c63d1452-0fce-4bb6-887c-b624658992bf.png)
 
