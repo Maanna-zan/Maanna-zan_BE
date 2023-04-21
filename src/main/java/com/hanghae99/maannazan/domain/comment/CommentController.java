@@ -20,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
 
     //    1. 댓글 작성 API
-    @Operation(summary = "createComment", description = "댓글 작성")
+    @Operation(summary = "댓글 작성", description = "댓글 작성")
     @PostMapping("/{postId}/comments")
     public ResponseEntity<ResponseMessage<String>> createComment(@PathVariable Long postId,
                                                                  @RequestBody @Valid CommentRequestDto commentRequestDto,
@@ -30,7 +30,7 @@ public class CommentController {
     }
 
     //    2. 댓글 수정 API
-    @Operation(summary = "updateComment", description = "댓글 업데이트")
+    @Operation(summary = "댓글 업데이트", description = "댓글 업데이트")
     @PatchMapping("/comments/{commentId}")
     public ResponseEntity<ResponseMessage<String>> updateComment( @PathVariable Long commentId,
                                                                  @RequestBody @Valid CommentRequestDto commentRequestDto,
@@ -39,7 +39,7 @@ public class CommentController {
         return ResponseMessage.SuccessResponse("수정 성공", "");
     }
     //    3. 댓글 삭제 API
-    @Operation(summary = "deleteComment", description = "댓글 삭제")
+    @Operation(summary = "댓글 삭제", description = "댓글 삭제")
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<ResponseMessage<String>> deleteComment(@PathVariable Long commentId,
                                                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -47,7 +47,7 @@ public class CommentController {
         return ResponseMessage.SuccessResponse("삭제 성공", "");
     }
 
-    //@Operation(summary = "createCommentList", description = "댓글 리스트 생성")
+    @Operation(summary = "댓글 리스트 생성", description = "댓글 리스트 생성")
     @PostMapping("/comments/{commentId}")
     public ResponseEntity<ResponseMessage<String>> createCommentList(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto,
                                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -56,7 +56,7 @@ public class CommentController {
         return ResponseMessage.SuccessResponse("작성 성공", "");
     }
 
-    @Operation(summary = "updateRecomments", description = "대댓글 수정")
+    @Operation(summary = "대댓글 수정", description = "대댓글 수정")
     @PatchMapping("/recomments/{commentId}")
     public ResponseEntity<ResponseMessage<String>> updateCommentList(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto,
                                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -65,7 +65,7 @@ public class CommentController {
         return ResponseMessage.SuccessResponse("작성 성공", "");
     }
 
-    @Operation(summary = "deleteCommentList", description = "대댓글 삭제")
+    @Operation(summary = "대댓글 삭제", description = "대댓글 삭제")
     @DeleteMapping("/recomments/{commentId}")
     public ResponseEntity<ResponseMessage<String>> deleteCommentList(@PathVariable Long commentId,
                                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {

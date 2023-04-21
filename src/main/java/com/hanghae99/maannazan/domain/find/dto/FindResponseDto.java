@@ -13,8 +13,8 @@ public class FindResponseDto {
     private Long stationLine;
 
     public FindResponseDto(double lat, double lng, String stationName, Long stationLine) {
-        this.lat = lng;
-        this.lng = lat;
+        this.lat = lat;
+        this.lng = lng;
         this.stationName = stationName;
         this.stationLine = stationLine;
     }
