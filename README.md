@@ -46,6 +46,4 @@
 <br/>
 
 ## 🔐 ERD (Entity Relationship Diagram) 
-![image](https://user-images.githubusercontent.com/124052204/233603837-abc58604-b171-4e76-b830-532c76372120.png)
-
-
+![스크린샷 2023-04-22 023310](https://user-images.githubusercontent.com/124052204/233699578-c36361ec-0410-4209-b44d-f89cfc058be1.png)
