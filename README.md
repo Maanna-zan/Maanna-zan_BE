@@ -43,4 +43,9 @@
 ## 🎅 아키텍쳐 다이어그램
 ![image (1)](https://user-images.githubusercontent.com/100390051/233577777-c63d1452-0fce-4bb6-887c-b624658992bf.png)
 
+<br/>
+
+## 🔐 ERD (Entity Relationship Diagram) 
+![image](https://user-images.githubusercontent.com/124052204/233603837-abc58604-b171-4e76-b830-532c76372120.png)
+
 
