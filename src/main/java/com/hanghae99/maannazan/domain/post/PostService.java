@@ -47,6 +47,17 @@ public class PostService {
     }
 
     @Transactional
+    public List<PostResponseDto> getBestPosts() {
+        List<Post> posts = getPostListOrderByViewCount();
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for(int i=0; i<3; i++){
+            postResponseDtoList.add(new PostResponseDto(posts.get(i)));
+        }
+        return postResponseDtoList;
+    }
+
+
+    @Transactional
     public List<PostResponseDto> getPosts(User user){
         List<Post> posts = postRepository.findAll();
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();

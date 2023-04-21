@@ -1,5 +1,6 @@
 package com.hanghae99.maannazan.domain.post;
 
+import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.file.S3Service;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
@@ -7,6 +8,7 @@ import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import com.hanghae99.maannazan.global.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,6 +35,12 @@ public class PostController {
         postRequestDto.setS3Url(url);
         postService.createPost(apiId, postRequestDto, userDetails.getUser());
         return  ResponseMessage.SuccessResponse("게시물 작성 성공","");
+    }
+
+    @Operation(summary = "getBestPosts", description = "게시글 조회수 베스트 3")
+    @GetMapping("/posts/best")
+    public ResponseEntity<ResponseMessage<List<PostResponseDto>>> getBestPosts() {
+    return ResponseMessage.SuccessResponse("게시물 작성 성공",postService.getBestPosts());
     }
 
     //게시글 전체 조회
