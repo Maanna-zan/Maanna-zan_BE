@@ -11,11 +11,10 @@ import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         for (Post post : posts) {
-            List<Comment> commentList = commentRepository.findByPost(post);
+            List<Comment> commentList = getCommentListByPost(post);
             List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
             Category category = categoryRepository.findByPostId(post.getId());
             if(user!=null) {
@@ -61,9 +60,9 @@ public class PostService {
                     commentResponseDtoList.add(new CommentResponseDto(comment));
                 }
                 if(category!=null){
-                    postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList));
+                    postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList, user.getNickName()));
                 } else {
-                    postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList));
+                    postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList, user.getNickName()));
                 }
             }
             else {
@@ -90,9 +89,9 @@ public class PostService {
                     commentResponseDtoList.add(new CommentResponseDto(comment));
                 }
                 if(category!=null){
-                    postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList));
+                    postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList, user.getNickName()));
                 } else {
-                    postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList));
+                    postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList, user.getNickName()));
                 }
             }
             else {
@@ -106,22 +105,23 @@ public class PostService {
     }
 
 
+
     public List<PostResponseDto> getpostsOrderByViewCount(User user) {
-        List<Post> posts = postRepository.findAllByOrderByViewCountDesc();
+        List<Post> postList = getPostListOrderByViewCount();
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-        for (Post post : posts) {
-            List<Comment> commentList = commentRepository.findByPost(post);
+        for (Post post : postList) {
+            List<Comment> commentList = getCommentListByPost(post);
             List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-            Category category = categoryRepository.findByPostId(post.getId());
+            Category category = getCategoryByPost(post);
             if(user!=null) {
                 boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
                 for (Comment comment : commentList) {
                     commentResponseDtoList.add(new CommentResponseDto(comment));
                 }
                 if(category!=null){
-                    postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList));
+                    postResponseDtoList.add(new PostResponseDto(category, like, commentResponseDtoList, user.getNickName()));
                 } else {
-                    postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList));
+                    postResponseDtoList.add(new PostResponseDto(post, like ,commentResponseDtoList, user.getNickName()));
                 }
             }
             else {
@@ -141,7 +141,7 @@ public class PostService {
     public PostResponseDto getPostOne(Long postId, User user) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
         post.viewCount(post.getViewCount()+1);
-        Category category = categoryRepository.findByPostId(post.getId());
+        Category category = getCategoryByPost(post);
         boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
         List<Comment> commentList = commentRepository.findByPost(post);
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
@@ -149,9 +149,9 @@ public class PostService {
             commentResponseDtoList.add(new CommentResponseDto(comment));
         }
         if(category == null){
-           return new PostResponseDto(post, like, commentResponseDtoList);
+           return new PostResponseDto(post, like, commentResponseDtoList, user.getNickName());
         }
-        return new PostResponseDto(category, like, commentResponseDtoList);
+        return new PostResponseDto(category, like, commentResponseDtoList, user.getNickName());
     }
 
 
@@ -173,7 +173,7 @@ public class PostService {
         if(!(user.getId().equals(post.getUser().getId()))){
             throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
-        Category category = categoryRepository.findByPostId(post.getId());
+        Category category = getCategoryByPost(post);
         Likes likes = likeRepository.findByPostIdAndUserId(post.getId(), user.getId());
 
         try{
@@ -198,5 +198,20 @@ public class PostService {
 
     }
 
+
+    //메서드
+    public List<Post> getPostListOrderByViewCount(){    // 게시글 조회순으로 가져오기
+        List<Post> postList = postRepository.findAllByOrderByViewCountDesc();
+        return postList;
+    }
+
+    public List<Comment> getCommentListByPost(Post post){   //댓글 리스트 조회
+        List<Comment> commentList = commentRepository.findByPost(post);
+        return commentList;
+    }
+    public Category getCategoryByPost(Post post){   //댓글 리스트 조회
+        Category category = categoryRepository.findByPostId(post.getId());
+        return category;
+    }
 
 }
