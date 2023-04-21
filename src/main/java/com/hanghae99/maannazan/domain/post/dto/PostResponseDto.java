@@ -111,6 +111,8 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.createAt = post.getCreatedAt();
         this.s3Url = post.getS3Url();
+        this.viewCount = post.getViewCount();
+
     }
     public PostResponseDto(Post post, boolean like){
         this.id = post.getId();
@@ -122,6 +124,8 @@ public class PostResponseDto {
         this.s3Url = post.getS3Url();
         this.likecnt = post.getLikecnt();
         this.like = like;
+        this.viewCount = post.getViewCount();
+
     }
 
 
