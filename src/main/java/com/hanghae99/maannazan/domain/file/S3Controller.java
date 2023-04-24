@@ -2,12 +2,9 @@ package com.hanghae99.maannazan.domain.file;
 
 
 import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.file.dto.FileDto;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
-import com.hanghae99.maannazan.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
