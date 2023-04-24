@@ -26,6 +26,9 @@ jobs:
     # (1) 기본 체크아웃
     - name: Checkout
       uses: actions/checkout@v3
+      
+    - name: Make Gradlew executable
+      run: chmod +x gradlew
 
     # (2) JDK 11 세팅
     - name: Set up JDK 17
