@@ -68,6 +68,6 @@ public class UserController {
     @PostMapping("/check/findEmail")
     @Operation(summary = "email 찾기", description = "email 찾기")
     public ResponseEntity<ResponseMessage<String>> checkFindEmail(@Validated @RequestBody CheckFindEmailRequestDto checkFindEmailRequestDto) {
-        return ResponseMessage.SuccessResponse("email 찾기 성공",userService.checkFindEmail(checkFindEmailRequestDto));
+        return ResponseMessage.SuccessResponse("email 찾기 성공1",userService.checkFindEmail(checkFindEmailRequestDto));
     }
 }
