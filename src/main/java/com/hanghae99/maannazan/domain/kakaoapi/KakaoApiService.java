@@ -153,5 +153,8 @@ public class KakaoApiService {
         return kakaoApiRepository.findByApiId(kakaoApiId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
     }
 
+    public Page<Kakao> getAlkolList(Pageable pageable) {    //모든 술집 조회(페이징 처리)
+        return kakaoApiRepository.findAll(pageable);
+    }
 
 }
