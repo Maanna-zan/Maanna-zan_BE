@@ -130,7 +130,13 @@ public class CommentService {
     public List<Comment> getCommentListByPost(Post post){    // 게시글에 달린 댓글리스트 조회
         return commentRepository.findByPost(post);
     }
+    public List<Comment> getCommentListByUserId(Long id){    // 게시글에 달린 댓글리스트 조회
+        return commentRepository.findByUserId(id);
+    }
 
+    public void deleteCommentAll(List<Comment> commentList){    // 게시글에 달린 댓글 전체 삭제
+        commentRepository.deleteAll(commentList);
+    }
 
     public Comment getCommentOne(Long commentId) {    // 단일 댓글 찾기(업데이트, 삭제)
         return commentRepository.findById(commentId).orElseThrow(
