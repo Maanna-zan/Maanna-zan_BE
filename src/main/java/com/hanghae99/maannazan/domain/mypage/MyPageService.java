@@ -3,11 +3,14 @@ package com.hanghae99.maannazan.domain.mypage;
 import com.hanghae99.maannazan.domain.entity.Kakao;
 import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.kakaoapi.KakaoApiService;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
+import com.hanghae99.maannazan.domain.like.LikeService;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangeNickNameRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangePasswordRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.MyPagePostResponseDto;
 import com.hanghae99.maannazan.domain.mypage.dto.MyPageResponseDto;
+import com.hanghae99.maannazan.domain.post.PostService;
 import com.hanghae99.maannazan.domain.post.dto.PostImageResponseDto;
 import com.hanghae99.maannazan.domain.repository.*;
 import com.hanghae99.maannazan.global.exception.CustomException;
@@ -32,22 +35,21 @@ import static com.hanghae99.maannazan.global.exception.CustomErrorCode.NOT_PROPE
 public class MyPageService {
 
     private final PasswordEncoder passwordEncoder;
-    private final PostRepository postRepository;
+    private final PostService postService;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
-    private final LikeRepository likeRepository;
+    private final LikeService likeService;
 
-    private final KakaoApiRepository kakaoApiRepository;
+    private final KakaoApiService kakaoApiService;
 
     //마이페이지 메인 (내가쓴 게시글 + 유저 정보)
     @Transactional
     public MyPageResponseDto getMyPage(User user, int page, int size) {
         Pageable pageable = PageRequest.of(page,size);
-        Page<Post> entityPage = postRepository.findByUserOrderByCreatedAtDesc(user,pageable);
+        Page<Post> entityPage = postService.getPostOrderByCreatedAtDesc(user,pageable);
         List<Post> entityList = entityPage.getContent();
         List<MyPagePostResponseDto> myPagePostResponseDtos = new ArrayList<>();
         for (Post post : entityList){
-            boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
+            boolean like = likeService.getPostLike(post, user);
             myPagePostResponseDtos.add(new MyPagePostResponseDto(post, like));
         }
         return new MyPageResponseDto(user,myPagePostResponseDtos);
@@ -56,11 +58,11 @@ public class MyPageService {
     @Transactional
     public MyPageResponseDto getMyPagelikePost(User user, int page, int size) {
         Pageable pageable = PageRequest.of(page,size);
-        Page<Post> entityPage = postRepository.findAll(pageable);
+        Page<Post> entityPage = postService.getPostList(pageable);
         List<Post> entityList = entityPage.getContent();
         List<MyPagePostResponseDto> myPagePostResponseDtos = new ArrayList<>();
         for (Post post : entityList){
-            boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
+            boolean like = likeService.getPostLike(post, user);
             if (like){
                 myPagePostResponseDtos.add(new MyPagePostResponseDto(post, true));
             }
@@ -72,12 +74,12 @@ public class MyPageService {
     @Transactional
     public List<AlkolResponseDto> getMyPagelikeAlkol(User user, int page, int size){
         Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Order.desc("roomLike")));
-        Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
+        Page<Kakao> entityPage = kakaoApiService.getAlkolList(pageable);
         List<Kakao> entityList = entityPage.getContent();
         List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
         for (Kakao kakao : entityList){
-            boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(kakao.getApiId(), user);
-            List<Post> posts = postRepository.findByKakaoApiId(kakao.getApiId());
+            boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
+            List<Post> posts = postService.getPostByKakaoApiId(kakao);
             List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
             for (Post post : posts){
                 postImageResponseDtoList.add(new PostImageResponseDto(post));

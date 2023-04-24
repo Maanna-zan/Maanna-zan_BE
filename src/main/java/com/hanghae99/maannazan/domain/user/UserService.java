@@ -1,6 +1,9 @@
 package com.hanghae99.maannazan.domain.user;
 
+import com.hanghae99.maannazan.domain.comment.CommentService;
 import com.hanghae99.maannazan.domain.entity.*;
+import com.hanghae99.maannazan.domain.like.LikeService;
+import com.hanghae99.maannazan.domain.post.PostService;
 import com.hanghae99.maannazan.domain.repository.*;
 import com.hanghae99.maannazan.domain.user.dto.*;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
@@ -27,9 +30,9 @@ import static com.hanghae99.maannazan.global.exception.CustomErrorCode.*;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
-    private final LikeRepository likeRepository;
+    private final PostService postService;
+    private final CommentService commentService;
+    private final LikeService likeService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -178,12 +181,12 @@ public class UserService {
         if (!passwordEncoder.matches(signoutRequestDto.getPassword(), user.get().getPassword())) {
             return ResponseMessage.ErrorResponse(CustomErrorCode.INVALID_PASSWORD);
         }
-        List<Post> posts = postRepository.findByUserId(id);
-        List<Comment> comments = commentRepository.findByUserId(id);
-        List<Likes> likes = likeRepository.findByUserId(id);
-        likeRepository.deleteAll(likes);
-        postRepository.deleteAll(posts);
-        commentRepository.deleteAll(comments);
+        List<Post> posts = postService.getPostByUserId(id);
+        List<Comment> comments = commentService.getCommentListByUserId(id);
+        List<Likes> likes = likeService.getUserLike(id);
+        likeService.deleteLikesAll(likes);
+        postService.deletePostAll(posts);
+        commentService.deleteCommentAll(comments);
         userRepository.deleteById(id);
 
         return ResponseMessage.SuccessResponse("회원탈퇴 성공", "");

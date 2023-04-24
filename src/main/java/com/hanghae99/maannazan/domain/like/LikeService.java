@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class LikeService {
@@ -83,6 +85,34 @@ public class LikeService {
         }
     }
 
+    
+    //메서드
+    public boolean getPostLike(Post post, User user){    // 게시글 좋아요 상태 확인 (true면 좋아요 누른 상태)
+        return likeRepository.existsByPostIdAndUser(post.getId(),user);
+    }
+
+    public boolean getAlkolLike(String apiId, User user){    // 게시글 좋아요 상태 확인 (true면 좋아요 누른 상태)
+        return likeRepository.existsByKakaoApiIdAndUser(apiId, user);
+    }
+
+    public boolean getCommentLike(Post post, User user){    // 게시글 좋아요 상태 확인 (true면 좋아요 누른 상태)
+        return likeRepository.existsByPostIdAndUser(post.getId(),user);
+    }
+    public List<Likes> getUserLike(Long id){    // 게시글 좋아요 상태 확인 (true면 좋아요 누른 상태)
+        return likeRepository.findByUserId(id);
+    }
+
+    public Likes getPostLikes(Post post, User user){    // 게시글 좋아요 삭제를 위한 조회
+        return likeRepository.findByPostIdAndUserId(post.getId(), user.getId());
+    }
+
+    public void deleteLikes(Likes likes){    // 게시글에 달린 좋아요 삭제
+        likeRepository.delete(likes);
+    }
+
+    public void deleteLikesAll(List<Likes> likes){    // 게시글에 달린 좋아요 전체 삭제(회원탈퇴)
+        likeRepository.deleteAll(likes);
+    }
 }
 
 
