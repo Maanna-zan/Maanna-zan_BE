@@ -33,7 +33,7 @@ jobs:
     - run: cat ./src/main/resources/application.properties
 
     - name: Run chmod to make gradlew executable
-      run: chmod +x /home/runner/work/Maanna-zan_BE/Maanna-zan_BE/gradlew
+      run: chmod +x ./gradlew
 
 
     # (2) JDK 11 세팅
