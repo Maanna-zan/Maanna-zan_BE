@@ -14,6 +14,8 @@ import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +57,7 @@ public class PostService {
     @Transactional
     public List<PostResponseDto> getPosts(User user) {  // 게시글 전체조회
         List<Post> posts = getPostList();
-        return getPostResponseDtos(user, posts);
+        return getPostResponseDtoList(user, posts);
     }
 
 
@@ -63,13 +65,13 @@ public class PostService {
 
     public List<PostResponseDto> getpostsOrderByLikeCnt(User user) { // 게시글 좋아요 순 조회
         List<Post> posts = getPostListOrderByLikecntDesc();
-        return getPostResponseDtos(user, posts);
+        return getPostResponseDtoList(user, posts);
     }
 
 
     public List<PostResponseDto> getpostsOrderByViewCount(User user) { // 게시글 조회순 조회
         List<Post> postList = getPostListOrderByViewCount();
-        return getPostResponseDtos(user, postList);
+        return getPostResponseDtoList(user, postList);
     }
 
 
@@ -119,10 +121,10 @@ public class PostService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        postRepository.delete(post);
         if (likes != null) {
             likeService.deleteLikes(likes);
         }
+        postRepository.delete(post);
         return "게시글 삭제 완료";
     }
 
@@ -153,7 +155,22 @@ public class PostService {
         return postRepository.findById(postId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
     }
 
-    private List<PostResponseDto> getPostResponseDtos(User user, List<Post> posts) {   //게시글 리스트 조회
+    public Page<Post> getPostOrderByCreatedAtDesc(User user, Pageable pageable){    // 게시글 최신순 조회 (페이지네이션)
+        return postRepository.findByUserOrderByCreatedAtDesc(user,pageable);
+    }
+
+    public Page<Post> getPostList(Pageable pageable){    // 게시글 최신순 조회 (페이지네이션)
+        return postRepository.findAll(pageable);
+    }
+
+    public List<Post> getPostByUserId(Long id){    // 게시글 최신순 조회 (페이지네이션)
+        return postRepository.findByUserId(id);
+    }
+
+    public void deletePostAll(List<Post> postList){    // 게시글 전체 삭제 (회원탈퇴)
+        postRepository.deleteAll(postList);
+    }
+    private List<PostResponseDto> getPostResponseDtoList(User user, List<Post> posts) {   //게시글 리스트 조회
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         for (Post post : posts) {
             List<Comment> commentList = commentService.getCommentListByPost(post);
