@@ -3,9 +3,6 @@ package com.hanghae99.maannazan.domain.entity;
 import com.hanghae99.maannazan.domain.comment.dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
 import java.util.ArrayList;
