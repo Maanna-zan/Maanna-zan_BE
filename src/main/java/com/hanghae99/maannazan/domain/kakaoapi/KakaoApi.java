@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.KakaoResponseDto;
 import com.hanghae99.maannazan.domain.post.PostService;
+import com.hanghae99.maannazan.domain.repository.PostRepository;
 import com.hanghae99.maannazan.global.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,6 @@ public class KakaoApi {
     private String key;
     private String url = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
-    private final PostService postService;
 
     private final KakaoApiService kakaoApiService;
 
