@@ -5,6 +5,8 @@ import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.KakaoResponseDto;
+import com.hanghae99.maannazan.domain.like.LikeService;
+import com.hanghae99.maannazan.domain.post.PostService;
 import com.hanghae99.maannazan.domain.post.dto.PostImageResponseDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.domain.repository.KakaoApiRepository;
@@ -27,9 +29,9 @@ import java.util.*;
 public class KakaoApiService {
     private final KakaoApiRepository kakaoApiRepository;
 
-    private final PostRepository postRepository;
+    private final PostService postService;
 
-    private final LikeRepository likeRepository;
+    private final LikeService likeService;
 
 
     //카카오 검색 api 저장
@@ -64,26 +66,24 @@ public class KakaoApiService {
     // 상세 술집 페이지
     @Transactional
     public List<KakaoResponseDto> getAlkol(String apiId, User user) {
-        Kakao kakaoView = kakaoApiRepository.findByApiId(apiId).orElseThrow(() -> new CustomException(CustomErrorCode.ALKOL_NOT_FOUND));
+        Kakao kakaoView = getAlkolByKakaoApiId(apiId);
         kakaoView.roomViewCount(kakaoView.getRoomViewCount()+1);
-        List<Kakao> kakaos = kakaoApiRepository.findAllByApiId(apiId);
         List<KakaoResponseDto> kakaoResponseDtoList = new ArrayList<>();
-        boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(apiId, user);
-        for (Kakao kakao : kakaos){
-            List<Post> posts = postRepository.findByKakaoApiId(kakao.getApiId());
+        boolean roomLike = likeService.getAlkolLike(apiId, user);
+            List<Post> posts = postService.getPostByKakaoApiId(kakaoView);
             int numberOfPosts = posts.size();
             List<PostResponseDto> postResponseDtoList = new ArrayList<>();
             for (Post post : posts){
                 if(user!=null) {
-                    boolean like = likeRepository.existsByPostIdAndUser(post.getId(), user);
+                    boolean like = likeService.getPostLike(post, user);
                     postResponseDtoList.add(new PostResponseDto(post, like));
 
                 }else {
                     postResponseDtoList.add(new PostResponseDto(post));
                 }
             }
-            kakaoResponseDtoList.add(new KakaoResponseDto(kakao, postResponseDtoList,numberOfPosts, roomLike));
-        }return kakaoResponseDtoList;
+            kakaoResponseDtoList.add(new KakaoResponseDto(kakaoView, postResponseDtoList,numberOfPosts, roomLike));
+        return kakaoResponseDtoList;
 
     }
 
@@ -95,8 +95,8 @@ public class KakaoApiService {
         List<Kakao> entityList = entityPage.getContent();
         List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
         for (Kakao kakao : entityList){
-            boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(kakao.getApiId(), user);
-            List<Post> posts = postRepository.findByKakaoApiId(kakao.getApiId());
+            boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
+            List<Post> posts = postService.getPostByKakaoApiId(kakao);
             List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
             for (Post post : posts){
                 postImageResponseDtoList.add(new PostImageResponseDto(post));
@@ -132,16 +132,25 @@ public class KakaoApiService {
         List<Kakao> entityList = entityPage.getContent();
         List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
         for (Kakao kakao : entityList){
-            List<Post> posts = postRepository.findByKakaoApiId(kakao.getApiId());
+            List<Post> posts = postService.getPostByKakaoApiId(kakao);
             List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
             for (Post post : posts){
                 postImageResponseDtoList.add(new PostImageResponseDto(post));
             }
             int numberOfPosts = posts.size();
-            boolean roomLike = likeRepository.existsByKakaoApiIdAndUser(kakao.getApiId(), user);
+            boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
             AlkolResponseDtoList.add(new AlkolResponseDto(kakao, numberOfPosts, roomLike, postImageResponseDtoList));
         }
         return AlkolResponseDtoList;
+    }
+
+    //메서드
+    public Kakao getAlkolByKakaoApiId(String kakaoApiId){    // 단일 술집 조회(상세조회)
+        return kakaoApiRepository.findByApiId(kakaoApiId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
+    }
+
+    public Page<Kakao> getAlkolList(Pageable pageable) {    //모든 술집 조회(페이징 처리)
+        return kakaoApiRepository.findAll(pageable);
     }
 
 }

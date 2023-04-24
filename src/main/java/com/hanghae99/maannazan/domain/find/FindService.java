@@ -20,14 +20,24 @@ public class FindService {
 @Transactional
 //    public FindResponseDto getCenterPlace(double x,double y,double x2,double y2,double x3,double y3,double x4,double y4) {
     public FindResponseDto getCenterPlace(FindRequestDto findRequestDto) {
-        double x= findRequestDto.getX();   //첫번째 사람
-        double y= findRequestDto.getY();
-        double x2 = findRequestDto.getX2(); // 두번째 사람
-        double y2 = findRequestDto.getY2();
-        double x3 = findRequestDto.getX3(); // 세번째 사람
-        double y3 = findRequestDto.getY3();
-        double x4 = findRequestDto.getX4(); // 네번째 사람
-        double y4 = findRequestDto.getY4();
+//        double x= findRequestDto.getX();   //첫번째 사람
+//        double y= findRequestDto.getY();
+//        double x2 = findRequestDto.getX2(); // 두번째 사람
+//        double y2 = findRequestDto.getY2();
+//        double x3 = findRequestDto.getX3(); // 세번째 사람
+//        double y3 = findRequestDto.getY3();
+//        double x4 = findRequestDto.getX4(); // 네번째 사람
+//        double y4 = findRequestDto.getY4();
+
+
+    double y= findRequestDto.getX();   //첫번째 사람          // 임시로 x랑 y 위치 변경, 프론트에서 반대로 보내주는 중
+    double x= findRequestDto.getY();                        // 프론트 수정 되면 이 코드는 다시 삭제 예정
+    double y2 = findRequestDto.getX2(); // 두번째 사람
+    double x2 = findRequestDto.getY2();
+    double y3 = findRequestDto.getX3(); // 세번째 사람
+    double x3 = findRequestDto.getY3();
+    double y4 = findRequestDto.getX4(); // 네번째 사람
+    double x4 = findRequestDto.getY4();
 
         List<Station> StationList = stationRepository.findAll();
         Station nearestStation = null;
@@ -121,14 +131,7 @@ public class FindService {
                     /
                     (((x4 - x) * (y2 - y3)) - ((y4 - y) * (x2 - x3)))) + 0.0001)*100000.0)/100000.0;
 
-            System.out.println(centerX);
-            System.out.println(centerY);
-            System.out.println(centerX2);
-            System.out.println(centerY2);
-            System.out.println(centerX3);
-            System.out.println(centerY3);
-            System.out.println(centerX4);
-            System.out.println(centerY4);
+
 
 
 //           //FIXME 식1
@@ -176,8 +179,7 @@ public class FindService {
             //FIXME 식3
             double midPointX = (centerX + centerX2 + centerX3 + centerX4) /4;
             double midPointY = (centerY + centerY2 + centerY3 + centerY4) /4;
-            System.out.println(midPointX);
-            System.out.println(midPointY);
+
 
             
 

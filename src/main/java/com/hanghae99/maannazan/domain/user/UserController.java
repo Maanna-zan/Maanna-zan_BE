@@ -21,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     //회원가입
-    @Operation(summary = "signup", description = "회원가입")
+    @Operation(summary = "회원가입", description = "회원가입")
     @PostMapping("/signup")
     public ResponseEntity<ResponseMessage<String>> signup(@Validated @RequestBody SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
@@ -29,14 +29,14 @@ public class UserController {
     }
 
     //로그인
-    @Operation(summary = "login", description = "로그인")
+    @Operation(summary = "로그인", description = "로그인")
     @PostMapping("/login")
     public ResponseEntity<ResponseMessage<String>> login(@Validated @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return ResponseMessage.SuccessResponse("로그인 성공", userService.login(loginRequestDto, response));
     }
 
     // 유저이메일 중복
-    @Operation(summary = "checkEmail", description = "이메일 중복확인")
+    @Operation(summary = "이메일 중복확인", description = "이메일 중복확인")
     @PostMapping("/confirm-email")
     public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
         userService.checkEmail(checkEmailRequestDto);
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     // 닉네임 중복
-    @Operation(summary = "checkNickName", description = "닉네임 중복확인")
+    @Operation(summary = "닉네임 중복확인", description = "닉네임 중복확인")
     @PostMapping("/confirm-nickName")
     public ResponseEntity<ResponseMessage<String>> checkNickName(@Validated @RequestBody CheckNickNameRequestDto checkNickNameRequestDto) {
         userService.checkNickName(checkNickNameRequestDto);
@@ -52,21 +52,21 @@ public class UserController {
     }
 
     @PostMapping("/check/findPw")
-    @Operation(summary = "checkFindPw", description = "비밀번호 중복확인")
+    @Operation(summary = "비밀번호 중복확인", description = "비밀번호 중복확인")
     public ResponseEntity<ResponseMessage<String>> checkFindPw(@Validated @RequestBody CheckFindPwRequestDto checkFindPw) {
         MailDto dto = userService.checkFindPw(checkFindPw);
         userService.mailSend(dto);
         return ResponseMessage.SuccessResponse("이메일로 임시 비밀번호를 보내드렸습니다.","");
     }
 
-    @Operation(summary = "SignOut", description = "회원 탈퇴")
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴")
     @PutMapping("/signout/{id}")
     public ResponseEntity<ResponseMessage<Object>> signout(@PathVariable Long id,@RequestBody SignoutRequestDto signoutRequestDto) {
         return userService.deleteUser(id, signoutRequestDto);
     }
 
     @PostMapping("/check/findEmail")
-    @Operation(summary = "checkFindEmail", description = "email 찾기")
+    @Operation(summary = "email 찾기", description = "email 찾기")
     public ResponseEntity<ResponseMessage<String>> checkFindEmail(@Validated @RequestBody CheckFindEmailRequestDto checkFindEmailRequestDto) {
         return ResponseMessage.SuccessResponse("email 찾기 성공",userService.checkFindEmail(checkFindEmailRequestDto));
     }
