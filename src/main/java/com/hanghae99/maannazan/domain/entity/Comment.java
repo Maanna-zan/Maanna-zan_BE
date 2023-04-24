@@ -49,7 +49,7 @@ public class Comment extends Timestamped {
     public Comment(CommentRequestDto commentRequestDto, User user, Comment parentComment) {
         this.content = commentRequestDto.getContent();
         this.user = user;
-        this.parent = parentComment;
+        this.parent = parentComment.getId();
         this.likecnt = 0;
 
     }
