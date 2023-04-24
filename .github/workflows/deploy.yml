@@ -27,8 +27,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       
-    - name: Make Gradlew executable
-      run: chmod +x gradlew
+    - uses: actions/checkout@v3
+    - run: touch ./src/main/resources/application.properties
+    - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
+    - run: cat ./src/main/resources/application.properties
+
+    - name: Run chmod to make gradlew executable
+      run: chmod +x ./gradlew
+
 
     # (2) JDK 11 세팅
     - name: Set up JDK 17
