@@ -83,6 +83,25 @@ public class LikeService {
         }
     }
 
+    public boolean getPostLike(Post post, User user){    // 게시글 좋아요 상태 확인 (true면 좋아요 누른 상태)
+        return likeRepository.existsByPostIdAndUser(post.getId(),user);
+    }
+
+    public boolean getAlkolLike(String apiId, User user){    // 게시글 좋아요 상태 확인 (true면 좋아요 누른 상태)
+        return likeRepository.existsByKakaoApiIdAndUser(apiId, user);
+    }
+
+    public boolean getCommentLike(Post post, User user){    // 게시글 좋아요 상태 확인 (true면 좋아요 누른 상태)
+        return likeRepository.existsByPostIdAndUser(post.getId(),user);
+    }
+
+    public Likes getPostLikes(Post post, User user){    // 게시글 좋아요 삭제를 위한 조회
+        return likeRepository.findByPostIdAndUserId(post.getId(), user.getId());
+    }
+
+    public void deleteLikes(Likes likes){    // 게시글에 달린 좋아요 삭제
+        likeRepository.delete(likes);
+    }
 }
 
 
