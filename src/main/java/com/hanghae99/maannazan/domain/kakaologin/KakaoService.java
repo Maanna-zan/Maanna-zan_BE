@@ -110,8 +110,7 @@ public class KakaoService {
         }catch(JsonProcessingException e){
             e.printStackTrace();
         }
-        System.out.println(oAuthTokenResponseDto.getAccess_token());
-        System.out.println(oAuthTokenResponseDto.getRefresh_token());
+
         return new String[] {oAuthTokenResponseDto.getAccess_token(), oAuthTokenResponseDto.getRefresh_token()};
 
     }

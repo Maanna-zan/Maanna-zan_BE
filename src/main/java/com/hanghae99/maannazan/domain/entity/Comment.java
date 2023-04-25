@@ -27,7 +27,6 @@ public class Comment extends Timestamped {
     @ManyToOne
     private Post post;
 
-
     private int likecnt;
 
     @ManyToOne
