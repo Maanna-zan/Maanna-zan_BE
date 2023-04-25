@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.DoubleStream;
 
 @Service
 @RequiredArgsConstructor
@@ -169,6 +170,20 @@ public class PostService {
 
     public void deletePostAll(List<Post> postList){    // 게시글 전체 삭제 (회원탈퇴)
         postRepository.deleteAll(postList);
+    }
+
+
+    public double getTasteAvg(Kakao kakao){     //술집 맛 평균 별점
+        return getPostByKakaoApiId(kakao).stream().mapToDouble(Post::getTaste).average().orElse(Double.NaN);
+    }
+    public double getServiceAvg(Kakao kakao){   //술집 서비스 평균 별점
+        return getPostByKakaoApiId(kakao).stream().mapToDouble(Post::getService).average().orElse(Double.NaN);
+    }
+    public double getAtmosphereAvg(Kakao kakao){    //술집 분위기 평균 별점
+        return getPostByKakaoApiId(kakao).stream().mapToDouble(Post::getAtmosphere).average().orElse(Double.NaN);
+    }
+    public double getSatisfactionAvg(Kakao kakao){  //술집 만족도 평균 별점
+        return getPostByKakaoApiId(kakao).stream().mapToDouble(Post::getSatisfaction).average().orElse(Double.NaN);
     }
     private List<PostResponseDto> getPostResponseDtoList(User user, List<Post> posts) {   //게시글 리스트 조회
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.DoubleStream;
 
 @Service
 @RequiredArgsConstructor
@@ -67,22 +68,26 @@ public class KakaoApiService {
     @Transactional
     public List<KakaoResponseDto> getAlkol(String apiId, User user) {
         Kakao kakaoView = getAlkolByKakaoApiId(apiId);
-        kakaoView.roomViewCount(kakaoView.getRoomViewCount()+1);
+        kakaoView.roomViewCount(kakaoView.getRoomViewCount() + 1);
         List<KakaoResponseDto> kakaoResponseDtoList = new ArrayList<>();
         boolean roomLike = likeService.getAlkolLike(apiId, user);
-            List<Post> posts = postService.getPostByKakaoApiId(kakaoView);
-            int numberOfPosts = posts.size();
-            List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-            for (Post post : posts){
-                if(user!=null) {
-                    boolean like = likeService.getPostLike(post, user);
-                    postResponseDtoList.add(new PostResponseDto(post, like));
+        double tasteAvg = postService.getTasteAvg(kakaoView);
+        double serviceAvg = postService.getServiceAvg(kakaoView);
+        double atmosphereAvg = postService.getAtmosphereAvg(kakaoView);
+        double satisfactionAvg = postService.getSatisfactionAvg(kakaoView);
+        List<Post> posts = postService.getPostByKakaoApiId(kakaoView);
+        int numberOfPosts = posts.size();
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for (Post post : posts) {
+            if (user != null) {
+                boolean like = likeService.getPostLike(post, user);
+                postResponseDtoList.add(new PostResponseDto(post, like));
 
-                }else {
-                    postResponseDtoList.add(new PostResponseDto(post));
-                }
+            } else {
+                postResponseDtoList.add(new PostResponseDto(post));
             }
-            kakaoResponseDtoList.add(new KakaoResponseDto(kakaoView, postResponseDtoList,numberOfPosts, roomLike));
+        }
+        kakaoResponseDtoList.add(new KakaoResponseDto(kakaoView, postResponseDtoList, numberOfPosts, roomLike, tasteAvg, serviceAvg, atmosphereAvg, satisfactionAvg));
         return kakaoResponseDtoList;
 
     }
