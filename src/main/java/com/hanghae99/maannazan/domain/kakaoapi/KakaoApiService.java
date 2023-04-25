@@ -45,16 +45,16 @@ public class KakaoApiService {
                 continue;
             }
             Kakao kakao = new Kakao();
-            kakao.setAddress_name(document.get("address_name").toString());
-            kakao.setCategory_group_code(document.get("category_group_code").toString());
-            kakao.setCategory_group_name(document.get("category_group_name").toString());
-            kakao.setCategory_name(document.get("category_name").toString());
+            kakao.setAddressName(document.get("address_name").toString());
+            kakao.setCategoryGroupCode(document.get("category_group_code").toString());
+            kakao.setCategoryGroupName(document.get("category_group_name").toString());
+            kakao.setCategoryName(document.get("category_name").toString());
             kakao.setDistance(document.get("distance").toString());
             kakao.setApiId(document.get("id").toString());
             kakao.setPhone(document.get("phone").toString());
-            kakao.setPlace_name(document.get("place_name").toString());
-            kakao.setPlace_url(document.get("place_url").toString());
-            kakao.setRoad_address_name(document.get("road_address_name").toString());
+            kakao.setPlaceName(document.get("place_name").toString());
+            kakao.setPlaceUrl(document.get("place_url").toString());
+            kakao.setRoadAddressName(document.get("road_address_name").toString());
             kakao.setX(document.get("x").toString());
             kakao.setY(document.get("y").toString());
             kakaos.add(kakao);
@@ -77,7 +77,6 @@ public class KakaoApiService {
                 if(user!=null) {
                     boolean like = likeService.getPostLike(post, user);
                     postResponseDtoList.add(new PostResponseDto(post, like));
-
                 }else {
                     postResponseDtoList.add(new PostResponseDto(post));
                 }
@@ -89,21 +88,41 @@ public class KakaoApiService {
 
 
     // 모든 술집 조회
-    public List<AlkolResponseDto> getAllAlkol(User user, int page, int size){
-        Pageable pageable = PageRequest.of(page,size);
-        Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
-        List<Kakao> entityList = entityPage.getContent();
-        List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
-        for (Kakao kakao : entityList){
-            boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
-            List<Post> posts = postService.getPostByKakaoApiId(kakao);
-            List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
-            for (Post post : posts){
-                postImageResponseDtoList.add(new PostImageResponseDto(post));
+    public List<AlkolResponseDto> getAllAlkol(String placeName,String categoryName,String addressName,String roadAddressName,User user, int page, int size) {
+        if (placeName != null) {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Kakao> kakaoSearchList = kakaoApiRepository.findByPlaceNameContainingOrCategoryNameContainingOrAddressNameContainingOrRoadAddressNameContaining(placeName,categoryName,addressName, roadAddressName, pageable);
+            if(kakaoSearchList==null){
+                throw new CustomException(CustomErrorCode.ALKOL_NOT_FOUND);
             }
-            AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
+            List<Kakao> entityList = kakaoSearchList.getContent();
+            List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
+            for (Kakao kakao : entityList) {
+                boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
+                List<Post> posts = postService.getPostByKakaoApiId(kakao);
+                List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
+                for (Post post : posts) {
+                    postImageResponseDtoList.add(new PostImageResponseDto(post));
+                }
+                AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
+            }
+            return AlkolResponseDtoList;
+        } else {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
+            List<Kakao> entityList = entityPage.getContent();
+            List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
+            for (Kakao kakao : entityList) {
+                boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
+                List<Post> posts = postService.getPostByKakaoApiId(kakao);
+                List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
+                for (Post post : posts) {
+                    postImageResponseDtoList.add(new PostImageResponseDto(post));
+                }
+                AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
+            }
+            return AlkolResponseDtoList;
         }
-        return AlkolResponseDtoList;
     }
 
     //    게시물 많은 순으로 술집 조회

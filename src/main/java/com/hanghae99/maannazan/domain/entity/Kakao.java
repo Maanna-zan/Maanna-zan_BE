@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -16,23 +17,24 @@ public class Kakao {
 
     @Id
     private String apiId;
-    private String address_name;
-
-    private String category_group_code;
-
-    private String category_group_name;
-
-    private String category_name;
+    @Column(name="address_name")
+    private String addressName;
+    @Column(name="category_group_code")
+    private String categoryGroupCode;
+    @Column(name="category_group_name")
+    private String categoryGroupName;
+    @Column(name="category_name")
+    private String categoryName;
 
     private String distance;
 
     private String phone;
-
-    private String place_name;
-
-    private String place_url;
-
-    private String road_address_name;
+    @Column(name="place_name")
+    private String placeName;
+    @Column(name="place_url")
+    private String placeUrl;
+    @Column(name="road_address_name")
+    private String roadAddressName;
 
     private String x;
 
