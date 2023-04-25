@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.DoubleStream;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +67,7 @@ public class KakaoApiService {
     @Transactional
     public List<KakaoResponseDto> getAlkol(String apiId, User user) {
         Kakao kakaoView = getAlkolByKakaoApiId(apiId);
-        kakaoView.roomViewCount(kakaoView.getRoomViewCount() + 1);
+        kakaoView.roomViewCount(kakaoView.getRoomViewCount()+1);
         List<KakaoResponseDto> kakaoResponseDtoList = new ArrayList<>();
         boolean roomLike = likeService.getAlkolLike(apiId, user);
         double tasteAvg = postService.getTasteAvg(kakaoView);
@@ -94,46 +93,85 @@ public class KakaoApiService {
 
 
     // 모든 술집 조회
-    public List<AlkolResponseDto> getAllAlkol(User user, int page, int size){
-        Pageable pageable = PageRequest.of(page,size);
-        Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
-        List<Kakao> entityList = entityPage.getContent();
-        List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
-        for (Kakao kakao : entityList){
-            boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
-            List<Post> posts = postService.getPostByKakaoApiId(kakao);
-            List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
-            for (Post post : posts){
-                postImageResponseDtoList.add(new PostImageResponseDto(post));
+    public List<AlkolResponseDto> getAllAlkol(String placeName,String categoryName,String addressName,String roadAddressName,User user, int page, int size) {
+        if (placeName != null) {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Kakao> kakaoSearchList = kakaoApiRepository.findByPlaceNameContainingOrCategoryNameContainingOrAddressNameContainingOrRoadAddressNameContaining(placeName,categoryName,addressName, roadAddressName, pageable);
+            if(kakaoSearchList==null){
+                throw new CustomException(CustomErrorCode.ALKOL_NOT_FOUND);
             }
-            AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
+            List<Kakao> entityList = kakaoSearchList.getContent();
+            List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
+            for (Kakao kakao : entityList) {
+                boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
+                List<Post> posts = postService.getPostByKakaoApiId(kakao);
+                List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
+                for (Post post : posts) {
+                    postImageResponseDtoList.add(new PostImageResponseDto(post));
+                }
+                AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
+            }
+            return AlkolResponseDtoList;
+        } else {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
+            List<Kakao> entityList = entityPage.getContent();
+            List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
+            for (Kakao kakao : entityList) {
+                boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
+                List<Post> posts = postService.getPostByKakaoApiId(kakao);
+                List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
+                for (Post post : posts) {
+                    postImageResponseDtoList.add(new PostImageResponseDto(post));
+                }
+                AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
+            }
+            return AlkolResponseDtoList;
         }
-        return AlkolResponseDtoList;
     }
 
     //    게시물 많은 순으로 술집 조회
     @Transactional
-    public List<AlkolResponseDto> getBestAlkol(User user, int page, int size){
+    public List<AlkolResponseDto> getBestAlkol(String placeName,String categoryName,String addressName,String roadAddressName,User user, int page, int size){
         Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "numberOfPosts"));
-        return getAlkolResponseDtos(user, pageable);
+        return getAlkolResponseDtos(placeName,categoryName,addressName,roadAddressName,user, pageable);
     }
 
     //조회수 많은 순으로 술집 조회
     @Transactional
-    public List<AlkolResponseDto> getViewAlkol(User user, int page, int size) {
+    public List<AlkolResponseDto> getViewAlkol(String placeName,String categoryName,String addressName,String roadAddressName,User user, int page, int size) {
         Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "roomViewCount"));
-        return getAlkolResponseDtos(user, pageable);
+        return getAlkolResponseDtos(placeName,categoryName,addressName,roadAddressName,user, pageable);
     }
 
     //좋아요 많은 순으로 술집 조회
-    public List<AlkolResponseDto> getLikeAlkol(User user, int page, int size) {
+    public List<AlkolResponseDto> getLikeAlkol(String placeName,String categoryName,String addressName,String roadAddressName,User user, int page, int size) {
         Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "roomLikecnt"));
-        return getAlkolResponseDtos(user, pageable);
+        return getAlkolResponseDtos(placeName,categoryName,addressName,roadAddressName,user, pageable);
     }
 
     // 공통 부분 메서드화
-    private List<AlkolResponseDto> getAlkolResponseDtos(User user, Pageable pageable) {
-        Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
+    private List<AlkolResponseDto> getAlkolResponseDtos(String placeName,String categoryName,String addressName,String roadAddressName, User user, Pageable pageable) {
+        if (placeName != null) {
+            Page<Kakao> kakaoSearchList = kakaoApiRepository.findByPlaceNameContainingOrCategoryNameContainingOrAddressNameContainingOrRoadAddressNameContaining(placeName,categoryName,addressName, roadAddressName, pageable);
+            if(kakaoSearchList==null){
+                throw new CustomException(CustomErrorCode.ALKOL_NOT_FOUND);
+            }
+            List<Kakao> entityList = kakaoSearchList.getContent();
+            List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
+            for (Kakao kakao : entityList) {
+                List<Post> posts = postService.getPostByKakaoApiId(kakao);
+                List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
+                for (Post post : posts) {
+                    postImageResponseDtoList.add(new PostImageResponseDto(post));
+                }
+                int numberOfPosts = posts.size();
+                boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
+                AlkolResponseDtoList.add(new AlkolResponseDto(kakao, numberOfPosts, roomLike, postImageResponseDtoList));
+            }
+            return AlkolResponseDtoList;
+        }
+            Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
         List<Kakao> entityList = entityPage.getContent();
         List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
         for (Kakao kakao : entityList){

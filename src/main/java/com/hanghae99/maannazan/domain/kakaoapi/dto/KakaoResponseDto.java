@@ -53,15 +53,15 @@ public class KakaoResponseDto {
 
     public KakaoResponseDto(Kakao kakao, List<PostResponseDto> postResponseDtoList, int numberOfPosts, boolean roomLike, double tasteAvg, double serviceAvg, double atmosphereAvg, double satisfactionAvg){
         this.apiId = kakao.getApiId();
-        this.address_name = kakao.getAddress_name();
-        this.category_group_code = kakao.getCategory_group_code();
-        this.category_group_name = kakao.getCategory_group_name();
-        this.category_name = kakao.getCategory_name();
+        this.address_name = kakao.getAddressName();
+        this.category_group_code = kakao.getCategoryGroupCode();
+        this.category_group_name = kakao.getCategoryGroupName();
+        this.category_name = kakao.getCategoryName();
         this.distance = kakao.getDistance();
         this.phone = kakao.getPhone();
-        this.place_name = kakao.getPlace_name();
-        this.place_url = kakao.getPlace_url();
-        this.road_address_name = kakao.getRoad_address_name();
+        this.place_name = kakao.getPlaceName();
+        this.place_url = kakao.getPlaceUrl();
+        this.road_address_name = kakao.getRoadAddressName();
         this.x = kakao.getX();
         this.y = kakao.getY();
         this.postList = postResponseDtoList;
