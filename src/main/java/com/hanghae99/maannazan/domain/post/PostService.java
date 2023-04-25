@@ -83,7 +83,7 @@ public class PostService {
         List<Comment> commentList = commentService.getCommentListByPost(post);
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : commentList) {
-            commentResponseDtoList.add(new CommentResponseDto(comment));
+            commentResponseDtoList.add(new CommentResponseDto(comment, comment.getId()));
         }
         return new PostResponseDto(post, like, commentResponseDtoList);
     }
@@ -178,7 +178,7 @@ public class PostService {
             if (user != null) {
                 boolean like = likeService.getPostLike(post, user);
                 for (Comment comment : commentList) {
-                    commentResponseDtoList.add(new CommentResponseDto(comment));
+                    commentResponseDtoList.add(new CommentResponseDto(comment, comment.getId()));
                 }
                 postResponseDtoList.add(new PostResponseDto(post, like, commentResponseDtoList));
             } else {

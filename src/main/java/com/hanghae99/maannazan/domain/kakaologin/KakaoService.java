@@ -32,7 +32,6 @@ import java.util.UUID;
 public class KakaoService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
@@ -110,8 +109,7 @@ public class KakaoService {
         }catch(JsonProcessingException e){
             e.printStackTrace();
         }
-        System.out.println(oAuthTokenResponseDto.getAccess_token());
-        System.out.println(oAuthTokenResponseDto.getRefresh_token());
+
         return new String[] {oAuthTokenResponseDto.getAccess_token(), oAuthTokenResponseDto.getRefresh_token()};
 
     }

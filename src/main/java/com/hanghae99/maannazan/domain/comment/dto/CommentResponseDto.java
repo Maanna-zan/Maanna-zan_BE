@@ -37,7 +37,7 @@ public class CommentResponseDto {
         this.likecnt = comment.getLikecnt();
         this.parentId = parentId;
         for(Comment comments : comment.getChildren()){
-            commentList.add(new CommentResponseDto(comments));
+            commentList.add(new CommentResponseDto(comments, comment.getId()));
         }
     }
 
