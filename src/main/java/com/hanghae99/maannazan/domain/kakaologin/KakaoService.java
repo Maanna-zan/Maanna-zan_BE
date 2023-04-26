@@ -52,11 +52,11 @@ public class KakaoService {
 //        String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
 //        String refreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
 
-        Cookie cookie = new Cookie("Authorization", token[0]);
+       /* Cookie cookie = new Cookie("Authorization", token[0]);
         cookie.setPath("/");
-        response.addCookie(cookie);
-  //      response.setHeader("Authorization", token[0]);
-  //      response.setHeader("refreshToken", token[1]);
+        response.addCookie(cookie);*/
+        response.setHeader("Authorization", token[0]);
+        response.setHeader("refreshToken", token[1]);
         /*TokenDto tokenDto = jwtUtil.createAllToken(kakaoUser.getEmail());
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserEmail(kakaoUser.getEmail());
 
