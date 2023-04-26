@@ -85,7 +85,7 @@ public class KakaoService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", client_key);
-        body.add("redirect_uri", "https://mannazan.shop/OAuth/Kakao");
+        body.add("redirect_uri", "http://localhost:3000/OAuth/Kakao");
         body.add("code", code);
 
         // HTTP 요청 보내기
