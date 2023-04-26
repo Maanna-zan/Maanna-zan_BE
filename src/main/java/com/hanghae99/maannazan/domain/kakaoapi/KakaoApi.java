@@ -72,48 +72,101 @@ public class KakaoApi {
     //술집 상세 조회
     @Operation(summary = "술집 상세 조회", description = "술집 상세 조회")
     @GetMapping("/alkol/{apiId}")
-    public List<KakaoResponseDto> getAlkol(@PathVariable String apiId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        if(userDetails==null){
-            return kakaoApiService.getAlkol(apiId,null);
+    public List<KakaoResponseDto> getAlkol(@PathVariable String apiId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails == null) {
+            return kakaoApiService.getAlkol(apiId, null);
         } else
-            return kakaoApiService.getAlkol(apiId,userDetails.getUser());
+            return kakaoApiService.getAlkol(apiId, userDetails.getUser());
     }
     // 게시글 많은 순으로 술집 조회
     @Operation(summary = "게시글 많은 순 술집 조회", description = "게시글 많은 순으로 술집 조회")
     @GetMapping("/alkol/best")
-    public List<AlkolResponseDto>getBestAlkol(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "3") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public List<AlkolResponseDto>getBestAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
+                                              @RequestParam(required = false, defaultValue = "") String categoryName,
+                                              @RequestParam(required = false, defaultValue = "") String addressName,
+                                              @RequestParam(required = false, defaultValue = "") String roadAddressName,
+                                              @RequestParam(value = "page", defaultValue = "1") int page,
+                                              @RequestParam(value = "size", defaultValue = "3") int size,
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails){
         if(userDetails==null){
-            return kakaoApiService.getBestAlkol(null,page -1,size);
+            if(placeName==null){
+                return kakaoApiService.getBestAlkol(null,null,null,null,null,page - 1,size);
+            }else{
+                return kakaoApiService.getBestAlkol(placeName,categoryName, addressName,roadAddressName,null,page - 1,size);
+            }
         } else
-            return kakaoApiService.getBestAlkol(userDetails.getUser(), page - 1,size);
+        if(placeName==null){
+            return kakaoApiService.getBestAlkol(null,null,null,null,userDetails.getUser(),page - 1,size);
+        }else{
+            return kakaoApiService.getBestAlkol(placeName, categoryName,addressName,roadAddressName,userDetails.getUser(), page - 1,size);
+        }
     }
 
     // 모든 술집 조회
     @Operation(summary = "전체 술집 조회", description = "모든 술집 조회")
     @GetMapping("/alkol/all")
-    public List<AlkolResponseDto> getAllAlkol(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public List<AlkolResponseDto> getAllAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
+                                              @RequestParam(required = false, defaultValue = "") String categoryName,
+                                              @RequestParam(required = false, defaultValue = "") String addressName,
+                                              @RequestParam(required = false, defaultValue = "") String roadAddressName,
+                                              @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
         if(userDetails==null){
-            return kakaoApiService.getAllAlkol(null,page - 1,size);
+            if(placeName==null){
+                return kakaoApiService.getAllAlkol(null,null,null,null,null,page - 1,size);
+            }else{
+                return kakaoApiService.getAllAlkol(placeName,categoryName, addressName,roadAddressName,null,page - 1,size);
+            }
         } else
-            return kakaoApiService.getAllAlkol(userDetails.getUser(), page - 1,size);
+            if(placeName==null){
+                return kakaoApiService.getAllAlkol(null,null,null,null,userDetails.getUser(),page - 1,size);
+            }else{
+                return kakaoApiService.getAllAlkol(placeName, categoryName,addressName,roadAddressName,userDetails.getUser(), page - 1,size);
+            }
     }
 
     //좋아요 순으로 술집 조회
     @Operation(summary = "좋아요 순 술집 조회", description = "좋아요 순으로 술집 조회")
     @GetMapping("/alkol/like")
-    public List<AlkolResponseDto> getLikeAlkol(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public List<AlkolResponseDto> getLikeAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
+                                               @RequestParam(required = false, defaultValue = "") String categoryName,
+                                               @RequestParam(required = false, defaultValue = "") String addressName,
+                                               @RequestParam(required = false, defaultValue = "") String roadAddressName,
+                                               @RequestParam(value = "page", defaultValue = "1") int page,
+                                               @RequestParam(value = "size", defaultValue = "10") int size,
+                                               @AuthenticationPrincipal UserDetailsImpl userDetails){
         if(userDetails==null){
-            return kakaoApiService.getLikeAlkol(null,page - 1,size);
+            if(placeName==null){
+                return kakaoApiService.getLikeAlkol(null,null,null,null,null,page - 1,size);
+            }else{
+                return kakaoApiService.getLikeAlkol(placeName,categoryName, addressName,roadAddressName,null,page - 1,size);
+            }
         } else
-            return kakaoApiService.getLikeAlkol(userDetails.getUser(), page - 1,size);
+        if(placeName==null){
+            return kakaoApiService.getLikeAlkol(null,null,null,null,userDetails.getUser(),page - 1,size);
+        }else{
+            return kakaoApiService.getLikeAlkol(placeName, categoryName,addressName,roadAddressName,userDetails.getUser(), page - 1,size);
+        }
     }
     //조회수 순으로 술집 조회
     @Operation(summary = "조회수 순 술집 조회", description = "조회수 순으로 술집 조회")
     @GetMapping("/alkol/view")
-    public List<AlkolResponseDto> getViewAlkol(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "3") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        if(userDetails==null){
-            return kakaoApiService.getViewAlkol(null,page - 1,size);
-        } else
-            return kakaoApiService.getViewAlkol(userDetails.getUser(), page - 1,size);
+    public List<AlkolResponseDto> getViewAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
+                                               @RequestParam(required = false, defaultValue = "") String categoryName,
+                                               @RequestParam(required = false, defaultValue = "") String addressName,
+                                               @RequestParam(required = false, defaultValue = "") String roadAddressName,
+                                               @RequestParam(value = "page", defaultValue = "1") int page,
+                                               @RequestParam(value = "size", defaultValue = "3") int size,
+                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails == null) {
+            if (placeName == null) {
+                return kakaoApiService.getViewAlkol(null, null, null, null, null, page - 1, size);
+            } else {
+                return kakaoApiService.getViewAlkol(placeName, categoryName, addressName, roadAddressName, null, page - 1, size);
+            }
+        } else if (placeName == null) {
+            return kakaoApiService.getViewAlkol(null, null, null, null, userDetails.getUser(), page - 1, size);
+        } else {
+            return kakaoApiService.getViewAlkol(placeName, categoryName, addressName, roadAddressName, userDetails.getUser(), page - 1, size);
+        }
     }
 }

@@ -47,6 +47,12 @@ public class PostService {
     public List<PostResponseDto> getBestPosts() {     //게시글 조회수 best3
         List<Post> posts = getPostListOrderByViewCount();
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        if(posts.size()<3) {
+            for (int i = 0; i < posts.size(); i++){
+                postResponseDtoList.add(new PostResponseDto(posts.get(i)));
+            }
+            return postResponseDtoList;
+        }
         for(int i=0; i<3; i++){
             postResponseDtoList.add(new PostResponseDto(posts.get(i)));
         }

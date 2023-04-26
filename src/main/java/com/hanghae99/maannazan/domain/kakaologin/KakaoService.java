@@ -80,7 +80,7 @@ public class KakaoService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", client_key);
-        body.add("redirect_uri", "http://localhost:8080/OAuth/Kakao");
+        body.add("redirect_uri", "http://localhost:3000/oauth");
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -227,10 +227,7 @@ public class KakaoService {
         }catch(JsonProcessingException e){
             e.printStackTrace();
         }
-        System.out.println(oAuthTokenResponseDto.getAccess_token());
-        System.out.println(oAuthTokenResponseDto.getExpires_in());
-        System.out.println(oAuthTokenResponseDto.getRefresh_token());
-        System.out.println(oAuthTokenResponseDto.getToken_type());
+
         return new String[] {oAuthTokenResponseDto.getAccess_token(), oAuthTokenResponseDto.getRefresh_token()};
 
     }

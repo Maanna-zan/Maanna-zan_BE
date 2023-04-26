@@ -13,7 +13,7 @@ import java.util.Set;
 
 public interface KakaoApiRepository extends JpaRepository<Kakao, Long> {
 
-    List<Kakao> findAllByApiId(String apiId);
+//    List<Kakao> findAllByApiId(String apiId); //FIXME 리팩토링하면서 삭제했습니다 동희님
 
     Page<Kakao> findAll(Pageable pageable);
 
@@ -21,4 +21,11 @@ public interface KakaoApiRepository extends JpaRepository<Kakao, Long> {
 
     @Query("SELECT DISTINCT k.apiId FROM Kakao k")
     Set<String> findAllApiIds();
+
+    Page<Kakao> findByPlaceNameContainingOrCategoryNameContainingOrAddressNameContainingOrRoadAddressNameContaining(String placeName, String categoryName,String addressName,String roadAddressName, Pageable pageable);
+//    Page<Kakao> findByPlaceNameContaining(String placeName, Pageable pageable);
+//    Page<Kakao> findByCategoryNameContaining(String placeName, Pageable pageable);
+//    Page<Kakao> findByAddressNameContaining(String placeName, Pageable pageable);
+//    Page<Kakao> findByRoadAddressNameContaining(String placeName, Pageable pageable);
+
 }
