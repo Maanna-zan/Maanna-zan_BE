@@ -2,7 +2,9 @@ package com.hanghae99.maannazan.domain.kakaoapi;
 
 import com.hanghae99.maannazan.domain.entity.Kakao;
 import com.hanghae99.maannazan.domain.entity.Post;
+import com.hanghae99.maannazan.domain.entity.Search;
 import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolDataAndSearchDataDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.KakaoResponseDto;
 import com.hanghae99.maannazan.domain.like.LikeService;
@@ -10,8 +12,8 @@ import com.hanghae99.maannazan.domain.post.PostService;
 import com.hanghae99.maannazan.domain.post.dto.PostImageResponseDto;
 import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
 import com.hanghae99.maannazan.domain.repository.KakaoApiRepository;
-import com.hanghae99.maannazan.domain.repository.LikeRepository;
-import com.hanghae99.maannazan.domain.repository.PostRepository;
+import com.hanghae99.maannazan.domain.repository.SearchRepository;
+import com.hanghae99.maannazan.domain.search.dto.SearchDto;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +37,8 @@ public class KakaoApiService {
     private final PostService postService;
 
     private final LikeService likeService;
+    private final SearchRepository searchRepository;
+
 
 
     //카카오 검색 api 저장
@@ -70,30 +77,45 @@ public class KakaoApiService {
         kakaoView.roomViewCount(kakaoView.getRoomViewCount()+1);
         List<KakaoResponseDto> kakaoResponseDtoList = new ArrayList<>();
         boolean roomLike = likeService.getAlkolLike(apiId, user);
-            List<Post> posts = postService.getPostByKakaoApiId(kakaoView);
-            int numberOfPosts = posts.size();
-            List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-            for (Post post : posts){
-                if(user!=null) {
-                    boolean like = likeService.getPostLike(post, user);
-                    postResponseDtoList.add(new PostResponseDto(post, like));
-                }else {
-                    postResponseDtoList.add(new PostResponseDto(post));
-                }
+        double tasteAvg = postService.getTasteAvg(kakaoView);
+        double serviceAvg = postService.getServiceAvg(kakaoView);
+        double atmosphereAvg = postService.getAtmosphereAvg(kakaoView);
+        double satisfactionAvg = postService.getSatisfactionAvg(kakaoView);
+        List<Post> posts = postService.getPostByKakaoApiId(kakaoView);
+        int numberOfPosts = posts.size();
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for (Post post : posts) {
+            if (user != null) {
+                boolean like = likeService.getPostLike(post, user);
+                postResponseDtoList.add(new PostResponseDto(post, like));
+
+            } else {
+                postResponseDtoList.add(new PostResponseDto(post));
             }
-            kakaoResponseDtoList.add(new KakaoResponseDto(kakaoView, postResponseDtoList,numberOfPosts, roomLike));
+        }
+        kakaoResponseDtoList.add(new KakaoResponseDto(kakaoView, postResponseDtoList, numberOfPosts, roomLike, tasteAvg, serviceAvg, atmosphereAvg, satisfactionAvg));
         return kakaoResponseDtoList;
 
     }
 
 
     // 모든 술집 조회
-    public List<AlkolResponseDto> getAllAlkol(String placeName,String categoryName,String addressName,String roadAddressName,User user, int page, int size) {
+    public AlkolDataAndSearchDataDto getAllAlkol(String placeName,String categoryName,String addressName,String roadAddressName,User user, int page, int size) {
         if (placeName != null) {
             Pageable pageable = PageRequest.of(page, size);
             Page<Kakao> kakaoSearchList = kakaoApiRepository.findByPlaceNameContainingOrCategoryNameContainingOrAddressNameContainingOrRoadAddressNameContaining(placeName,categoryName,addressName, roadAddressName, pageable);
             if(kakaoSearchList==null){
                 throw new CustomException(CustomErrorCode.ALKOL_NOT_FOUND);
+            }
+            //검색 결과 저장
+            List<Search> searchList = searchRepository.findByUserId(user.getId());
+            if((searchList==null || searchList.size()<5) && user != null){
+            Search search = new Search(placeName, user);
+            searchRepository.save(search);
+            } else if (searchList.size() == 5 && user != null) { //검색어가 5개일 시 가장 오래 된 검색어 삭제
+                searchRepository.delete(searchList.get(0));
+                Search search = new Search(placeName, user);
+                searchRepository.save(search);
             }
             List<Kakao> entityList = kakaoSearchList.getContent();
             List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
@@ -106,7 +128,12 @@ public class KakaoApiService {
                 }
                 AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
             }
-            return AlkolResponseDtoList;
+
+            List<SearchDto> searchDtoList = new ArrayList<>();
+            for (Search search : searchList) { //User정보까지 보내주기에 Dto에 searchWord만 저장해서 보내줌
+                searchDtoList.add(new SearchDto(search.getSearchWord()));
+            }
+            return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList);
         } else {
             Pageable pageable = PageRequest.of(page, size);
             Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
@@ -121,7 +148,13 @@ public class KakaoApiService {
                 }
                 AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
             }
-            return AlkolResponseDtoList;
+            //검색 결과 저장
+            List<Search> searchList = searchRepository.findByUserId(user.getId());
+            List<SearchDto> searchDtoList = new ArrayList<>();
+            for (Search search : searchList) {    //User정보까지 보내주기에 Dto에 searchWord만 저장해서 보내줌
+                searchDtoList.add(new SearchDto(search.getSearchWord()));
+            }
+            return new AlkolDataAndSearchDataDto(AlkolResponseDtoList,searchDtoList);
         }
     }
 
@@ -181,7 +214,6 @@ public class KakaoApiService {
         }
         return AlkolResponseDtoList;
     }
-
 
     //메서드
     public Kakao getAlkolByKakaoApiId(String kakaoApiId){    // 단일 술집 조회(상세조회)

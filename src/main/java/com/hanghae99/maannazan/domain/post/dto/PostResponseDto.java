@@ -38,6 +38,13 @@ public class PostResponseDto {
     private boolean like;
     private int viewCount;
 
+    private double taste;
+    private double service;
+    private double atmosphere;
+    private double satisfaction;
+
+    private double postStarAvg;
+
 
     public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) { //산하 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
@@ -51,6 +58,11 @@ public class PostResponseDto {
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
         this.viewCount = post.getViewCount();
+        this.taste = post.getTaste();
+        this.service = post.getService();
+        this.atmosphere = post.getAtmosphere();
+        this.satisfaction = post.getSatisfaction();
+        this.postStarAvg = (taste+service+atmosphere+satisfaction)/4;
     }
 
     public PostResponseDto(Post post, List<CommentResponseDto> commentResponseDtoList) {    //산하  게시물 하나 조회 (category가 null이라면 이걸 반환)
@@ -64,7 +76,11 @@ public class PostResponseDto {
         this.s3Url = post.getS3Url();
         this.commentList = commentResponseDtoList;
         this.viewCount = post.getViewCount();
-
+        this.taste = post.getTaste();
+        this.service = post.getService();
+        this.atmosphere = post.getAtmosphere();
+        this.satisfaction = post.getSatisfaction();
+        this.postStarAvg = (taste+service+atmosphere+satisfaction)/4;
     }
 
     public PostResponseDto(Post post){
@@ -77,7 +93,11 @@ public class PostResponseDto {
         this.createAt = post.getCreatedAt();
         this.s3Url = post.getS3Url();
         this.viewCount = post.getViewCount();
-
+        this.taste = post.getTaste();
+        this.service = post.getService();
+        this.atmosphere = post.getAtmosphere();
+        this.satisfaction = post.getSatisfaction();
+        this.postStarAvg = (taste+service+atmosphere+satisfaction)/4;
     }
     public PostResponseDto(Post post, boolean like){
         this.id = post.getId();
@@ -90,10 +110,12 @@ public class PostResponseDto {
         this.likecnt = post.getLikecnt();
         this.like = like;
         this.viewCount = post.getViewCount();
-
+        this.taste = post.getTaste();
+        this.service = post.getService();
+        this.atmosphere = post.getAtmosphere();
+        this.satisfaction = post.getSatisfaction();
+        this.postStarAvg = (taste+service+atmosphere+satisfaction)/4;
     }
-
-
 
 }
 

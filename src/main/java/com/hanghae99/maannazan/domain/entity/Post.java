@@ -32,6 +32,11 @@ public class Post extends Timestamped {
 
     private int viewCount;
 
+    private double taste;
+    private double service;
+    private double atmosphere;
+    private double satisfaction;
+
 
 
 
@@ -58,6 +63,10 @@ public class Post extends Timestamped {
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
         this.kakao = kakao;
+        this.taste = postRequestDto.getTaste();
+        this.service = postRequestDto.getService();
+        this.atmosphere = postRequestDto.getAtmosphere();
+        this.satisfaction = postRequestDto.getSatisfaction();
     }
 
     public Post(PostRequestDto postRequestDto, User user) {
@@ -66,6 +75,10 @@ public class Post extends Timestamped {
         this.user = user;
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
+        this.taste = postRequestDto.getTaste();
+        this.service = postRequestDto.getService();
+        this.atmosphere = postRequestDto.getAtmosphere();
+        this.satisfaction = postRequestDto.getSatisfaction();
 
     }
 
@@ -75,6 +88,10 @@ public class Post extends Timestamped {
         this.s3Url = postRequestDto.getS3Url();
         this.user = user;
         this.fileName = postRequestDto.getFileName();
+        this.taste = postRequestDto.getTaste();
+        this.service = postRequestDto.getService();
+        this.atmosphere = postRequestDto.getAtmosphere();
+        this.satisfaction = postRequestDto.getSatisfaction();
 
     }
 
@@ -84,6 +101,10 @@ public class Post extends Timestamped {
         this.description = postRequestDto.getDescription();
         this.s3Url = postRequestDto.getS3Url();
         this.fileName = postRequestDto.getFileName();
+        this.taste = postRequestDto.getTaste();
+        this.service = postRequestDto.getService();
+        this.atmosphere = postRequestDto.getAtmosphere();
+        this.satisfaction = postRequestDto.getSatisfaction();
     }
 
     public void likeCount(int plusOrMinus) {  //좋아요 개수

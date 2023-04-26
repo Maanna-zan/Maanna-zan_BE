@@ -42,9 +42,16 @@ public class KakaoResponseDto {
     private int roomLikecnt;
     private boolean roomLike;
 
+    private double tasteAvg;
+    private double serviceAvg;
+    private double atmosphereAvg;
+    private double satisfactionAvg;
+
+    private double starAvg;
 
 
-    public KakaoResponseDto(Kakao kakao, List<PostResponseDto> postResponseDtoList, int numberOfPosts, boolean roomLike){
+
+    public KakaoResponseDto(Kakao kakao, List<PostResponseDto> postResponseDtoList, int numberOfPosts, boolean roomLike, double tasteAvg, double serviceAvg, double atmosphereAvg, double satisfactionAvg){
         this.apiId = kakao.getApiId();
         this.address_name = kakao.getAddressName();
         this.category_group_code = kakao.getCategoryGroupCode();
@@ -62,6 +69,11 @@ public class KakaoResponseDto {
         this.roomViewCount = kakao.getRoomViewCount();
         this.roomLikecnt = kakao.getRoomLikecnt();
         this.roomLike = roomLike;
+        this.tasteAvg = tasteAvg;
+        this.serviceAvg = serviceAvg;
+        this.atmosphereAvg = atmosphereAvg;
+        this.satisfactionAvg = satisfactionAvg;
+        this.starAvg = (tasteAvg+serviceAvg+atmosphereAvg+satisfactionAvg)/4;
     }
 
 

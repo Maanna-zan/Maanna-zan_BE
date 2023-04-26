@@ -1,6 +1,7 @@
 package com.hanghae99.maannazan.domain.kakaoapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolDataAndSearchDataDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.KakaoResponseDto;
 import com.hanghae99.maannazan.domain.post.PostService;
@@ -105,11 +106,11 @@ public class KakaoApi {
     // 모든 술집 조회
     @Operation(summary = "전체 술집 조회", description = "모든 술집 조회")
     @GetMapping("/alkol/all")
-    public List<AlkolResponseDto> getAllAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
-                                              @RequestParam(required = false, defaultValue = "") String categoryName,
-                                              @RequestParam(required = false, defaultValue = "") String addressName,
-                                              @RequestParam(required = false, defaultValue = "") String roadAddressName,
-                                              @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public AlkolDataAndSearchDataDto getAllAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
+                                                 @RequestParam(required = false, defaultValue = "") String categoryName,
+                                                 @RequestParam(required = false, defaultValue = "") String addressName,
+                                                 @RequestParam(required = false, defaultValue = "") String roadAddressName,
+                                                 @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
         if(userDetails==null){
             if(placeName==null){
                 return kakaoApiService.getAllAlkol(null,null,null,null,null,page - 1,size);
