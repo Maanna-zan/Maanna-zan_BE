@@ -22,7 +22,7 @@ public class KakaoController {
 
 
 
-    @GetMapping("/oauth")
+    @GetMapping("/OAuth/Kakao")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
         kakaoService.kakaoLogin(code, response);
@@ -32,7 +32,7 @@ public class KakaoController {
         return "home";
     }
 
-    @GetMapping("/oauth/refresh")
+    @GetMapping("/OAuth/Kakao/refresh")
     public String getRefresh(@RequestParam String refreshToken, HttpServletResponse response) throws JsonProcessingException {
 
       kakaoService.getRefresh(refreshToken, response);
