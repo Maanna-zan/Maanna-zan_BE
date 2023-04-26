@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -23,9 +21,10 @@ public class Search{
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "KAKAO_ID")
-    private Kakao kakao;
+    public Search(String searchWord, User user) {
+        this.searchWord = searchWord;
+        this.user = user;
+    }
 
 
 }
