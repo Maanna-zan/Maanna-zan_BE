@@ -26,7 +26,6 @@ public class KakaoController {
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드
         kakaoService.kakaoLogin(code, response);
-
         // 세션에 액세스 토큰과 리프레시 토큰 저장
         return "home";
     }
