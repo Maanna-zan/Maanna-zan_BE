@@ -23,6 +23,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -50,8 +51,12 @@ public class KakaoService {
         // 4. JWT 토큰 반환
 //        String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
 //        String refreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
-        response.setHeader("Authorization", token[0]);
-        response.setHeader("refreshToken", token[1]);
+
+        Cookie cookie = new Cookie("Authorization", token[0]);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+  //      response.setHeader("Authorization", token[0]);
+  //      response.setHeader("refreshToken", token[1]);
         /*TokenDto tokenDto = jwtUtil.createAllToken(kakaoUser.getEmail());
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserEmail(kakaoUser.getEmail());
 
@@ -80,7 +85,7 @@ public class KakaoService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", client_key);
-        body.add("redirect_uri", "http://localhost:8080/OAuth/Kakao");
+        body.add("redirect_uri", "http://localhost:3000/OAuth/Kakao");
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -227,10 +232,7 @@ public class KakaoService {
         }catch(JsonProcessingException e){
             e.printStackTrace();
         }
-        System.out.println(oAuthTokenResponseDto.getAccess_token());
-        System.out.println(oAuthTokenResponseDto.getExpires_in());
-        System.out.println(oAuthTokenResponseDto.getRefresh_token());
-        System.out.println(oAuthTokenResponseDto.getToken_type());
+
         return new String[] {oAuthTokenResponseDto.getAccess_token(), oAuthTokenResponseDto.getRefresh_token()};
 
     }
