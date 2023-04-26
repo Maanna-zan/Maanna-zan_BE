@@ -28,7 +28,6 @@ public class KakaoController {
         kakaoService.kakaoLogin(code, response);
 
         // 세션에 액세스 토큰과 리프레시 토큰 저장
-
         return "home";
     }
 
