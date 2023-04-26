@@ -45,16 +45,16 @@ public class KakaoApiService {
                 continue;
             }
             Kakao kakao = new Kakao();
-            kakao.setAddress_name(document.get("address_name").toString());
-            kakao.setCategory_group_code(document.get("category_group_code").toString());
-            kakao.setCategory_group_name(document.get("category_group_name").toString());
-            kakao.setCategory_name(document.get("category_name").toString());
+            kakao.setAddressName(document.get("address_name").toString());
+            kakao.setCategoryGroupCode(document.get("category_group_code").toString());
+            kakao.setCategoryGroupName(document.get("category_group_name").toString());
+            kakao.setCategoryName(document.get("category_name").toString());
             kakao.setDistance(document.get("distance").toString());
             kakao.setApiId(document.get("id").toString());
             kakao.setPhone(document.get("phone").toString());
-            kakao.setPlace_name(document.get("place_name").toString());
-            kakao.setPlace_url(document.get("place_url").toString());
-            kakao.setRoad_address_name(document.get("road_address_name").toString());
+            kakao.setPlaceName(document.get("place_name").toString());
+            kakao.setPlaceUrl(document.get("place_url").toString());
+            kakao.setRoadAddressName(document.get("road_address_name").toString());
             kakao.setX(document.get("x").toString());
             kakao.setY(document.get("y").toString());
             kakaos.add(kakao);
