@@ -1,14 +1,8 @@
 package com.hanghae99.maannazan.domain.file;
 
 
-import com.hanghae99.maannazan.domain.entity.Category;
 import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.entity.User;
-import com.hanghae99.maannazan.domain.file.dto.FileDto;
-import com.hanghae99.maannazan.domain.post.PostService;
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
-import com.hanghae99.maannazan.domain.post.dto.PostResponseDto;
-import com.hanghae99.maannazan.domain.repository.CategoryRepository;
 import com.hanghae99.maannazan.domain.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
