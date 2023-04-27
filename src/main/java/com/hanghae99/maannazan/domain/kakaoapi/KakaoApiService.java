@@ -268,6 +268,9 @@ public class KakaoApiService {
         }
         return new AlkolDataAndSearchDataDto(AlkolResponseDtoList);
     }
+
+
+
     //메서드
     public Kakao getAlkolByKakaoApiId(String kakaoApiId){    // 단일 술집 조회(상세조회)
         return kakaoApiRepository.findByApiId(kakaoApiId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
