@@ -53,6 +53,6 @@ public class CalendarController {
     @DeleteMapping("/my-page/calendar/{calendarId}")
     public ResponseEntity<ResponseMessage<String>> deleteCalendarMemo(@PathVariable Long calendarId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         calendarService.deleteCalendarMemo(calendarId, userDetails.getUser());
-        return ResponseMessage.SuccessResponse("일정 전체 조회 완료","");
+        return ResponseMessage.SuccessResponse("일정 삭제 완료","");
     }
 }
