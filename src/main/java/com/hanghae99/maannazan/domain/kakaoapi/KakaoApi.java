@@ -110,7 +110,7 @@ public class KakaoApi {
                                                  @RequestParam(required = false, defaultValue = "") String categoryName,
                                                  @RequestParam(required = false, defaultValue = "") String addressName,
                                                  @RequestParam(required = false, defaultValue = "") String roadAddressName,
-                                                 @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                                 @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception{
         if(userDetails==null){
             if(placeName==null){
                 return kakaoApiService.getAllAlkol(null,null,null,null,null,page - 1,size);
