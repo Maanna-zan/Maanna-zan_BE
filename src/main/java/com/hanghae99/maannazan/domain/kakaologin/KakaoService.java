@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae99.maannazan.domain.entity.User;
-import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
 import com.hanghae99.maannazan.global.jwt.JwtUtil;
 import com.hanghae99.maannazan.global.jwt.TokenDto;
