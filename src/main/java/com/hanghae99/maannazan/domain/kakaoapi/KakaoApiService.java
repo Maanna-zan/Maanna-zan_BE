@@ -101,21 +101,12 @@ public class KakaoApiService {
 
     // 모든 술집 조회
     public AlkolDataAndSearchDataDto getAllAlkol(String placeName,String categoryName,String addressName,String roadAddressName,User user, int page, int size) {
+
         if (placeName != null) {
             Pageable pageable = PageRequest.of(page, size);
-            Page<Kakao> kakaoSearchList = kakaoApiRepository.findByPlaceNameContainingOrCategoryNameContainingOrAddressNameContainingOrRoadAddressNameContaining(placeName,categoryName,addressName, roadAddressName, pageable);
-            if(kakaoSearchList==null){
+            Page<Kakao> kakaoSearchList = kakaoApiRepository.findByPlaceNameContainingOrCategoryNameContainingOrAddressNameContainingOrRoadAddressNameContaining(placeName, categoryName, addressName, roadAddressName, pageable);
+            if (kakaoSearchList == null) {
                 throw new CustomException(CustomErrorCode.ALKOL_NOT_FOUND);
-            }
-            //검색 결과 저장
-            List<Search> searchList = searchRepository.findByUserId(user.getId());
-            if((searchList==null || searchList.size()<5) && user != null){
-            Search search = new Search(placeName, user);
-            searchRepository.save(search);
-            } else if (searchList.size() == 5 && user != null) { //검색어가 5개일 시 가장 오래 된 검색어 삭제
-                searchRepository.delete(searchList.get(0));
-                Search search = new Search(placeName, user);
-                searchRepository.save(search);
             }
             List<Kakao> entityList = kakaoSearchList.getContent();
             List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
@@ -129,11 +120,33 @@ public class KakaoApiService {
                 AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
             }
 
-            List<SearchDto> searchDtoList = new ArrayList<>();
-            for (Search search : searchList) { //User정보까지 보내주기에 Dto에 searchWord만 저장해서 보내줌
-                searchDtoList.add(new SearchDto(search.getSearchWord()));
+            //검색 결과 저장
+            if (user != null) {
+                List<Search> searchList = searchRepository.findByUserId(user.getId());
+                if ((searchList == null || searchList.size() < 5) && user != null) {
+                    Search search = new Search(placeName, user);
+                    searchRepository.save(search);
+
+                    List<SearchDto> searchDtoList = new ArrayList<>();
+                    for (Search searchWord : searchList) { //User정보까지 보내주기에 Dto에 searchWord만 저장해서 보내줌
+                        searchDtoList.add(new SearchDto(searchWord.getSearchWord()));
+                    }
+                    return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList);
+
+                } else if (searchList.size() == 5 && user != null) { //검색어가 5개일 시 가장 오래 된 검색어 삭제
+                    searchRepository.delete(searchList.get(0));
+                    Search search = new Search(placeName, user);
+                    searchRepository.save(search);
+
+                    List<SearchDto> searchDtoList = new ArrayList<>();
+                    for (Search searchWord : searchList) { //User정보까지 보내주기에 Dto에 searchWord만 저장해서 보내줌
+                        searchDtoList.add(new SearchDto(searchWord.getSearchWord()));
+                    }
+                    return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList);
+                }
             }
-            return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList);
+            return new AlkolDataAndSearchDataDto(AlkolResponseDtoList);
+
         } else {
             Pageable pageable = PageRequest.of(page, size);
             Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
@@ -148,15 +161,21 @@ public class KakaoApiService {
                 }
                 AlkolResponseDtoList.add(new AlkolResponseDto(kakao, roomLike, postImageResponseDtoList));
             }
-            //검색 결과 저장
-            List<Search> searchList = searchRepository.findByUserId(user.getId());
-            List<SearchDto> searchDtoList = new ArrayList<>();
-            for (Search search : searchList) {    //User정보까지 보내주기에 Dto에 searchWord만 저장해서 보내줌
-                searchDtoList.add(new SearchDto(search.getSearchWord()));
+            if (user != null) {
+                //검색 결과 저장
+                List<Search> searchList = searchRepository.findByUserId(user.getId());
+                List<SearchDto> searchDtoList = new ArrayList<>();
+                for (Search search : searchList) {    //User정보까지 보내주기에 Dto에 searchWord만 저장해서 보내줌
+                    searchDtoList.add(new SearchDto(search.getSearchWord()));
+                }
+                return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList);
             }
-            return new AlkolDataAndSearchDataDto(AlkolResponseDtoList,searchDtoList);
+            return new AlkolDataAndSearchDataDto(AlkolResponseDtoList);
         }
     }
+
+
+
 
     //    게시물 많은 순으로 술집 조회
     @Transactional
