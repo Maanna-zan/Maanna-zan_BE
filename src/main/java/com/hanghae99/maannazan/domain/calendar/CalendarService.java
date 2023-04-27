@@ -21,6 +21,12 @@ public class CalendarService {
     //캘린더 일정 작성
     @Transactional
     public void createCalendarMemo(CalendarRequestDto calendarRequestDto, User user) {
+        if (calendarRequestDto == null) {
+            throw new CustomException(CustomErrorCode.CALENDAR_DTO_NOT_FOUND);
+        }
+        if (user == null) {
+            throw new CustomException(CustomErrorCode.USER_NOT_FOUND);
+        }
         Calendar calendar = new Calendar(calendarRequestDto, user);
         calendarRepository.save(calendar);
     }
@@ -29,13 +35,23 @@ public class CalendarService {
     @Transactional
     public CalendarResponseDto getCalendarMemo(Long calendarId, User user){
         Calendar calendar = calendarRepository.findByUserIdAndId(user.getId(), calendarId);
+        if (calendar == null) {
+            throw new CustomException(CustomErrorCode.CALENDAR_NOT_FOUND);
+        }
+        if (!calendar.getUser().equals(user)) {
+            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
+        }
         return new CalendarResponseDto(calendar);
     }
-
     //캘린더 전체 조회
     @Transactional
     public List<CalendarResponseDto> getCalendarMemoList(User user) {
-        List<Calendar> calendarList = calendarRepository.findByUser(user);
+        List<Calendar> calendarList;
+        try {
+            calendarList = calendarRepository.findByUser(user);
+        } catch (Exception e) {
+            throw new CustomException(CustomErrorCode.CALENDAR_NOT_FOUND);
+        }
         List<CalendarResponseDto> calendarResponseDtoList = new ArrayList<>();
         for (Calendar calendar : calendarList) {
             calendarResponseDtoList.add(new CalendarResponseDto(calendar));
@@ -47,12 +63,24 @@ public class CalendarService {
     @Transactional
     public void updateCalendarMemo(CalendarRequestDto calendarRequestDto, Long calendarId,User user) {
         Calendar calendar = calendarRepository.findByUserIdAndId(user.getId(), calendarId);
+        if (calendar == null) {
+            throw new CustomException(CustomErrorCode.CALENDAR_NOT_FOUND);
+        }
+        if (!calendar.getUser().equals(user)) {
+            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
+        }
         calendar.update(calendarRequestDto, user);
     }
     //캘린더 삭제
     @Transactional
     public void deleteCalendarMemo(Long calendarId, User user) {
         Calendar calendar = calendarRepository.findByUserIdAndId(user.getId(), calendarId);
+        if (calendar == null) {
+            throw new CustomException(CustomErrorCode.CALENDAR_NOT_FOUND);
+        }
+        if (!calendar.getUser().equals(user)) {
+            throw new CustomException(CustomErrorCode.NOT_AUTHOR);
+        }
         calendarRepository.delete(calendar);
     }
 }
