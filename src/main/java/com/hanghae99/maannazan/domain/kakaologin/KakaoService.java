@@ -5,14 +5,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hanghae99.maannazan.domain.entity.Kakao;
+import com.hanghae99.maannazan.domain.entity.Post;
+import com.hanghae99.maannazan.domain.entity.Search;
 import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolDataAndSearchDataDto;
+import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
+import com.hanghae99.maannazan.domain.post.dto.PostImageResponseDto;
 import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
+import com.hanghae99.maannazan.domain.search.dto.SearchDto;
+import com.hanghae99.maannazan.global.exception.CustomErrorCode;
+import com.hanghae99.maannazan.global.exception.CustomException;
 import com.hanghae99.maannazan.global.jwt.JwtUtil;
 import com.hanghae99.maannazan.global.jwt.TokenDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,6 +37,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
