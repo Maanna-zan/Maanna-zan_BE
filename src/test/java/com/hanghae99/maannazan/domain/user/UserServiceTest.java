@@ -8,6 +8,7 @@ import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
 import com.hanghae99.maannazan.domain.user.dto.LoginRequestDto;
 import com.hanghae99.maannazan.domain.user.dto.SignupRequestDto;
+import com.hanghae99.maannazan.global.exception.CustomException;
 import com.hanghae99.maannazan.global.jwt.JwtUtil;
 import com.hanghae99.maannazan.global.jwt.TokenDto;
 import org.junit.jupiter.api.DisplayName;
@@ -29,9 +30,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -141,6 +143,53 @@ class UserServiceTest {
             assertThat(refreshToken).isNotEmpty();
 
         }
+    }
+    @Nested
+    @DisplayName("실패 케이스")
+    class FailCase{
+        @DisplayName("회원가입 실패(중복된 이메일)")
+        @Test
+        void failLoginEmail(){
+            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt123@naver.com")
+                    .password("ehd12ehd12!@")
+                    .birth("19980630")
+                    .build();
+
+            String userName = signupRequestDto.getUserName();
+            String nickName = signupRequestDto.getNickName();
+            String email = signupRequestDto.getEmail();
+            String phoneNumber = signupRequestDto.getPhoneNumber();
+            Mockito.when(passwordEncoder.encode(anyString())).thenReturn(signupRequestDto.getPassword());
+            String password = passwordEncoder.encode(signupRequestDto.getPassword());
+            String birth = signupRequestDto.getBirth();
+
+            User user = User.builder()
+                    .userName("장동국")
+                    .nickName("장동희3")
+                    .phoneNumber("01020948731")
+                    .email("ehdehdrnt123@naver.com")
+                    .password(passwordEncoder.encode(password))
+                    .birth("19980630")
+                    .build();
+
+            when(userRepository.findByEmail(signupRequestDto.getEmail())).thenReturn(Optional.of(user));
+            CustomException customException = assertThrows(CustomException.class, ()->{
+                userService.signup(signupRequestDto);
+            });
+
+            assertThat(customException).isNotNull();
+            assertThat(customException.getErrorCode().getMessage()).isEqualTo("중복된 이메일이 존재합니다");
+
+
+        }
+
+
+
+
     }
 
 
