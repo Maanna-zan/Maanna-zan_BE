@@ -81,8 +81,6 @@ public class KakaoService {
             refreshTokenRepository.save(newToken);
         }
         setHeader(response, tokenDto);*/
-
-
     }
     private void setHeader(HttpServletResponse response, TokenDto tokenDto){
         response.addHeader(jwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
