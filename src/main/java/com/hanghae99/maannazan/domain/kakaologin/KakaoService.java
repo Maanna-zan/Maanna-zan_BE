@@ -199,13 +199,16 @@ public class KakaoService {
         return kakaoUser;
     }
 
+/*
     public void getRefresh(String refreshToken ,HttpServletResponse response) throws JsonProcessingException {
         String[] tokens = getNewAccessToken(refreshToken);
 //        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(tokens[0]);
 //        User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
- /*       String newAccessToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
-        String newRefreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");*/
+ */
+/*       String newAccessToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+        String newRefreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");*//*
+
 
         response.setHeader("Authorization", tokens[0]);
         response.setHeader("refreshToken", tokens[1]);
@@ -250,6 +253,7 @@ public class KakaoService {
         return new String[] {oAuthTokenResponseDto.getAccess_token(), oAuthTokenResponseDto.getRefresh_token()};
 
     }
+*/
 
 
 
