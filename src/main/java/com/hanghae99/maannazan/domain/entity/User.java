@@ -4,11 +4,13 @@ import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import com.hanghae99.maannazan.domain.user.dto.CheckFindPwRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity(name = "users")
 public class User {
