@@ -6,8 +6,10 @@ import com.hanghae99.maannazan.domain.like.LikeService;
 import com.hanghae99.maannazan.domain.post.PostService;
 import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
+import com.hanghae99.maannazan.domain.user.dto.LoginRequestDto;
 import com.hanghae99.maannazan.domain.user.dto.SignupRequestDto;
 import com.hanghae99.maannazan.global.jwt.JwtUtil;
+import com.hanghae99.maannazan.global.jwt.TokenDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,13 +20,18 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -38,8 +45,8 @@ class UserServiceTest {
     private CommentService commentService;
     @Mock
     private LikeService likeService;
-    @Mock
-    private PasswordEncoder passwordEncoder;
+    @Spy
+    private BCryptPasswordEncoder passwordEncoder;
     @Mock
     private JwtUtil jwtUtil;
 
@@ -66,17 +73,18 @@ class UserServiceTest {
             String nickName = signupRequestDto.getNickName();
             String email = signupRequestDto.getEmail();
             String phoneNumber = signupRequestDto.getPhoneNumber();
-            Mockito.when(passwordEncoder.encode(Mockito.anyString())).thenReturn(signupRequestDto.getPassword());
+            Mockito.when(passwordEncoder.encode(anyString())).thenReturn(signupRequestDto.getPassword());
             String password = passwordEncoder.encode(signupRequestDto.getPassword());
             String birth = signupRequestDto.getBirth();
             User user = new User(userName, nickName, email, phoneNumber, password, birth);
             Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+
             //when
             userService.signup(signupRequestDto);
-
-            //then
             Mockito.when(userRepository.findByUserName("장동희")).thenReturn(user);
             User saveUser = userRepository.findByUserName("장동희");
+
+            //then
             assertThat(saveUser.getNickName()).isEqualTo("장동희");
             assertThat(saveUser.getUserName()).isEqualTo("장동희");
             assertThat(saveUser.getEmail()).isEqualTo("ehdehdrnt123@naver.com");
@@ -86,15 +94,57 @@ class UserServiceTest {
 
 
         }
+        @DisplayName("로그인")
+        @Test
+        void login() {
+            Map<String, String> headers = new HashMap<>();
+            HttpServletResponse response = mock(HttpServletResponse.class);
+
+            doAnswer(invocation -> {
+                String key = invocation.getArgument(0);
+                String value = invocation.getArgument(1);
+                headers.put(key, value);
+                return null;
+            }).when(response).addHeader(anyString(), anyString());
+
+            User user = User.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt123@naver.com")
+                    .password(passwordEncoder.encode("ehd12ehd12!@"))
+                    .birth("19980630")
+                    .build();
+            LoginRequestDto loginRequestDto = LoginRequestDto.builder()
+                    .email("ehdehdrnt123@naver.com")
+                    .password("ehd12ehd12!@")
+                    .build();
+
+            String fakeAccess = "fakeAccess";
+            String fakeRefresh = "fakeRefresh";
+
+            TokenDto tokenDto = new TokenDto(fakeAccess, fakeRefresh);
+
+            Mockito.when(userRepository.findByEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.of(user));
+            Mockito.when(jwtUtil.createAllToken(loginRequestDto.getEmail())).thenReturn(tokenDto);
+            Mockito.when(refreshTokenRepository.findByUserEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.empty());
+
+            String result = userService.login(loginRequestDto,response);
+
+            assertThat(user).isNotNull();
+            assertThat(user.getNickName()).isEqualTo(result);
+
+            String accessToken = headers.get(JwtUtil.ACCESS_TOKEN);
+            String refreshToken = headers.get(JwtUtil.REFRESH_TOKEN);
+
+            assertThat(accessToken).isNotEmpty();
+            assertThat(refreshToken).isNotEmpty();
+
+        }
     }
 
-    @Test
-    void signup() {
-    }
 
-    @Test
-    void login() {
-    }
+
 
     @Test
     void checkEmail() {
