@@ -187,6 +187,45 @@ class UserServiceTest {
 
         }
 
+        @DisplayName("회원가입 실패(중복된 닉네임)")
+        @Test
+        void failLoginNickName(){
+            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt123@naver.com")
+                    .password("ehd12ehd12!@")
+                    .birth("19980630")
+                    .build();
+
+            String userName = signupRequestDto.getUserName();
+            String nickName = signupRequestDto.getNickName();
+            String email = signupRequestDto.getEmail();
+            String phoneNumber = signupRequestDto.getPhoneNumber();
+            Mockito.when(passwordEncoder.encode(anyString())).thenReturn(signupRequestDto.getPassword());
+            String password = passwordEncoder.encode(signupRequestDto.getPassword());
+            String birth = signupRequestDto.getBirth();
+
+            User user = User.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948731")
+                    .email("ehdehdrnt12@naver.com")
+                    .password(passwordEncoder.encode(password))
+                    .birth("19980630")
+                    .build();
+
+            when(userRepository.findByNickName(signupRequestDto.getNickName())).thenReturn(Optional.of(user));
+            CustomException customException = assertThrows(CustomException.class, ()->{
+                userService.signup(signupRequestDto);
+            });
+
+            assertThat(customException).isNotNull();
+            assertThat(customException.getErrorCode().getMessage()).isEqualTo("중복된 닉네임이 존재합니다");
+
+
+        }
 
 
 
