@@ -147,7 +147,7 @@ class UserServiceTest {
     class FailCase{
         @DisplayName("회원가입 실패(중복된 이메일)")
         @Test
-        void failLoginEmail(){
+        void failSignUpEmail(){
             SignupRequestDto signupRequestDto = SignupRequestDto.builder()
                     .userName("장동희")
                     .nickName("장동희")
@@ -187,7 +187,7 @@ class UserServiceTest {
 
         @DisplayName("회원가입 실패(중복된 닉네임)")
         @Test
-        void failLoginNickName(){
+        void failSignUpNickName(){
             SignupRequestDto signupRequestDto = SignupRequestDto.builder()
                     .userName("장동희")
                     .nickName("장동희")
@@ -226,7 +226,7 @@ class UserServiceTest {
         }
         @DisplayName("회원가입 실패(중복된 전화번호)")
         @Test
-        void failLoginPhoneNumber(){
+        void failSignUpPhoneNumber(){
             SignupRequestDto signupRequestDto = SignupRequestDto.builder()
                     .userName("장동희")
                     .nickName("장동희")
@@ -261,6 +261,59 @@ class UserServiceTest {
             assertThat(customException).isNotNull();
             assertThat(customException.getErrorCode().getMessage()).isEqualTo("중복된 번호가 존재합니다");
 
+
+        }
+
+        @DisplayName("로그인 실패(일치하지않는 email)")
+        @Test
+        void failloginPassword() {
+            HttpServletResponse response = mock(HttpServletResponse.class);
+
+
+            LoginRequestDto loginRequestDto = LoginRequestDto.builder()
+                    .email("ehdehdrnt123@naver.com")
+                    .password("ehd12ehd12!@")
+                    .build();
+
+
+
+            Mockito.when(userRepository.findByEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.empty());
+            CustomException customException = assertThrows(CustomException.class, ()->{
+                userService.login(loginRequestDto,response);
+            });
+
+            assertThat(customException).isNotNull();
+            assertThat(customException.getErrorCode().getMessage()).isEqualTo("이메일 또는 비밀번호가 일치하지 않습니다.");
+
+        }
+
+        @DisplayName("로그인 실패(일치하지않는 비밀번호)")
+        @Test
+        void failloginEmail() {
+            HttpServletResponse response = mock(HttpServletResponse.class);
+
+
+            User user = User.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt123@naver.com")
+                    .password(passwordEncoder.encode("ehd12ehd12!@"))
+                    .birth("19980630")
+                    .build();
+            LoginRequestDto loginRequestDto = LoginRequestDto.builder()
+                    .email("ehdehdrnt123@naver.com")
+                    .password("ehd12ehd12!")
+                    .build();
+
+
+            Mockito.when(userRepository.findByEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.of(user));
+            CustomException customException = assertThrows(CustomException.class, ()->{
+                userService.login(loginRequestDto,response);
+            });
+
+            assertThat(customException).isNotNull();
+            assertThat(customException.getErrorCode().getMessage()).isEqualTo("이메일 또는 비밀번호가 일치하지 않습니다.");
 
         }
 
