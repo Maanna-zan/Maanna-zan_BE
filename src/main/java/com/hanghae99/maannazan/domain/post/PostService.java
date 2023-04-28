@@ -147,11 +147,15 @@ public class PostService {
     }
 
     public Post getPostByUserIdAndPostId(User user, Long postId){    // 내가 작성한 게시글 확인
-        return postRepository.findByUserIdAndId(user.getId(), postId);
+        try{
+            return postRepository.findByUserIdAndId(user.getId(), postId);
+        } catch (Exception e) {
+            throw new CustomException(CustomErrorCode.POST_NOT_FOUND);
+        }
     }
 
     public List<Post> getPostList(){    // 게시글 전체 조회
-        return postRepository.findAll();
+            return postRepository.findAll();
     }
 
     public List<Post> getPostListOrderByLikecntDesc(){    // 게시글 좋아요순 조회
@@ -191,7 +195,7 @@ public class PostService {
     public double getSatisfactionAvg(Kakao kakao){  //술집 만족도 평균 별점
         return getPostByKakaoApiId(kakao).stream().mapToDouble(Post::getSatisfaction).average().orElse(Double.NaN);
     }
-    private List<PostResponseDto> getPostResponseDtoList(User user, List<Post> posts) {   //게시글 리스트 조회
+    private List<PostResponseDto> getPostResponseDtoList(User user, List<Post> posts) {   //게시글 리스트 조회 (전체조회, 좋아요순 조회, 조회순 조회)
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         for (Post post : posts) {
             List<Comment> commentList = commentService.getCommentListByPost(post);
