@@ -32,7 +32,9 @@ public enum CustomErrorCode {
     USER_NOT_FOUND(NOT_FOUND, "사용자를 찾을 수 없습니다."),
     EMAIL_AND_PHONENUMBER_NOT_FOUND(NOT_FOUND, "등록된 정보가 없습니다"),
     COMMENT_NOT_FOUND(NOT_FOUND, "선택한 댓글을 찾을 수 없습니다."),
-    EMAIL_NOT_FOUND(NOT_FOUND,"등록되지 않은 이메일입니다.");
+    EMAIL_NOT_FOUND(NOT_FOUND,"등록되지 않은 이메일입니다."),
+    CALENDAR_NOT_FOUND(NOT_FOUND,"선택한 캘린더를 찾을 수 없습니다"),
+    CALENDAR_DTO_NOT_FOUND(NOT_FOUND,"저장할 정보가 없습니다.");
 
 
 
