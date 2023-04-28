@@ -1,16 +1,12 @@
 package com.hanghae99.maannazan.domain.kakaologin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.hanghae99.maannazan.global.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-
-
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -50,9 +46,6 @@ public class KakaoController {
         public ModelAndView loginPage() {
             return new ModelAndView("login");
         }
-
-
-
 
     }
 
