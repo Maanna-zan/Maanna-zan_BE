@@ -82,7 +82,7 @@ public class KakaoApi {
     // 게시글 많은 순으로 술집 조회
     @Operation(summary = "게시글 많은 순 술집 조회", description = "게시글 많은 순으로 술집 조회")
     @GetMapping("/alkol/best")
-    public List<AlkolResponseDto>getBestAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
+    public AlkolDataAndSearchDataDto getBestAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
                                               @RequestParam(required = false, defaultValue = "") String categoryName,
                                               @RequestParam(required = false, defaultValue = "") String addressName,
                                               @RequestParam(required = false, defaultValue = "") String roadAddressName,
@@ -110,7 +110,7 @@ public class KakaoApi {
                                                  @RequestParam(required = false, defaultValue = "") String categoryName,
                                                  @RequestParam(required = false, defaultValue = "") String addressName,
                                                  @RequestParam(required = false, defaultValue = "") String roadAddressName,
-                                                 @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                                 @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception{
         if(userDetails==null){
             if(placeName==null){
                 return kakaoApiService.getAllAlkol(null,null,null,null,null,page - 1,size);
@@ -128,7 +128,7 @@ public class KakaoApi {
     //좋아요 순으로 술집 조회
     @Operation(summary = "좋아요 순 술집 조회", description = "좋아요 순으로 술집 조회")
     @GetMapping("/alkol/like")
-    public List<AlkolResponseDto> getLikeAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
+    public AlkolDataAndSearchDataDto getLikeAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
                                                @RequestParam(required = false, defaultValue = "") String categoryName,
                                                @RequestParam(required = false, defaultValue = "") String addressName,
                                                @RequestParam(required = false, defaultValue = "") String roadAddressName,
@@ -151,7 +151,7 @@ public class KakaoApi {
     //조회수 순으로 술집 조회
     @Operation(summary = "조회수 순 술집 조회", description = "조회수 순으로 술집 조회")
     @GetMapping("/alkol/view")
-    public List<AlkolResponseDto> getViewAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
+    public AlkolDataAndSearchDataDto getViewAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
                                                @RequestParam(required = false, defaultValue = "") String categoryName,
                                                @RequestParam(required = false, defaultValue = "") String addressName,
                                                @RequestParam(required = false, defaultValue = "") String roadAddressName,

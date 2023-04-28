@@ -5,14 +5,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hanghae99.maannazan.domain.entity.Kakao;
+import com.hanghae99.maannazan.domain.entity.Post;
+import com.hanghae99.maannazan.domain.entity.Search;
 import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolDataAndSearchDataDto;
+import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
+import com.hanghae99.maannazan.domain.post.dto.PostImageResponseDto;
 import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
+import com.hanghae99.maannazan.domain.search.dto.SearchDto;
+import com.hanghae99.maannazan.global.exception.CustomErrorCode;
+import com.hanghae99.maannazan.global.exception.CustomException;
 import com.hanghae99.maannazan.global.jwt.JwtUtil;
 import com.hanghae99.maannazan.global.jwt.TokenDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,6 +37,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -49,14 +63,14 @@ public class KakaoService {
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-//        String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+       String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
 //        String refreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
 
-        Cookie cookie = new Cookie("Authorization", token[0]);
+       /* Cookie cookie = new Cookie("Authorization", token[0]);
         cookie.setPath("/");
-        response.addCookie(cookie);
-  //      response.setHeader("Authorization", token[0]);
-  //      response.setHeader("refreshToken", token[1]);
+        response.addCookie(cookie);*/
+        response.setHeader("Authorization", createToken);
+
         /*TokenDto tokenDto = jwtUtil.createAllToken(kakaoUser.getEmail());
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUserEmail(kakaoUser.getEmail());
 
@@ -185,13 +199,16 @@ public class KakaoService {
         return kakaoUser;
     }
 
+/*
     public void getRefresh(String refreshToken ,HttpServletResponse response) throws JsonProcessingException {
         String[] tokens = getNewAccessToken(refreshToken);
 //        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(tokens[0]);
 //        User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
- /*       String newAccessToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
-        String newRefreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");*/
+ */
+/*       String newAccessToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+        String newRefreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");*//*
+
 
         response.setHeader("Authorization", tokens[0]);
         response.setHeader("refreshToken", tokens[1]);
@@ -236,6 +253,7 @@ public class KakaoService {
         return new String[] {oAuthTokenResponseDto.getAccess_token(), oAuthTokenResponseDto.getRefresh_token()};
 
     }
+*/
 
 
 
