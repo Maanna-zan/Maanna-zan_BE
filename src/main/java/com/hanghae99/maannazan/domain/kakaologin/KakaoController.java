@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 
 
-@Controller
+@RestController
 @Validated
 @RequiredArgsConstructor
 public class KakaoController {
@@ -30,6 +30,7 @@ public class KakaoController {
         return "/";
     }
 
+/*
     @GetMapping("/OAuth/Kakao/refresh")
     public String getRefresh(@RequestParam String refreshToken, HttpServletResponse response) throws JsonProcessingException {
 
@@ -50,6 +51,7 @@ public class KakaoController {
         }
 
 
+*/
 
 
     }
