@@ -287,6 +287,35 @@ class UserServiceTest {
 
         }
 
+        @DisplayName("로그인 실패(일치하지않는 비밀번호)")
+        @Test
+        void failloginEmail() {
+            HttpServletResponse response = mock(HttpServletResponse.class);
+
+
+            User user = User.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt123@naver.com")
+                    .password(passwordEncoder.encode("ehd12ehd12!@"))
+                    .birth("19980630")
+                    .build();
+            LoginRequestDto loginRequestDto = LoginRequestDto.builder()
+                    .email("ehdehdrnt123@naver.com")
+                    .password("ehd12ehd12!")
+                    .build();
+
+
+            Mockito.when(userRepository.findByEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.of(user));
+            CustomException customException = assertThrows(CustomException.class, ()->{
+                userService.login(loginRequestDto,response);
+            });
+
+            assertThat(customException).isNotNull();
+            assertThat(customException.getErrorCode().getMessage()).isEqualTo("이메일 또는 비밀번호가 일치하지 않습니다.");
+
+        }
 
 
 
