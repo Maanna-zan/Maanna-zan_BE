@@ -226,7 +226,45 @@ class UserServiceTest {
 
 
         }
+        @DisplayName("회원가입 실패(중복된 전화번호)")
+        @Test
+        void failLoginPhoneNumber(){
+            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt123@naver.com")
+                    .password("ehd12ehd12!@")
+                    .birth("19980630")
+                    .build();
 
+            String userName = signupRequestDto.getUserName();
+            String nickName = signupRequestDto.getNickName();
+            String email = signupRequestDto.getEmail();
+            String phoneNumber = signupRequestDto.getPhoneNumber();
+            Mockito.when(passwordEncoder.encode(anyString())).thenReturn(signupRequestDto.getPassword());
+            String password = passwordEncoder.encode(signupRequestDto.getPassword());
+            String birth = signupRequestDto.getBirth();
+
+            User user = User.builder()
+                    .userName("장동희")
+                    .nickName("장동희3")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt12@naver.com")
+                    .password(passwordEncoder.encode(password))
+                    .birth("19980630")
+                    .build();
+
+            when(userRepository.findByPhoneNumber(signupRequestDto.getPhoneNumber())).thenReturn(Optional.of(user));
+            CustomException customException = assertThrows(CustomException.class, ()->{
+                userService.signup(signupRequestDto);
+            });
+
+            assertThat(customException).isNotNull();
+            assertThat(customException.getErrorCode().getMessage()).isEqualTo("중복된 번호가 존재합니다");
+
+
+        }
 
 
     }
