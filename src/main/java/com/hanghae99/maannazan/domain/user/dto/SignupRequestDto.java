@@ -1,8 +1,6 @@
 package com.hanghae99.maannazan.domain.user.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -10,7 +8,8 @@ import javax.validation.constraints.Size;
 
 @NoArgsConstructor
 @Getter
-@Setter
+@AllArgsConstructor
+@Builder
 public class SignupRequestDto {
 
     @NotBlank(message = "이름은 필수사항 입니다.")
