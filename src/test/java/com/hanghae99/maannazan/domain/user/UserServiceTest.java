@@ -1,0 +1,130 @@
+package com.hanghae99.maannazan.domain.user;
+
+import com.hanghae99.maannazan.domain.comment.CommentService;
+import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.like.LikeService;
+import com.hanghae99.maannazan.domain.post.PostService;
+import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
+import com.hanghae99.maannazan.domain.repository.UserRepository;
+import com.hanghae99.maannazan.domain.user.dto.SignupRequestDto;
+import com.hanghae99.maannazan.global.jwt.JwtUtil;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class UserServiceTest {
+    @InjectMocks
+    private UserService userService;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private PostService postService;
+    @Mock
+    private CommentService commentService;
+    @Mock
+    private LikeService likeService;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
+    private JwtUtil jwtUtil;
+
+    @Mock
+    private RefreshTokenRepository refreshTokenRepository;
+    @Mock
+    private JavaMailSender mailSender;
+    @Nested
+    @DisplayName("성공 케이스")
+    class SuccessCase{
+        @DisplayName("회원가입")
+        @Test
+        void signup() {
+            //given
+            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt123@naver.com")
+                    .password("ehd12ehd12!@")
+                    .birth("19980630")
+                    .build();
+            String userName = signupRequestDto.getUserName();
+            String nickName = signupRequestDto.getNickName();
+            String email = signupRequestDto.getEmail();
+            String phoneNumber = signupRequestDto.getPhoneNumber();
+            Mockito.when(passwordEncoder.encode(Mockito.anyString())).thenReturn(signupRequestDto.getPassword());
+            String password = passwordEncoder.encode(signupRequestDto.getPassword());
+            String birth = signupRequestDto.getBirth();
+            User user = new User(userName, nickName, email, phoneNumber, password, birth);
+            Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+            //when
+            userService.signup(signupRequestDto);
+
+            //then
+            Mockito.when(userRepository.findByUserName("장동희")).thenReturn(user);
+            User saveUser = userRepository.findByUserName("장동희");
+            assertThat(saveUser.getNickName()).isEqualTo("장동희");
+            assertThat(saveUser.getUserName()).isEqualTo("장동희");
+            assertThat(saveUser.getEmail()).isEqualTo("ehdehdrnt123@naver.com");
+            assertThat(saveUser.getBirth()).isEqualTo("19980630");
+            assertThat(saveUser.getPhoneNumber()).isEqualTo("01020948737");
+            assertThat(saveUser.getPassword()).isEqualTo("ehd12ehd12!@");
+
+
+        }
+    }
+
+    @Test
+    void signup() {
+    }
+
+    @Test
+    void login() {
+    }
+
+    @Test
+    void checkEmail() {
+    }
+
+    @Test
+    void checkNickName() {
+    }
+
+    @Test
+    void checkFindPw() {
+    }
+
+    @Test
+    void updatePassword() {
+    }
+
+    @Test
+    void getTempPassword() {
+    }
+
+    @Test
+    void mailSend() {
+    }
+
+    @Test
+    void deleteUser() {
+    }
+
+    @Test
+    void checkFindEmail() {
+    }
+}
