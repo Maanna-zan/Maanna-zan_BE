@@ -28,9 +28,12 @@ public class Likes {
     @JoinColumn(name = "KAKAO_ID")
     private Kakao kakao;
 
+    private boolean status;
+
     public Likes(Post post, User user) {
         this.user= user;
         this.post= post;
+        this.status = true;
     }
 
     public Likes(Comment comment, User user) {
@@ -41,9 +44,11 @@ public class Likes {
     public Likes(Kakao kakao, User user) {
         this.user= user;
         this.kakao= kakao;
+        this.status = true;
     }
 
     public Post getPost() {
         return this.post;
     }
+
 }

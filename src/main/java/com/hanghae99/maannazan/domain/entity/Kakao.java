@@ -40,8 +40,6 @@ public class Kakao {
 
     private String y;
 
-    private boolean roomLike = false;
-
     private int roomLikecnt;
 
     private int roomViewCount;

@@ -1,11 +1,10 @@
 package com.hanghae99.maannazan.domain.user;
 
-import com.hanghae99.maannazan.domain.comment.CommentService;
 import com.hanghae99.maannazan.domain.entity.User;
-import com.hanghae99.maannazan.domain.like.LikeService;
-import com.hanghae99.maannazan.domain.post.PostService;
 import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
+import com.hanghae99.maannazan.domain.user.dto.CheckEmailRequestDto;
+import com.hanghae99.maannazan.domain.user.dto.CheckNickNameRequestDto;
 import com.hanghae99.maannazan.domain.user.dto.LoginRequestDto;
 import com.hanghae99.maannazan.domain.user.dto.SignupRequestDto;
 import com.hanghae99.maannazan.global.exception.CustomException;
@@ -39,12 +38,7 @@ class UserServiceTest {
     private UserService userService;
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private PostService postService;
-    @Mock
-    private CommentService commentService;
-    @Mock
-    private LikeService likeService;
+
     @Spy
     private BCryptPasswordEncoder passwordEncoder;
     @Mock
@@ -97,6 +91,7 @@ class UserServiceTest {
         @DisplayName("로그인")
         @Test
         void login() {
+            //given
             Map<String, String> headers = new HashMap<>();
             HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -125,12 +120,13 @@ class UserServiceTest {
 
             TokenDto tokenDto = new TokenDto(fakeAccess, fakeRefresh);
 
+            //when
             Mockito.when(userRepository.findByEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.of(user));
             Mockito.when(jwtUtil.createAllToken(loginRequestDto.getEmail())).thenReturn(tokenDto);
             Mockito.when(refreshTokenRepository.findByUserEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.empty());
-
             String result = userService.login(loginRequestDto,response);
 
+            //then
             assertThat(user).isNotNull();
             assertThat(user.getNickName()).isEqualTo(result);
 
@@ -141,6 +137,60 @@ class UserServiceTest {
             assertThat(refreshToken).isNotEmpty();
 
         }
+
+        @DisplayName("email 중복확인")
+        @Test
+        void checkEmail(){
+            //given
+            User user = User.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt123@naver.com")
+                    .password(passwordEncoder.encode("ehd12ehd12!@"))
+                    .birth("19980630")
+                    .build();
+            CheckEmailRequestDto checkEmailRequestDto = CheckEmailRequestDto.builder()
+                    .email("ehdehdrnt123@naver.com")
+                    .build();
+
+            //when
+            Mockito.when(userRepository.findByEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.of(user));
+            CustomException customException = assertThrows(CustomException.class, ()-> userService.checkEmail(checkEmailRequestDto));
+
+            //then
+            assertThat(customException).isNotNull();
+            assertThat(customException.getErrorCode().getMessage()).isEqualTo("중복된 이메일이 존재합니다");
+
+        }
+
+        @DisplayName("nickName 중복확인")
+        @Test
+        void checkNickName(){
+            //given
+            User user = User.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt123@naver.com")
+                    .password(passwordEncoder.encode("ehd12ehd12!@"))
+                    .birth("19980630")
+                    .build();
+            CheckNickNameRequestDto checkNickNameRequestDto = CheckNickNameRequestDto.builder()
+                    .nickName("장동희")
+                    .build();
+
+            //when
+            Mockito.when(userRepository.findByNickName("장동희")).thenReturn(Optional.of(user));
+            CustomException customException = assertThrows(CustomException.class, ()-> userService.checkNickName(checkNickNameRequestDto));
+
+            //then
+            assertThat(customException).isNotNull();
+            assertThat(customException.getErrorCode().getMessage()).isEqualTo("중복된 닉네임이 존재합니다");
+
+        }
+
+
     }
     @Nested
     @DisplayName("실패 케이스")
@@ -148,6 +198,7 @@ class UserServiceTest {
         @DisplayName("회원가입 실패(중복된 이메일)")
         @Test
         void failSignUpEmail(){
+            //given
             SignupRequestDto signupRequestDto = SignupRequestDto.builder()
                     .userName("장동희")
                     .nickName("장동희")
@@ -156,15 +207,8 @@ class UserServiceTest {
                     .password("ehd12ehd12!@")
                     .birth("19980630")
                     .build();
-
-            String userName = signupRequestDto.getUserName();
-            String nickName = signupRequestDto.getNickName();
-            String email = signupRequestDto.getEmail();
-            String phoneNumber = signupRequestDto.getPhoneNumber();
             Mockito.when(passwordEncoder.encode(anyString())).thenReturn(signupRequestDto.getPassword());
             String password = passwordEncoder.encode(signupRequestDto.getPassword());
-            String birth = signupRequestDto.getBirth();
-
             User user = User.builder()
                     .userName("장동국")
                     .nickName("장동희3")
@@ -174,11 +218,11 @@ class UserServiceTest {
                     .birth("19980630")
                     .build();
 
+            //when
             when(userRepository.findByEmail(signupRequestDto.getEmail())).thenReturn(Optional.of(user));
-            CustomException customException = assertThrows(CustomException.class, ()->{
-                userService.signup(signupRequestDto);
-            });
+            CustomException customException = assertThrows(CustomException.class, ()-> userService.signup(signupRequestDto));
 
+            //then
             assertThat(customException).isNotNull();
             assertThat(customException.getErrorCode().getMessage()).isEqualTo("중복된 이메일이 존재합니다");
 
@@ -188,6 +232,7 @@ class UserServiceTest {
         @DisplayName("회원가입 실패(중복된 닉네임)")
         @Test
         void failSignUpNickName(){
+            //given
             SignupRequestDto signupRequestDto = SignupRequestDto.builder()
                     .userName("장동희")
                     .nickName("장동희")
@@ -197,13 +242,8 @@ class UserServiceTest {
                     .birth("19980630")
                     .build();
 
-            String userName = signupRequestDto.getUserName();
-            String nickName = signupRequestDto.getNickName();
-            String email = signupRequestDto.getEmail();
-            String phoneNumber = signupRequestDto.getPhoneNumber();
             Mockito.when(passwordEncoder.encode(anyString())).thenReturn(signupRequestDto.getPassword());
             String password = passwordEncoder.encode(signupRequestDto.getPassword());
-            String birth = signupRequestDto.getBirth();
 
             User user = User.builder()
                     .userName("장동희")
@@ -214,11 +254,11 @@ class UserServiceTest {
                     .birth("19980630")
                     .build();
 
+            //when
             when(userRepository.findByNickName(signupRequestDto.getNickName())).thenReturn(Optional.of(user));
-            CustomException customException = assertThrows(CustomException.class, ()->{
-                userService.signup(signupRequestDto);
-            });
+            CustomException customException = assertThrows(CustomException.class, ()-> userService.signup(signupRequestDto));
 
+            //then
             assertThat(customException).isNotNull();
             assertThat(customException.getErrorCode().getMessage()).isEqualTo("중복된 닉네임이 존재합니다");
 
@@ -227,6 +267,7 @@ class UserServiceTest {
         @DisplayName("회원가입 실패(중복된 전화번호)")
         @Test
         void failSignUpPhoneNumber(){
+            //given
             SignupRequestDto signupRequestDto = SignupRequestDto.builder()
                     .userName("장동희")
                     .nickName("장동희")
@@ -236,13 +277,9 @@ class UserServiceTest {
                     .birth("19980630")
                     .build();
 
-            String userName = signupRequestDto.getUserName();
-            String nickName = signupRequestDto.getNickName();
-            String email = signupRequestDto.getEmail();
-            String phoneNumber = signupRequestDto.getPhoneNumber();
+
             Mockito.when(passwordEncoder.encode(anyString())).thenReturn(signupRequestDto.getPassword());
             String password = passwordEncoder.encode(signupRequestDto.getPassword());
-            String birth = signupRequestDto.getBirth();
 
             User user = User.builder()
                     .userName("장동희")
@@ -253,11 +290,11 @@ class UserServiceTest {
                     .birth("19980630")
                     .build();
 
+            //when
             when(userRepository.findByPhoneNumber(signupRequestDto.getPhoneNumber())).thenReturn(Optional.of(user));
-            CustomException customException = assertThrows(CustomException.class, ()->{
-                userService.signup(signupRequestDto);
-            });
+            CustomException customException = assertThrows(CustomException.class, ()-> userService.signup(signupRequestDto));
 
+            //then
             assertThat(customException).isNotNull();
             assertThat(customException.getErrorCode().getMessage()).isEqualTo("중복된 번호가 존재합니다");
 
@@ -267,21 +304,19 @@ class UserServiceTest {
         @DisplayName("로그인 실패(일치하지않는 email)")
         @Test
         void failloginPassword() {
+            //given
             HttpServletResponse response = mock(HttpServletResponse.class);
-
 
             LoginRequestDto loginRequestDto = LoginRequestDto.builder()
                     .email("ehdehdrnt123@naver.com")
                     .password("ehd12ehd12!@")
                     .build();
 
-
-
+            //when
             Mockito.when(userRepository.findByEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.empty());
-            CustomException customException = assertThrows(CustomException.class, ()->{
-                userService.login(loginRequestDto,response);
-            });
+            CustomException customException = assertThrows(CustomException.class, ()-> userService.login(loginRequestDto,response));
 
+            //then
             assertThat(customException).isNotNull();
             assertThat(customException.getErrorCode().getMessage()).isEqualTo("이메일 또는 비밀번호가 일치하지 않습니다.");
 
@@ -290,8 +325,8 @@ class UserServiceTest {
         @DisplayName("로그인 실패(일치하지않는 비밀번호)")
         @Test
         void failloginEmail() {
+            //given
             HttpServletResponse response = mock(HttpServletResponse.class);
-
 
             User user = User.builder()
                     .userName("장동희")
@@ -306,12 +341,11 @@ class UserServiceTest {
                     .password("ehd12ehd12!")
                     .build();
 
-
+            //when
             Mockito.when(userRepository.findByEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.of(user));
-            CustomException customException = assertThrows(CustomException.class, ()->{
-                userService.login(loginRequestDto,response);
-            });
+            CustomException customException = assertThrows(CustomException.class, ()-> userService.login(loginRequestDto,response));
 
+            //then
             assertThat(customException).isNotNull();
             assertThat(customException.getErrorCode().getMessage()).isEqualTo("이메일 또는 비밀번호가 일치하지 않습니다.");
 
@@ -319,40 +353,5 @@ class UserServiceTest {
 
 
 
-    }
-
-
-
-
-    @Test
-    void checkEmail() {
-    }
-
-    @Test
-    void checkNickName() {
-    }
-
-    @Test
-    void checkFindPw() {
-    }
-
-    @Test
-    void updatePassword() {
-    }
-
-    @Test
-    void getTempPassword() {
-    }
-
-    @Test
-    void mailSend() {
-    }
-
-    @Test
-    void deleteUser() {
-    }
-
-    @Test
-    void checkFindEmail() {
     }
 }
