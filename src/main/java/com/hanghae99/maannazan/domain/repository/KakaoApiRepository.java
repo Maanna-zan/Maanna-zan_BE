@@ -19,9 +19,18 @@ public interface KakaoApiRepository extends JpaRepository<Kakao, Long> {
 
     Optional<Kakao> findByApiId(String apiId);
 
+    Page<Kakao> findAllByApiId(String apiId, Pageable pageable);
+
+
+
+
     @Query("SELECT DISTINCT k.apiId FROM Kakao k")
     Set<String> findAllApiIds();
 
     Page<Kakao> findByPlaceNameContainingOrCategoryNameContainingOrAddressNameContainingOrRoadAddressNameContaining(String placeName, String categoryName,String addressName,String roadAddressName, Pageable pageable);
+//    Page<Kakao> findByPlaceNameContaining(String placeName, Pageable pageable);
+//    Page<Kakao> findByCategoryNameContaining(String placeName, Pageable pageable);
+//    Page<Kakao> findByAddressNameContaining(String placeName, Pageable pageable);
+//    Page<Kakao> findByRoadAddressNameContaining(String placeName, Pageable pageable);
 
 }

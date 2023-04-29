@@ -1,11 +1,13 @@
 package com.hanghae99.maannazan.domain.mypage;
 
 import com.hanghae99.maannazan.domain.entity.Kakao;
+import com.hanghae99.maannazan.domain.entity.Likes;
 import com.hanghae99.maannazan.domain.entity.Post;
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.kakaoapi.KakaoApiService;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.like.LikeService;
+import com.hanghae99.maannazan.domain.like.dto.LikesResponseDto;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangeNickNameRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangePasswordRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.MyPagePostResponseDto;
@@ -19,13 +21,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.hanghae99.maannazan.global.exception.CustomErrorCode.DUPLICATE_NICKNAME;
 import static com.hanghae99.maannazan.global.exception.CustomErrorCode.NOT_PROPER_INPUTFORM;
@@ -38,59 +40,62 @@ public class MyPageService {
     private final PostService postService;
     private final UserRepository userRepository;
     private final LikeService likeService;
+    private final LikeRepository likeRepository;
 
     private final KakaoApiService kakaoApiService;
 
     //마이페이지 메인 (내가쓴 게시글 + 유저 정보)
     @Transactional
     public MyPageResponseDto getMyPage(User user, int page, int size) {
-        Pageable pageable = PageRequest.of(page,size);
-        Page<Post> entityPage = postService.getPostOrderByCreatedAtDesc(user,pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> entityPage = postService.getPostOrderByCreatedAtDesc(user, pageable);
         List<Post> entityList = entityPage.getContent();
         List<MyPagePostResponseDto> myPagePostResponseDtos = new ArrayList<>();
-        for (Post post : entityList){
+        for (Post post : entityList) {
             boolean like = likeService.getPostLike(post, user);
             myPagePostResponseDtos.add(new MyPagePostResponseDto(post, like));
         }
-        return new MyPageResponseDto(user,myPagePostResponseDtos);
+        return new MyPageResponseDto(user, myPagePostResponseDtos);
     }
 
     @Transactional
     public MyPageResponseDto getMyPagelikePost(User user, int page, int size) {
-        Pageable pageable = PageRequest.of(page,size);
-        Page<Post> entityPage = postService.getPostList(pageable);
-        List<Post> entityList = entityPage.getContent();
+        List<Likes> likesList = likeRepository.findAllByStatusAndUser(true,user);
         List<MyPagePostResponseDto> myPagePostResponseDtos = new ArrayList<>();
-        for (Post post : entityList){
-            boolean like = likeService.getPostLike(post, user);
-            if (like){
-                myPagePostResponseDtos.add(new MyPagePostResponseDto(post, true));
+        for (Likes likes:likesList){
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Post> entityPage = postService.getPostList(likes.getPost().getId(),pageable);
+            List<Post> entityList = entityPage.getContent();
+            for (Post post : entityList) {
+                boolean like = likeService.getPostLike(post, user);
+                    myPagePostResponseDtos.add(new MyPagePostResponseDto(post, like));
             }
-
         }
-        return new MyPageResponseDto(user,myPagePostResponseDtos);
+        return new MyPageResponseDto(user, myPagePostResponseDtos);
     }
 
     @Transactional
-    public List<AlkolResponseDto> getMyPagelikeAlkol(User user, int page, int size){
-        Pageable pageable = PageRequest.of(page,size, Sort.by(Sort.Order.desc("roomLike")));
-        Page<Kakao> entityPage = kakaoApiService.getAlkolList(pageable);
-        List<Kakao> entityList = entityPage.getContent();
+    public List<AlkolResponseDto> getMyPagelikeAlkol(User user, int page, int size) {
+        List<Likes> likesList = likeRepository.findAllByStatusAndUser(true,user);
         List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
-        for (Kakao kakao : entityList){
-            boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
-            List<Post> posts = postService.getPostByKakaoApiId(kakao);
-            List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
-            for (Post post : posts){
-                postImageResponseDtoList.add(new PostImageResponseDto(post));
+        for (Likes likes:likesList){
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Kakao> entityPage = kakaoApiService.getAlkolList(likes.getKakao().getApiId(),pageable);
+            List<Kakao> entityList = entityPage.getContent();
+            for (Kakao kakao : entityList) {
+                boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
+                List<Post> posts = postService.getPostByKakaoApiId(kakao);
+                List<PostImageResponseDto> postImageResponseDtoList = new ArrayList<>();
+                for (Post post : posts) {
+                    postImageResponseDtoList.add(new PostImageResponseDto(post));
+                }
+                    AlkolResponseDto dto = new AlkolResponseDto(kakao,roomLike, postImageResponseDtoList);
+                    AlkolResponseDtoList.add(dto);
             }
-            if (roomLike){
-                AlkolResponseDtoList.add(new AlkolResponseDto(kakao, true, postImageResponseDtoList));
-            }
-
         }
         return AlkolResponseDtoList;
     }
+
 
     @Transactional
     public void changeNickName(User user, ChangeNickNameRequestDto changeNickNameRequestDto) {
@@ -110,4 +115,5 @@ public class MyPageService {
             userRepository.save(user);
         }else throw new CustomException(NOT_PROPER_INPUTFORM);
     }
+
 }

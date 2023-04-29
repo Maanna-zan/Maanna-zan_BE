@@ -1,7 +1,7 @@
 package com.hanghae99.maannazan.domain.kakaoapi.dto;
 
 import com.hanghae99.maannazan.domain.entity.Kakao;
-import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.entity.Likes;
 import com.hanghae99.maannazan.domain.post.dto.PostImageResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +45,27 @@ public class AlkolResponseDto {
     private List<PostImageResponseDto> postList = new ArrayList<>();
 
 
-    public AlkolResponseDto(Kakao kakao, boolean roomLike,List<PostImageResponseDto> postImageResponseDtoList){
+
+    public AlkolResponseDto(Kakao kakao,boolean roomLike, Likes likes, List<PostImageResponseDto> postImageResponseDtoList){
+        this.apiId = kakao.getApiId();
+        this.address_name = kakao.getAddressName();
+        this.category_group_code = kakao.getCategoryGroupCode();
+        this.category_group_name = kakao.getCategoryGroupName();
+        this.category_name = kakao.getCategoryName();
+        this.distance = kakao.getDistance();
+        this.phone = kakao.getPhone();
+        this.place_name = kakao.getPlaceName();
+        this.place_url = kakao.getPlaceUrl();
+        this.road_address_name = kakao.getRoadAddressName();
+        this.x = kakao.getX();
+        this.y = kakao.getY();
+        this.roomViewCount = kakao.getRoomViewCount();
+        this.roomLikecnt = kakao.getRoomLikecnt();
+        this.postList = postImageResponseDtoList;
+        this.roomLike = roomLike;
+    }
+
+    public AlkolResponseDto(Kakao kakao, boolean roomLike, List<PostImageResponseDto> postImageResponseDtoList){
         this.apiId = kakao.getApiId();
         this.address_name = kakao.getAddressName();
         this.category_group_code = kakao.getCategoryGroupCode();
