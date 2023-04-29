@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Getter
 public class CalendarResponseDto {
 
+        private Long id;
         private String title;
         private String content;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
@@ -16,6 +17,7 @@ public class CalendarResponseDto {
         private LocalDate selectedDate;
 
     public CalendarResponseDto(Calendar calendar) {
+        this.id = calendar.getId();
         this.title = calendar.getTitle();
         this.content = calendar.getContent();
         this.selectedDate = calendar.getSelectedDate();
