@@ -1,14 +1,11 @@
 package com.hanghae99.maannazan.domain.entity;
 
-import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
-import com.hanghae99.maannazan.domain.user.dto.CheckFindPwRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -38,6 +35,7 @@ public class User {
     private String profile_image;
 
     private String birth;
+
 
     public User(String userName, String nickName, String email, String phoneNumber, String password, String birth) {
         this.userName = userName;

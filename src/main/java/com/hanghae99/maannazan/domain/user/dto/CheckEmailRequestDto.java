@@ -1,13 +1,17 @@
 package com.hanghae99.maannazan.domain.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CheckEmailRequestDto {
     @NotBlank(message = "email은 필수사항 입니다.")
     @Pattern(regexp = "^[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\\.]?[0-9a-zA-Z])*\\.[a-zA-Z]{2,3}$", message = "이메일 형식에 맞지 않습니다.")
