@@ -2,9 +2,6 @@ package com.hanghae99.maannazan.domain.calendar;
 
 import com.hanghae99.maannazan.domain.calendar.dto.CalendarRequestDto;
 import com.hanghae99.maannazan.domain.calendar.dto.CalendarResponseDto;
-import com.hanghae99.maannazan.domain.mypage.MyPageService;
-import com.hanghae99.maannazan.domain.mypage.dto.ChangePasswordRequestDto;
-import com.hanghae99.maannazan.domain.mypage.dto.MyPageResponseDto;
 import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import com.hanghae99.maannazan.global.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
