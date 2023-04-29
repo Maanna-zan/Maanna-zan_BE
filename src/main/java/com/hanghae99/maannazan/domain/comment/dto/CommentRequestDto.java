@@ -1,11 +1,13 @@
 package com.hanghae99.maannazan.domain.comment.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Getter
+@Setter
 public class CommentRequestDto {
 
     @NotBlank(message = "댓글을 입력해주세요.")// size랑 동시에 써도 되는지?
