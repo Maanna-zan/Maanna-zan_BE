@@ -82,10 +82,10 @@ public class KakaoApi {
     // 게시글 많은 순으로 술집 조회
     @Operation(summary = "게시글 많은 순 술집 조회", description = "게시글 많은 순으로 술집 조회")
     @GetMapping("/alkol/best")
-    public AlkolDataAndSearchDataDto getBestAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
-                                              @RequestParam(required = false, defaultValue = "") String categoryName,
-                                              @RequestParam(required = false, defaultValue = "") String addressName,
-                                              @RequestParam(required = false, defaultValue = "") String roadAddressName,
+    public AlkolDataAndSearchDataDto getBestAlkol(@RequestParam(required = false) String placeName,
+                                              @RequestParam(required = false) String categoryName,
+                                              @RequestParam(required = false) String addressName,
+                                              @RequestParam(required = false) String roadAddressName,
                                               @RequestParam(value = "page", defaultValue = "1") int page,
                                               @RequestParam(value = "size", defaultValue = "3") int size,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -106,10 +106,10 @@ public class KakaoApi {
     // 모든 술집 조회
     @Operation(summary = "전체 술집 조회", description = "모든 술집 조회")
     @GetMapping("/alkol/all")
-    public AlkolDataAndSearchDataDto getAllAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
-                                                 @RequestParam(required = false, defaultValue = "") String categoryName,
-                                                 @RequestParam(required = false, defaultValue = "") String addressName,
-                                                 @RequestParam(required = false, defaultValue = "") String roadAddressName,
+    public AlkolDataAndSearchDataDto getAllAlkol(@RequestParam(required = false) String placeName,
+                                                 @RequestParam(required = false) String categoryName,
+                                                 @RequestParam(required = false) String addressName,
+                                                 @RequestParam(required = false) String roadAddressName,
                                                  @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "size", defaultValue = "10") int size, @AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception{
         if(userDetails==null){
             if(placeName==null){
@@ -128,10 +128,10 @@ public class KakaoApi {
     //좋아요 순으로 술집 조회
     @Operation(summary = "좋아요 순 술집 조회", description = "좋아요 순으로 술집 조회")
     @GetMapping("/alkol/like")
-    public AlkolDataAndSearchDataDto getLikeAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
-                                               @RequestParam(required = false, defaultValue = "") String categoryName,
-                                               @RequestParam(required = false, defaultValue = "") String addressName,
-                                               @RequestParam(required = false, defaultValue = "") String roadAddressName,
+    public AlkolDataAndSearchDataDto getLikeAlkol(@RequestParam(required = false) String placeName,
+                                               @RequestParam(required = false) String categoryName,
+                                               @RequestParam(required = false) String addressName,
+                                               @RequestParam(required = false) String roadAddressName,
                                                @RequestParam(value = "page", defaultValue = "1") int page,
                                                @RequestParam(value = "size", defaultValue = "10") int size,
                                                @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -151,10 +151,10 @@ public class KakaoApi {
     //조회수 순으로 술집 조회
     @Operation(summary = "조회수 순 술집 조회", description = "조회수 순으로 술집 조회")
     @GetMapping("/alkol/view")
-    public AlkolDataAndSearchDataDto getViewAlkol(@RequestParam(required = false, defaultValue = "") String placeName,
-                                               @RequestParam(required = false, defaultValue = "") String categoryName,
-                                               @RequestParam(required = false, defaultValue = "") String addressName,
-                                               @RequestParam(required = false, defaultValue = "") String roadAddressName,
+    public AlkolDataAndSearchDataDto getViewAlkol(@RequestParam(required = false) String placeName,
+                                               @RequestParam(required = false) String categoryName,
+                                               @RequestParam(required = false) String addressName,
+                                               @RequestParam(required = false) String roadAddressName,
                                                @RequestParam(value = "page", defaultValue = "1") int page,
                                                @RequestParam(value = "size", defaultValue = "3") int size,
                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
