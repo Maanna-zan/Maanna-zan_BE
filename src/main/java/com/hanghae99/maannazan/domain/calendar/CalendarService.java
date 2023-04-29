@@ -66,7 +66,7 @@ public class CalendarService {
         if (calendar == null) {
             throw new CustomException(CustomErrorCode.CALENDAR_NOT_FOUND);
         }
-        if (!calendar.getUser().equals(user)) {
+        if (calendar.getUser()==user) {
             throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
         calendar.update(calendarRequestDto, user);
@@ -78,7 +78,7 @@ public class CalendarService {
         if (calendar == null) {
             throw new CustomException(CustomErrorCode.CALENDAR_NOT_FOUND);
         }
-        if (!calendar.getUser().equals(user)) {
+        if (calendar.getUser()==user) {
             throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
         calendarRepository.delete(calendar);
