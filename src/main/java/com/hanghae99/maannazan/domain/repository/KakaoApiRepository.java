@@ -15,7 +15,7 @@ public interface KakaoApiRepository extends JpaRepository<Kakao, Long> {
 
 //    List<Kakao> findAllByApiId(String apiId); //FIXME 리팩토링하면서 삭제했습니다 동희님
 
-
+    Page<Kakao> findAll(Pageable pageable);
 
     Optional<Kakao> findByApiId(String apiId);
 
@@ -28,9 +28,6 @@ public interface KakaoApiRepository extends JpaRepository<Kakao, Long> {
     Set<String> findAllApiIds();
 
     Page<Kakao> findByPlaceNameContainingOrCategoryNameContainingOrAddressNameContainingOrRoadAddressNameContaining(String placeName, String categoryName,String addressName,String roadAddressName, Pageable pageable);
-
-
-
 //    Page<Kakao> findByPlaceNameContaining(String placeName, Pageable pageable);
 //    Page<Kakao> findByCategoryNameContaining(String placeName, Pageable pageable);
 //    Page<Kakao> findByAddressNameContaining(String placeName, Pageable pageable);
