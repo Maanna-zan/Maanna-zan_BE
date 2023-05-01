@@ -37,9 +37,9 @@ public class CommentService {
     @Transactional
     public void updateComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
 
-//        댓글 존재 여부 확인. 없으면 예외처리
+
         Comment comment = getCommentOne(commentId);
-//        ADMIN이 아닌 멤버가 댓글의 해당 작성자가 아닐때 예외 처리 && !user.getRole().equals(UserRoleEnum.ADMIN
+
         if (!comment.getUser().getId().equals(user.getId())) {
             throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }

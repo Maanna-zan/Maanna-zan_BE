@@ -319,4 +319,16 @@ public class KakaoApiService {
     }
 
 
+    public void deleteAlkol(String apiId, User user) {
+        Kakao kakao = getAlkolByKakaoApiId(apiId);
+        List<Post> postList = postService.getPostByKakaoApiId(kakao);
+        for (Post post : postList){
+            postService.deletePost(post.getId(), user);
+        }
+        Likes likes = likeService.getAlkolLikes(kakao,user);
+        if (likes != null){
+            likeService.deleteLikes(likes);
+        }
+        kakaoApiRepository.delete(kakao);
+    }
 }

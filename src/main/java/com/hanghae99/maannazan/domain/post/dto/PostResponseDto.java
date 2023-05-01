@@ -46,6 +46,9 @@ public class PostResponseDto {
     private double postStarAvg;
     private String categoryName;
 
+    private String storename;
+    private String apiId;
+
 
     public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList, String categoryName) { //산하 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
@@ -77,6 +80,8 @@ public class PostResponseDto {
         this.createAt = post.getCreatedAt();
         this.like = like;
         this.s3Url = post.getS3Url();
+        this.storename = post.getKakao().getPlaceName();
+        this.apiId = post.getKakao().getApiId();
         this.commentList = commentResponseDtoList;
         this.viewCount = post.getViewCount();
         this.taste = post.getTaste();
@@ -95,6 +100,8 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.createAt = post.getCreatedAt();
         this.s3Url = post.getS3Url();
+        this.storename = post.getKakao().getPlaceName();
+        this.apiId = post.getKakao().getApiId();
         this.commentList = commentResponseDtoList;
         this.viewCount = post.getViewCount();
         this.taste = post.getTaste();
@@ -113,6 +120,8 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.createAt = post.getCreatedAt();
         this.s3Url = post.getS3Url();
+        this.storename = post.getKakao().getPlaceName();
+        this.apiId = post.getKakao().getApiId();
         this.viewCount = post.getViewCount();
         this.taste = post.getTaste();
         this.service = post.getService();
@@ -128,6 +137,8 @@ public class PostResponseDto {
         this.modifiedAt = post.getModifiedAt();
         this.createAt = post.getCreatedAt();
         this.s3Url = post.getS3Url();
+        this.storename = post.getKakao().getPlaceName();
+        this.apiId = post.getKakao().getApiId();
         this.likecnt = post.getLikecnt();
         this.like = like;
         this.viewCount = post.getViewCount();

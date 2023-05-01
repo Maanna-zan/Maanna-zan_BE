@@ -63,7 +63,7 @@ public class KakaoService {
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-       String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
+        String createToken = jwtUtil.createToken(kakaoUser.getNickName(), "Access");
 //        String refreshToken = jwtUtil.createToken(kakaoUser.getNickName(), "Refresh");
 
        /* Cookie cookie = new Cookie("Authorization", token[0]);
@@ -81,8 +81,6 @@ public class KakaoService {
             refreshTokenRepository.save(newToken);
         }
         setHeader(response, tokenDto);*/
-
-
     }
     private void setHeader(HttpServletResponse response, TokenDto tokenDto){
         response.addHeader(jwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
