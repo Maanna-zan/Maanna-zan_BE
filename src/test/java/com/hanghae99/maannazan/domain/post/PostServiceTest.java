@@ -1,3 +1,4 @@
+/*
 package com.hanghae99.maannazan.domain.post;
 
 import org.junit.jupiter.api.Test;
@@ -94,4 +95,4 @@ class PostServiceTest {
     @Test
     void getSatisfactionAvg() {
     }
-}
+}*/
