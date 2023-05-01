@@ -15,6 +15,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -39,7 +41,7 @@ class CalendarServiceTest {
         @Test
         @DisplayName("캘린더 작성")
         void createCalendarMemo() {
-            //given     //request값
+            //given     //request 값
             CalendarRequestDto calendarRequestDto = CalendarRequestDto.builder()
                     .title("제목입니다")
                     .content("내용입니다")
@@ -109,7 +111,35 @@ class CalendarServiceTest {
         @DisplayName("캘린더 전체 조회")
         void getCalendarMemoList() {
             //given
+            Calendar calendar = Calendar.builder()
+                    .id(1L)
+                    .title("제목입니다")
+                    .content("내용입니다")
+                    .selectedDate(LocalDate.parse("2023-04-30"))
+                    .user(user)
+                    .build();
 
+            List<Calendar> calendarList = new ArrayList<>();
+            Mockito.when(calendarRepository.findByUser(user)).thenReturn(calendarList);
+            calendarList = calendarRepository.findByUser(user);
+
+
+            List<CalendarResponseDto> calendarResponseDtoList = new ArrayList<>();
+            for (Calendar calendar1 : calendarList) {
+                calendarResponseDtoList.add(new CalendarResponseDto(calendar1));
+            }
+
+            //when
+            List<CalendarResponseDto> List = calendarService.getCalendarMemoList(user);
+
+            //then
+            assertThat(calendarList).isNotNull();
+            assertThat(List).isNotNull();
+            System.out.println(calendarList);
+            System.out.println(List);
+
+
+            assertThat(List).isEqualTo(calendarList);
 
         }
 
@@ -130,6 +160,7 @@ class CalendarServiceTest {
                     .selectedDate(LocalDate.parse("2023-05-30"))
                     .user(user)
                     .build();
+
             Long calendarId = 1L;
 
 
@@ -152,9 +183,7 @@ class CalendarServiceTest {
             //몇번 실행됐는지
             verify(calendarRepository, times(1)).findByUserIdAndId(user.getId(), calendarId);
             //예외가 없었다면 실행이 됐는지
-            assertDoesNotThrow( () -> {
-                calendarService.updateCalendarMemo(calendarRequestDto ,calendarId, user);
-            });
+            assertDoesNotThrow( () -> calendarService.updateCalendarMemo(calendarRequestDto ,calendarId, user));
 
         }
 
@@ -175,16 +204,16 @@ class CalendarServiceTest {
             Long calendarId = 1L;
 
             //when
-            Mockito.when(calendarRepository.findByUserIdAndId(user.getId(), calendarId)).thenReturn(calendar);
-            calendarService.deleteCalendarMemo(calendarId ,user);
+            Mockito.when(calendarRepository.findByUserIdAndId(user.getId(), calendar.getId())).thenReturn(calendar);
+            calendarService.deleteCalendarMemo(calendar.getId() ,user);
 
             //then    //실행결과가 이래야한다~
             verify(calendarRepository, times(1)).findByUserIdAndId(user.getId(), calendarId);
             verify(calendarRepository, times(1)).delete(calendar);
-
-            assertDoesNotThrow( () -> {
-                calendarService.deleteCalendarMemo(calendarId, user);
-            });
+            System.out.println(calendar.getContent());
+            System.out.println(calendar.getTitle());
+            assertThat(calendar).isNotNull();
+            assertDoesNotThrow( () -> calendarService.deleteCalendarMemo(calendarId, user));
         }
     }
     @Nested
