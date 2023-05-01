@@ -3,7 +3,10 @@ package com.hanghae99.maannazan.domain.entity;
 import com.hanghae99.maannazan.domain.comment.dto.CommentRequestDto;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -12,8 +15,8 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
-@Setter
 @NoArgsConstructor
 public class Comment extends Timestamped {
     @Id
@@ -41,6 +44,7 @@ public class Comment extends Timestamped {
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
 
+
     public Comment(Post post, User user, CommentRequestDto commentRequestDto) {
         if(commentRequestDto.getContent()==null||commentRequestDto.getContent().isEmpty()){
             throw new CustomException(CustomErrorCode.CONTENT_IS_EMPTY);
@@ -58,7 +62,7 @@ public class Comment extends Timestamped {
     }
 
     public Comment(CommentRequestDto commentRequestDto, User user, Comment parentComment) {
-        if(commentRequestDto.getContent()==null||commentRequestDto.getContent().isEmpty()){
+        /*if(commentRequestDto.getContent()==null||commentRequestDto.getContent().isEmpty()){
             throw new CustomException(CustomErrorCode.CONTENT_IS_EMPTY);
         }
         if(user.getId()==null || user.getId()<0){
@@ -66,7 +70,7 @@ public class Comment extends Timestamped {
         }
         if(post.getId()==null || post.getId()<0){
             throw new CustomException(CustomErrorCode.FALSE_ID);
-        }
+        }*/
         this.content = commentRequestDto.getContent();
         this.user = user;
         this.parent = parentComment;

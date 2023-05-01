@@ -51,7 +51,7 @@ public class CommentController {
     @PostMapping("/comments/{commentId}")
     public ResponseEntity<ResponseMessage<String>> createCommentList(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto,
                                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        System.out.println(userDetails.getUser()+ userDetails.getPassword());
+
         commentService.createCommentList(commentRequestDto ,  userDetails.getUser(), commentId);
         return ResponseMessage.SuccessResponse("작성 성공", "");
     }
@@ -62,7 +62,7 @@ public class CommentController {
                                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         commentService.updateCommentList(commentId , userDetails.getUser(),commentRequestDto );
-        return ResponseMessage.SuccessResponse("작성 성공", "");
+        return ResponseMessage.SuccessResponse("수정 성공", "");
     }
 
     @Operation(summary = "대댓글 삭제", description = "대댓글 삭제")
@@ -71,6 +71,6 @@ public class CommentController {
                                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         commentService.deleteCommentList(commentId, userDetails.getUser());
-        return ResponseMessage.SuccessResponse("작성 성공", "");
+        return ResponseMessage.SuccessResponse("삭제 성공", "");
     }
 }
