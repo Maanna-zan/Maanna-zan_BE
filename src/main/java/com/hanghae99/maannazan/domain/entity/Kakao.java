@@ -9,8 +9,6 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @Setter
 @NoArgsConstructor
 public class Kakao {
