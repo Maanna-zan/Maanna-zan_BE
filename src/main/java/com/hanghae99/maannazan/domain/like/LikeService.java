@@ -112,6 +112,10 @@ public class LikeService {
         return likeRepository.findByPostIdAndUserId(post.getId(), user.getId());
     }
 
+    public Likes getAlkolLikes(Kakao kakao, User user){    // 게시글 좋아요 삭제를 위한 조회
+        return likeRepository.findByKakaoApiIdAndUser(kakao.getApiId(), user);
+    }
+
     public void deleteLikes(Likes likes){    // 게시글에 달린 좋아요 삭제
         likeRepository.delete(likes);
     }
