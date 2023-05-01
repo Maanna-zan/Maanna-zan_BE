@@ -2,10 +2,7 @@ package com.hanghae99.maannazan.domain.like;
 
 
 import com.hanghae99.maannazan.domain.entity.*;
-import com.hanghae99.maannazan.domain.repository.CommentRepository;
-import com.hanghae99.maannazan.domain.repository.KakaoApiRepository;
-import com.hanghae99.maannazan.domain.repository.LikeRepository;
-import com.hanghae99.maannazan.domain.repository.PostRepository;
+import com.hanghae99.maannazan.domain.repository.*;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +20,7 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
     private final KakaoApiRepository kakaoApiRepository;
+    private final KakaoLikeRepository kakaoLikeRepository;
 
     @Transactional
     //게시글 좋아요
@@ -56,15 +54,15 @@ public class LikeService {
     public String roomLike(String apiId, User user) {
         // 해당 사용자 정보와 술집 정보를 가져온다.
         Kakao kakao = kakaoApiRepository.findByApiId(apiId).orElseThrow(() -> new CustomException(CustomErrorCode.ALKOL_NOT_FOUND));
-        Likes likes = likeRepository.findByUserAndKakao(user, kakao);
-        if (likes != null) { // 이미 좋아요를 눌렀다면 좋아요 취소
-            deleteLikes(likes);
+        KakaoLikes kakaoLikes = kakaoLikeRepository.findByUserAndKakao(user, kakao);
+        if (kakaoLikes != null) { // 이미 좋아요를 눌렀다면 좋아요 취소
+            deleteLikes(kakaoLikes);
             kakao.likeCount(kakao.getRoomLikecnt() - 1);
             saveRoom(kakao);
             return "좋아요 취소";
         } else { // 좋아요를 누르지 않았다면 좋아요 추가
-            likes = new Likes(kakao, user);
-            saveLike(likes);
+            kakaoLikes = new KakaoLikes(kakao, user);
+            saveLike(kakaoLikes);
             kakao.likeCount(kakao.getRoomLikecnt() + 1);
             saveRoom(kakao);
             return "좋아요 성공";
@@ -73,26 +71,26 @@ public class LikeService {
 
 
     
-    @Transactional
-    //댓글 좋아요
-    public String commentLike(Long commentId, User user) {
-        // 해당 사용자 정보와 댓글 정보를 가져온다.
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND));
-        Likes likes = likeRepository.findByUserAndComment(user, comment);
-
-        if (likes != null) { // 이미 좋아요를 눌렀다면 좋아요 취소
-            deleteLikes(likes);
-            comment.likeCount(comment.getLikecnt() - 1);
-            saveComment(comment);
-            return "좋아요 취소";
-        } else { // 좋아요를 누르지 않았다면 좋아요 추가
-            likes = new Likes(comment, user);
-            saveLike(likes);
-            comment.likeCount(comment.getLikecnt() + 1);
-            saveComment(comment);
-            return "좋아요 성공";
-        }
-    }
+//    @Transactional
+//    //댓글 좋아요
+//    public String commentLike(Long commentId, User user) {
+//        // 해당 사용자 정보와 댓글 정보를 가져온다.
+//        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_FOUND));
+//        Likes likes = likeRepository.findByUserAndComment(user, comment);
+//
+//        if (likes != null) { // 이미 좋아요를 눌렀다면 좋아요 취소
+//            deleteLikes(likes);
+//            comment.likeCount(comment.getLikecnt() - 1);
+//            saveComment(comment);
+//            return "좋아요 취소";
+//        } else { // 좋아요를 누르지 않았다면 좋아요 추가
+//            likes = new Likes(comment, user);
+//            saveLike(likes);
+//            comment.likeCount(comment.getLikecnt() + 1);
+//            saveComment(comment);
+//            return "좋아요 성공";
+//        }
+//    }
 
     
     //메서드
@@ -101,7 +99,7 @@ public class LikeService {
     }
 
     public boolean getAlkolLike(String apiId, User user){    // 게시글 좋아요 상태 확인 (true면 좋아요 누른 상태)
-        return likeRepository.existsByKakaoApiIdAndUser(apiId, user);
+        return kakaoLikeRepository.existsByKakaoApiIdAndUser(apiId, user);
     }
 
     public List<Likes> getUserLike(Long id){    // 게시글 좋아요 상태 확인 (true면 좋아요 누른 상태)
@@ -112,8 +110,8 @@ public class LikeService {
         return likeRepository.findByPostIdAndUserId(post.getId(), user.getId());
     }
 
-    public Likes getAlkolLikes(Kakao kakao, User user){    // 게시글 좋아요 삭제를 위한 조회
-        return likeRepository.findByKakaoApiIdAndUser(kakao.getApiId(), user);
+    public KakaoLikes getAlkolLikes(Kakao kakao, User user){    // 게시글 좋아요 삭제를 위한 조회
+        return kakaoLikeRepository.findByKakaoApiIdAndUser(kakao.getApiId(), user);
     }
 
     public void deleteLikes(Likes likes){    // 게시글에 달린 좋아요 삭제
@@ -123,12 +121,15 @@ public class LikeService {
     public void deleteLikesAll(List<Likes> likes){    // 게시글에 달린 좋아요 전체 삭제(회원탈퇴)
         likeRepository.deleteAll(likes);
     }
+    public void deleteLikes(KakaoLikes kakaoLikes){    // 게시글에 달린 좋아요 삭제
+        kakaoLikeRepository.delete(kakaoLikes);
+    }
 
     public void saveLike(Likes likes){    // 좋아요 성공
         likeRepository.save(likes);
     }
-    public void saveComment(Comment comment){    // 댓글 저장
-        commentRepository.save(comment);
+    public void saveLike(KakaoLikes kakaoLikes){    // 좋아요 성공
+        kakaoLikeRepository.save(kakaoLikes);
     }
 
     public void saveRoom(Kakao kakao){    // 술집 저장

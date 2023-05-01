@@ -1,13 +1,9 @@
 package com.hanghae99.maannazan.domain.mypage;
 
-import com.hanghae99.maannazan.domain.entity.Kakao;
-import com.hanghae99.maannazan.domain.entity.Likes;
-import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.entity.*;
 import com.hanghae99.maannazan.domain.kakaoapi.KakaoApiService;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.like.LikeService;
-import com.hanghae99.maannazan.domain.like.dto.LikesResponseDto;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangeNickNameRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangePasswordRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.MyPagePostResponseDto;
@@ -20,14 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.hanghae99.maannazan.global.exception.CustomErrorCode.DUPLICATE_NICKNAME;
 import static com.hanghae99.maannazan.global.exception.CustomErrorCode.NOT_PROPER_INPUTFORM;
@@ -41,6 +34,7 @@ public class MyPageService {
     private final UserRepository userRepository;
     private final LikeService likeService;
     private final LikeRepository likeRepository;
+    private final KakaoLikeRepository kakaoLikeRepository;
 
     private final KakaoApiService kakaoApiService;
 
@@ -76,11 +70,11 @@ public class MyPageService {
 
     @Transactional
     public List<AlkolResponseDto> getMyPagelikeAlkol(User user, int page, int size) {
-        List<Likes> likesList = likeRepository.findAllByStatusAndUser(true,user);
+        List<KakaoLikes> kakaoLikesList = kakaoLikeRepository.findAllByStatusAndUser(true,user);
         List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
-        for (Likes likes:likesList){
+        for (KakaoLikes kakaoLikes:kakaoLikesList){
             Pageable pageable = PageRequest.of(page, size);
-            Page<Kakao> entityPage = kakaoApiService.getAlkolList(likes.getKakao().getApiId(),pageable);
+            Page<Kakao> entityPage = kakaoApiService.getAlkolList(kakaoLikes.getKakao().getApiId(),pageable);
             List<Kakao> entityList = entityPage.getContent();
             for (Kakao kakao : entityList) {
                 boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);
