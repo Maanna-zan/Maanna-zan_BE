@@ -44,7 +44,6 @@ public class Comment extends Timestamped {
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
 
-
     public Comment(Post post, User user, CommentRequestDto commentRequestDto) {
         if(commentRequestDto.getContent()==null||commentRequestDto.getContent().isEmpty()){
             throw new CustomException(CustomErrorCode.CONTENT_IS_EMPTY);
@@ -62,15 +61,15 @@ public class Comment extends Timestamped {
     }
 
     public Comment(CommentRequestDto commentRequestDto, User user, Comment parentComment) {
-        /*if(commentRequestDto.getContent()==null||commentRequestDto.getContent().isEmpty()){
-            throw new CustomException(CustomErrorCode.CONTENT_IS_EMPTY);
-        }
-        if(user.getId()==null || user.getId()<0){
-            throw new CustomException(CustomErrorCode.FALSE_ID);
-        }
-        if(post.getId()==null || post.getId()<0){
-            throw new CustomException(CustomErrorCode.FALSE_ID);
-        }*/
+//        if(commentRequestDto.getContent()==null||commentRequestDto.getContent().isEmpty()){
+//            throw new CustomException(CustomErrorCode.CONTENT_IS_EMPTY);
+//        }
+//        if(user.getId()==null || user.getId()<0){
+//            throw new CustomException(CustomErrorCode.FALSE_ID);
+//        }
+//        if(post.getId()==null || post.getId()<0){
+//            throw new CustomException(CustomErrorCode.FALSE_ID);
+//        }
         this.content = commentRequestDto.getContent();
         this.user = user;
         this.parent = parentComment;
