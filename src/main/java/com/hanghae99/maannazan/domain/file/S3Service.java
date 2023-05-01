@@ -29,6 +29,11 @@ public class S3Service {    //FIXME  S3버킷에 object를 업로드 하는 Serv
 
 
     public String uploadFile(MultipartFile multipartFile) throws IOException {
+        System.out.println(multipartFile);
+        System.out.println(multipartFile);
+        System.out.println(multipartFile);
+        System.out.println(multipartFile);
+        System.out.println(multipartFile);
         if (multipartFile == null) {
             return null;
         } else {

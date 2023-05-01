@@ -1,8 +1,6 @@
 package com.hanghae99.maannazan.domain.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +9,8 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @Setter
 @NoArgsConstructor
 public class Kakao {

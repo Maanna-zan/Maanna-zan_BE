@@ -6,6 +6,8 @@ import com.hanghae99.maannazan.domain.entity.Station;
 import com.hanghae99.maannazan.domain.find.dto.FindRequestDto;
 import com.hanghae99.maannazan.domain.find.dto.FindResponseDto;
 import com.hanghae99.maannazan.domain.repository.StationRepository;
+import com.hanghae99.maannazan.global.exception.CustomErrorCode;
+import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,16 +46,19 @@ public class FindService {
     double shortestDistance = Double.MAX_VALUE;
 
 
-    if (x == 0.0 || x2 == 0.0) {
-        throw new NullPointerException("두명 이상 검색해주세요");
+
+    //클라이언트에서 값을 보내줄 때 x,x2,x3,x4 순서대로 오는것이 아니었다. 그래서 임시로 조건식을 수정(추후 조건식 수정 필요)
+//    if (x == 0.0 || x2 == 0.0) {
+    if (x+x2+x3+x4 < 40) {
+        throw new CustomException(CustomErrorCode.X1_CAN_NOT_BE_NULL);
     }
     //몇명인지 구분하고 중간 위치 구해서 db에 저장하고 가까운 지하철역 찾아주는 쿼리문
-    if (x3 == 0.0 && x4 == 0.0) {   //두명일 때 공식
-        double midPointX = (x + x2) / 2;
-        double midPointY = (y + y2) / 2;
+    //클라이언트에서 값을 보내줄 때 x,x2,x3,x4 순서대로 오는것이 아니었다. 그래서 임시로 조건식을 수정(추후 조건식 수정 필요)
+//    if (x3 == 0.0 && x4 == 0.0) {   //두명일 때 공식
+    if (x+x2+x3+x4 < 80) {   //두명일 때 공식
+        double midPointX = (x + x2 + x3 +x4) / 2;
+        double midPointY = (y + y2 + y3 + y4) / 2;
         boolean foundNearbyStation = false;
-
-
 
 
         final int R = 6371; // 지구 반지름 (단위: km)
@@ -101,10 +106,11 @@ public class FindService {
 //            //
 //            return new FindResponseDto(midPointX,midPointY, nearestStation.getStationName(), nearestStation.getStationLine());
 
-
-        } else if(x4 == 0.0 && y4 == 0.0){        //세명일 때 공식
-            double midPointX = (x + x2 + x3) / 3;
-            double midPointY = (y + y2 + y3) / 3;
+        //클라이언트에서 값을 보내줄 때 x,x2,x3,x4 순서대로 오는것이 아니었다. 그래서 임시로 조건식을 수정(추후 조건식 수정 필요)
+//    } else if(x4 == 0.0 && y4 == 0.0){        //세명일 때 공식
+    } else if(x+x2+x3+x4 < 120){        //세명일 때 공식
+            double midPointX = (x + x2 + x3 + x4) / 3;
+            double midPointY = (y + y2 + y3 + y4) / 3;
             boolean foundNearbyStation = false;
 
         final int R = 6371; // 지구 반지름 (단위: km)
