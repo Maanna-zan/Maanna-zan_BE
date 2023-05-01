@@ -3,10 +3,7 @@ package com.hanghae99.maannazan.domain.user;
 import com.hanghae99.maannazan.domain.entity.User;
 import com.hanghae99.maannazan.domain.repository.RefreshTokenRepository;
 import com.hanghae99.maannazan.domain.repository.UserRepository;
-import com.hanghae99.maannazan.domain.user.dto.CheckEmailRequestDto;
-import com.hanghae99.maannazan.domain.user.dto.CheckNickNameRequestDto;
-import com.hanghae99.maannazan.domain.user.dto.LoginRequestDto;
-import com.hanghae99.maannazan.domain.user.dto.SignupRequestDto;
+import com.hanghae99.maannazan.domain.user.dto.*;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import com.hanghae99.maannazan.global.jwt.JwtUtil;
 import com.hanghae99.maannazan.global.jwt.TokenDto;
@@ -189,6 +186,31 @@ class UserServiceTest {
             assertThat(customException.getErrorCode().getMessage()).isEqualTo("중복된 닉네임이 존재합니다");
 
         }
+        @DisplayName("임시비밀번호 메일전송")
+        @Test
+        void checkFindPw(){
+            User user = User.builder()
+                    .userName("장동희")
+                    .nickName("장동희")
+                    .phoneNumber("01020948737")
+                    .email("ehdehdrnt123@naver.com")
+                    .password(passwordEncoder.encode("ehd12ehd12!@"))
+                    .birth("19980630")
+                    .build();
+            CheckFindPwRequestDto checkFindPwRequestDto = CheckFindPwRequestDto.builder()
+                    .email("ehdehdrnt123@naver.com")
+                    .build();
+
+
+            Mockito.when(userRepository.findByEmail("ehdehdrnt123@naver.com")).thenReturn(Optional.of(user));
+            MailDto mailDto = userService.checkFindPw(checkFindPwRequestDto);
+
+            assertThat(user).isNotNull();
+            assertThat(mailDto.getAddress()).isEqualTo("ehdehdrnt123@naver.com");
+            assertThat(mailDto.getTitle()).isEqualTo("MannaZan 임시비밀번호 안내 이메일 입니다.");
+            assertThat(user.getPassword()).isNotEqualTo(passwordEncoder.encode("ehd12ehd12!@"));
+        }
+
 
 
     }

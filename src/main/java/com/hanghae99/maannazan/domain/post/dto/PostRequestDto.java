@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class PostRequestDto {
 
-    private String storename;   //술집명
     private String title;      // 제목
     private String description;
     private boolean soju;
