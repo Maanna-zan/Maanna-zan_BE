@@ -21,6 +21,17 @@ public enum CustomErrorCode {
     NOT_PROPER_INPUTFORM(BAD_REQUEST, "입력한 형식이 맞지 않습니다."),
     NOT_PROPER_URLFORM(BAD_REQUEST, "입력한 URL 형식이 맞지 않습니다."),
     NOT_AUTHOR(BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다."),
+    TITLE_IS_EMPTY(BAD_REQUEST, "제목에 빈 값이 올 수 없습니다"),   //캘린더, 게시글 테이블
+    CONTENT_IS_EMPTY(BAD_REQUEST, "내용에 빈 값이 올 수 없습니다"), //캘린더, 게시글, 댓글 테이블
+    DATE_IS_EMPTY(BAD_REQUEST, "날짜를 선택해주세요"),
+    FALSE_ID(BAD_REQUEST, "잘못된 ID입니다"),
+    FALSE_API_ID(BAD_REQUEST, "잘못된 술집 ID입니다"), //게시글 테이블
+    TASTE_VALUE_IS_FALSE(BAD_REQUEST, "평점(맛) 형식이 잘못되었습니다"), //게시글 테이블
+    SERVICE_VALUE_IS_FALSE(BAD_REQUEST, "평점(서비스) 형식이 잘못되었습니다"), //게시글 테이블
+    ATMOSPHERE_VALUE_IS_FALSE(BAD_REQUEST, "평점(분위기) 형식이 잘못되었습니다"), //게시글 테이블
+    SATISFACTION_VALUE_IS_FALSE(BAD_REQUEST, "평점(만족도) 형식이 잘못되었습니다"), //게시글 테이블
+    SEARCH_WORD_IS_EMPTY(BAD_REQUEST, "평점(만족도) 형식이 잘못되었습니다"), //게시글 테이블
+    X1_CAN_NOT_BE_NULL(BAD_REQUEST, "두명 이상 검색해주세요"), // 위치검색
 
 
 
@@ -35,7 +46,6 @@ public enum CustomErrorCode {
     EMAIL_NOT_FOUND(NOT_FOUND,"등록되지 않은 이메일입니다."),
     CALENDAR_NOT_FOUND(NOT_FOUND,"선택한 캘린더를 찾을 수 없습니다"),
     CALENDAR_DTO_NOT_FOUND(NOT_FOUND,"저장할 정보가 없습니다.");
-
 
 
 
