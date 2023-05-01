@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "users")
 public class User {
     @Id

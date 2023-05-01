@@ -85,6 +85,7 @@ public class PostService {
     @Transactional
     public PostResponseDto getPostOne(Long postId, User user) { //단일 게시글 조회
         Post post = getPostByPostId(postId);
+        String categoryName =  post.getKakao().getCategoryName();
         post.viewCount(post.getViewCount() + 1);
         boolean like = likeService.getPostLike(post, user);
         List<Comment> commentList = commentService.getCommentListByPost(post);
@@ -92,7 +93,7 @@ public class PostService {
         for (Comment comment : commentList) {
             commentResponseDtoList.add(new CommentResponseDto(comment, comment.getId()));
         }
-        return new PostResponseDto(post, like, commentResponseDtoList);
+        return new PostResponseDto(post, like, commentResponseDtoList, categoryName);
     }
 
 

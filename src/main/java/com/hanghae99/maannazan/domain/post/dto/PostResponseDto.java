@@ -44,7 +44,28 @@ public class PostResponseDto {
     private double satisfaction;
 
     private double postStarAvg;
+    private String categoryName;
 
+
+    public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList, String categoryName) { //산하 게시물 하나 조회 (category가 null이라면 이걸 반환)
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.description = post.getDescription();
+        this.likecnt = post.getLikecnt();
+        this.nickname = post.getUser().getNickName();
+        this.modifiedAt = post.getModifiedAt();
+        this.createAt = post.getCreatedAt();
+        this.like = like;
+        this.s3Url = post.getS3Url();
+        this.commentList = commentResponseDtoList;
+        this.viewCount = post.getViewCount();
+        this.taste = post.getTaste();
+        this.service = post.getService();
+        this.atmosphere = post.getAtmosphere();
+        this.satisfaction = post.getSatisfaction();
+        this.postStarAvg = (taste+service+atmosphere+satisfaction)/4;
+        this.categoryName = categoryName;
+    }
 
     public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) { //산하 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
