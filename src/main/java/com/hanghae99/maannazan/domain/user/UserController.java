@@ -32,11 +32,10 @@ public class UserController {
     @Operation(summary = "로그인", description = "로그인")
     @PostMapping("/login")
     public ResponseEntity<ResponseMessage<String>> login(@Validated @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        userService.login(loginRequestDto, response);
         if (loginRequestDto.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,20}$")){
-            return ResponseMessage.SuccessResponse("로그인 성공","");
+            return ResponseMessage.SuccessResponse("로그인 성공", userService.login(loginRequestDto, response));
         }else
-            return ResponseMessage.SuccessResponse("비밀번호 변경이 필요합니다","");
+            return ResponseMessage.SuccessResponse("비밀번호 변경이 필요합니다", userService.login(loginRequestDto, response));
     }
 
     // 유저이메일 중복

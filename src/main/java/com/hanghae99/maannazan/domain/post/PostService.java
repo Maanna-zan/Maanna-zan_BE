@@ -131,6 +131,8 @@ public class PostService {
         if (likes != null) {
             likeService.deleteLikes(likes);
         }
+        Kakao kakao = kakaoApiRepository.findByApiId(post.getKakao().getApiId()).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
+        kakao.postCount(kakao.getNumberOfPosts() - 1);
         postRepository.delete(post);
         return "게시글 삭제 완료";
     }
