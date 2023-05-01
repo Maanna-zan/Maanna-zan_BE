@@ -17,4 +17,5 @@ public class CommentRequestDto {
     public CommentRequestDto(String content){
         this. content = content;
     }
+
 }
