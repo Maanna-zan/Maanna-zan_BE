@@ -8,12 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Likes {
+public class KakaoLikes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,30 +24,24 @@ public class Likes {
     @JoinColumn(name = "USER_ID")
     private User user;
 
+
     @ManyToOne
-    @JoinColumn(name = "POST_ID")
-    private Post post;
-
-
+    @JoinColumn(name = "KAKAO_ID")
+    private Kakao kakao;
 
     private boolean status;
 
-    public Likes(Post post, User user) {
-        if(post.getId()==null || post.getId()<0){
+    public KakaoLikes(Kakao kakao, User user) {
+        if (kakao.getApiId() == null || kakao.getApiId().isEmpty()) {
             throw new CustomException(CustomErrorCode.FALSE_ID);
         }
-        if(user.getId()==null || user.getId()<0){
+        if (user.getId() == null || user.getId() < 0) {
             throw new CustomException(CustomErrorCode.FALSE_ID);
         }
-        this.user= user;
-        this.post= post;
+        this.user = user;
+        this.kakao = kakao;
         this.status = true;
     }
 
-
-
-    public Post getPost() {
-        return this.post;
-    }
 
 }
