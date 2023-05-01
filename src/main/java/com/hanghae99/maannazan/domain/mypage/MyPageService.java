@@ -1,9 +1,6 @@
 package com.hanghae99.maannazan.domain.mypage;
 
-import com.hanghae99.maannazan.domain.entity.Kakao;
-import com.hanghae99.maannazan.domain.entity.Likes;
-import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.entity.*;
 import com.hanghae99.maannazan.domain.kakaoapi.KakaoApiService;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.like.LikeService;
@@ -41,6 +38,7 @@ public class MyPageService {
     private final UserRepository userRepository;
     private final LikeService likeService;
     private final LikeRepository likeRepository;
+    private final KakaoLikeRepository kakaoLikeRepository;
 
     private final KakaoApiService kakaoApiService;
 
@@ -76,11 +74,11 @@ public class MyPageService {
 
     @Transactional
     public List<AlkolResponseDto> getMyPagelikeAlkol(User user, int page, int size) {
-        List<Likes> likesList = likeRepository.findAllByStatusAndUser(true,user);
+        List<KakaoLikes> kakaoLikesList = kakaoLikeRepository.findAllByStatusAndUser(true,user);
         List<AlkolResponseDto> AlkolResponseDtoList = new ArrayList<>();
-        for (Likes likes:likesList){
+        for (KakaoLikes kakaoLikes:kakaoLikesList){
             Pageable pageable = PageRequest.of(page, size);
-            Page<Kakao> entityPage = kakaoApiService.getAlkolList(likes.getKakao().getApiId(),pageable);
+            Page<Kakao> entityPage = kakaoApiService.getAlkolList(kakaoLikes.getKakao().getApiId(),pageable);
             List<Kakao> entityList = entityPage.getContent();
             for (Kakao kakao : entityList) {
                 boolean roomLike = likeService.getAlkolLike(kakao.getApiId(), user);

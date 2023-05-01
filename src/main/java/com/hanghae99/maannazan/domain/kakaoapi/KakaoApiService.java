@@ -328,7 +328,7 @@ public class KakaoApiService {
         for (Post post : postList){
             postService.deletePost(post.getId(), user);
         }
-        Likes likes = likeService.getAlkolLikes(kakao,user);
+        KakaoLikes likes = likeService.getAlkolLikes(kakao,user);
         if (likes != null){
             likeService.deleteLikes(likes);
         }
