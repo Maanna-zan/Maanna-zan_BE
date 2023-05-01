@@ -38,6 +38,7 @@ public enum CustomErrorCode {
 
     /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
     POST_NOT_FOUND(NOT_FOUND, "선택한 게시물을 찾을 수 없습니다."),
+    SCHEDULE_NOT_FOUND(NOT_FOUND, "선택한 일정을 찾을 수 없습니다."),
     S3_NOT_FOUND(NOT_FOUND, "선택한 이미지를 찾을 수 없습니다."),
     ALKOL_NOT_FOUND(NOT_FOUND, "선택한 술집을 찾을 수 없습니다."),
     USER_NOT_FOUND(NOT_FOUND, "사용자를 찾을 수 없습니다."),
