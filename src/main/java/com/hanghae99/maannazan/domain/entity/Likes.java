@@ -27,9 +27,6 @@ public class Likes {
     private Post post;
 
 
-    @ManyToOne
-    @JoinColumn(name = "KAKAO_ID")
-    private Kakao kakao;
 
     private boolean status;
 

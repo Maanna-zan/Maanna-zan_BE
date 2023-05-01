@@ -4,7 +4,6 @@ import com.hanghae99.maannazan.domain.entity.*;
 import com.hanghae99.maannazan.domain.kakaoapi.KakaoApiService;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.like.LikeService;
-import com.hanghae99.maannazan.domain.like.dto.LikesResponseDto;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangeNickNameRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.ChangePasswordRequestDto;
 import com.hanghae99.maannazan.domain.mypage.dto.MyPagePostResponseDto;
@@ -17,14 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.hanghae99.maannazan.global.exception.CustomErrorCode.DUPLICATE_NICKNAME;
 import static com.hanghae99.maannazan.global.exception.CustomErrorCode.NOT_PROPER_INPUTFORM;
