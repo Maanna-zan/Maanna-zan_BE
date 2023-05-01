@@ -1,13 +1,10 @@
 package com.hanghae99.maannazan.domain.entity;
+
 import com.hanghae99.maannazan.domain.post.dto.PostRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 //@Where(clause = "deleted_at IS NULL")
 //@SQLDelete(sql = "UPDATE POST SET deleted_at = CONVERT_TZ(now(), 'UTC', 'Asia/Seoul') WHERE id = ?")
 @Entity
@@ -36,9 +33,6 @@ public class Post extends Timestamped {
     private double service;
     private double atmosphere;
     private double satisfaction;
-
-
-
 
 
 

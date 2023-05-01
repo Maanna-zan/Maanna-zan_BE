@@ -95,6 +95,9 @@ public class LikeService {
         return likeRepository.existsByKakaoApiIdAndUser(apiId, user);
     }
 
+
+
+
     public boolean getCommentLike(Post post, User user){    // 게시글 좋아요 상태 확인 (true면 좋아요 누른 상태)
         return likeRepository.existsByPostIdAndUser(post.getId(),user);
     }
@@ -113,6 +116,8 @@ public class LikeService {
     public void deleteLikesAll(List<Likes> likes){    // 게시글에 달린 좋아요 전체 삭제(회원탈퇴)
         likeRepository.deleteAll(likes);
     }
+
+
 }
 
 

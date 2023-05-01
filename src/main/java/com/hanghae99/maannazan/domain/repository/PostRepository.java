@@ -18,6 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
 
 
+
     List<Post> findByKakaoApiId(String apiId);
 
 //    List<Post> findAllOrderByLikecntDesc();
@@ -25,4 +26,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByOrderByLikecntDesc();
 
     List<Post> findAllByOrderByViewCountDesc();
+
+    Page<Post> findAllById(Long id, Pageable pageable);
 }

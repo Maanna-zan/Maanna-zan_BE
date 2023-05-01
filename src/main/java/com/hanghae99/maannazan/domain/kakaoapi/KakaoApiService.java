@@ -1,9 +1,6 @@
 package com.hanghae99.maannazan.domain.kakaoapi;
 
-import com.hanghae99.maannazan.domain.entity.Kakao;
-import com.hanghae99.maannazan.domain.entity.Post;
-import com.hanghae99.maannazan.domain.entity.Search;
-import com.hanghae99.maannazan.domain.entity.User;
+import com.hanghae99.maannazan.domain.entity.*;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolDataAndSearchDataDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.AlkolResponseDto;
 import com.hanghae99.maannazan.domain.kakaoapi.dto.KakaoResponseDto;
@@ -320,8 +317,9 @@ public class KakaoApiService {
         return kakaoApiRepository.findByApiId(kakaoApiId).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
     }
 
-    public Page<Kakao> getAlkolList(Pageable pageable) {    //모든 술집 조회(페이징 처리)
-        return kakaoApiRepository.findAll(pageable);
+    public Page<Kakao> getAlkolList(String apiId,Pageable pageable) {    //모든 술집 조회(페이징 처리)
+        return kakaoApiRepository.findAllByApiId(apiId, pageable);
     }
+
 
 }

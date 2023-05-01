@@ -170,8 +170,8 @@ public class PostService {
         return postRepository.findByUserOrderByCreatedAtDesc(user,pageable);
     }
 
-    public Page<Post> getPostList(Pageable pageable){    // 게시글 최신순 조회 (페이지네이션)
-        return postRepository.findAll(pageable);
+    public Page<Post> getPostList(Long id, Pageable pageable){    // 게시글 최신순 조회 (페이지네이션)
+        return postRepository.findAllById(id, pageable);
     }
 
     public List<Post> getPostByUserId(Long id){    // 게시글 최신순 조회 (페이지네이션)
