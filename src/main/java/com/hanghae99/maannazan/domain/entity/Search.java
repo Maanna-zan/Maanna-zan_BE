@@ -30,9 +30,7 @@ public class Search{
     private User user;
 
     public Search(String searchWord, User user) {
-        if(searchWord.isEmpty() || searchWord==null){
-            throw new CustomException(CustomErrorCode.SEARCH_WORD_IS_EMPTY);
-        }
+
         if(user.getId()==null || user.getId()<0){
             throw new CustomException(CustomErrorCode.FALSE_ID);
         }
