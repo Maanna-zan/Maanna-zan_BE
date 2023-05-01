@@ -38,7 +38,7 @@ public class UserService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final JavaMailSender mailSender;
-    private static final String FROM_ADDRESS = "ehdehdrnt123@naver.com";
+    private static final String FROM_ADDRESS = "sanha0630@naver.com";
 
 
 
