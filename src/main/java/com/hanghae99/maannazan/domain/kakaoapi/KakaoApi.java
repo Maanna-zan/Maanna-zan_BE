@@ -15,10 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -69,6 +66,10 @@ public class KakaoApi {
         ResponseEntity<Map> result = restTemplate.exchange(targetUrl, HttpMethod.GET, httpEntity, Map.class);
         kakaoApiService.apiSave(result.getBody());
         return result.getBody(); //내용 반환
+    }
+    @DeleteMapping("/alkol/{apiId}")
+    public void deleteAlkol(@PathVariable String apiId,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        kakaoApiService.deleteAlkol(apiId,userDetails.getUser());
     }
     //술집 상세 조회
     @Operation(summary = "술집 상세 조회", description = "술집 상세 조회")

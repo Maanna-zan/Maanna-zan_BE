@@ -23,4 +23,5 @@ public interface LikeRepository extends JpaRepository<Likes, Long> {
 
     List<Likes> findAllByStatusAndUser(boolean Status,User user);
 
+    Likes findByKakaoApiIdAndUser(String id, User user);
 }
