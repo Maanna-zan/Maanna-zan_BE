@@ -154,6 +154,7 @@ public class PostService {
         }
     }
 
+
     public List<Post> getPostList(){    // 게시글 전체 조회
             return postRepository.findAll();
     }
