@@ -3,10 +3,7 @@ package com.hanghae99.maannazan.domain.entity;
 import com.hanghae99.maannazan.domain.comment.dto.CommentRequestDto;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
