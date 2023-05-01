@@ -1,11 +1,13 @@
 package com.hanghae99.maannazan.domain.user.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
+@Builder
 public class CheckFindPwRequestDto {
 
     @NotBlank(message = "이메일을 입력해 주세요")

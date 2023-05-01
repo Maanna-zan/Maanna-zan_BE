@@ -1,5 +1,6 @@
 package com.hanghae99.maannazan.domain.user.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
@@ -7,6 +8,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Getter
+@Builder
 public class CheckFindEmailRequestDto {
     @NotBlank(message = "이름은 필수사항 입니다.")
     @Size(min = 2, max = 5, message = "사용자 이름은 최소 2글자 최대 5글자로 구성되어야합니다.")
