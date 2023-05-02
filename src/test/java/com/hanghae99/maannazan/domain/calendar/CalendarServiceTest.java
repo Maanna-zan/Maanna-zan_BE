@@ -166,7 +166,7 @@ class CalendarServiceTest {
 
             //when
             Mockito.when(calendarRepository.findByUserIdAndId(user.getId(), calendarId)).thenReturn(calendar);
-            calendar.update(calendarRequestDto,user);
+            calendar.update(calendarRequestDto);
             calendarService.updateCalendarMemo(calendarRequestDto, calendarId ,user);
 
 

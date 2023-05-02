@@ -77,10 +77,10 @@ public class CalendarService {
         if (calendar == null) {
             throw new CustomException(CustomErrorCode.CALENDAR_NOT_FOUND);
         }
-        if (!(calendar.getUser() == user)) {
+        if (!(calendar.getUser().getId() == user.getId())) {
             throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
-        calendar.update(calendarRequestDto, user);
+        calendar.update(calendarRequestDto);
     }
 
     //캘린더 삭제
@@ -90,7 +90,7 @@ public class CalendarService {
         if (calendar == null) {
             throw new CustomException(CustomErrorCode.CALENDAR_NOT_FOUND);
         }
-        if (!(calendar.getUser() == user)) {
+        if (!(calendar.getUser().getId() == user.getId())) {
             throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
         calendarRepository.delete(calendar);
