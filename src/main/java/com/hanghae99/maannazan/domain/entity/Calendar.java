@@ -64,11 +64,11 @@ import java.util.Date;
 
 
 
-        public void update(CalendarRequestDto calendarRequestDto, User user) {
+        public void update(CalendarRequestDto calendarRequestDto) {
             this.title = calendarRequestDto.getTitle();
             this.content = calendarRequestDto.getContent();
             this.selectedDate = calendarRequestDto.getSelectedDate();
-            this.user = user;
+
         }
     }
 
