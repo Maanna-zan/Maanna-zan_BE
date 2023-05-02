@@ -112,6 +112,7 @@ public class PostService {
     @Transactional
     public String deletePost(Long postId, User user) { //게시글 삭제
         Post post = getPostByUserIdAndPostId(user, postId);
+        List<Comment> commentList = commentService.getCommentListByPost(post);
         if (!(user.getId().equals(post.getUser().getId()))) {
             throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
@@ -133,6 +134,7 @@ public class PostService {
         }
         Kakao kakao = kakaoApiRepository.findByApiId(post.getKakao().getApiId()).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
         kakao.postCount(kakao.getNumberOfPosts() - 1);
+        commentService.deleteCommentAll(commentList);
         postRepository.delete(post);
         return "게시글 삭제 완료";
     }
