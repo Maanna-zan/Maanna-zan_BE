@@ -50,6 +50,7 @@ public class PostResponseDto {
     private String apiId;
 
 
+
     public PostResponseDto(Post post, boolean like, List<CommentResponseDto> commentResponseDtoList) { //산하 게시물 하나 조회 (category가 null이라면 이걸 반환)
         this.id = post.getId();
         this.title = post.getTitle();
@@ -67,11 +68,10 @@ public class PostResponseDto {
         this.atmosphere = post.getAtmosphere();
         this.satisfaction = post.getSatisfaction();
         this.postStarAvg = (taste+service+atmosphere+satisfaction)/4;
-        this.categoryName = post.getKakao().getCategoryName();
-        this.storename = post.getKakao().getPlaceName();
         this.apiId = post.getKakao().getApiId();
+        this.storename = post.getKakao().getPlaceName();
+        this.categoryName = post.getKakao().getCategoryName();
     }
-
 
 
     public PostResponseDto(Post post, List<CommentResponseDto> commentResponseDtoList) {    //산하  게시물 하나 조회 (category가 null이라면 이걸 반환)
