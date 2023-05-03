@@ -5,6 +5,7 @@ import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +40,12 @@ public class UserController {
     }
 
     // 유저이메일 중복
-    @Operation(summary = "이메일 중복확인", description = "이메일 중복확인")
-    @PostMapping("/confirm-email")
-    public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
-        userService.checkEmail(checkEmailRequestDto);
-        return ResponseMessage.SuccessResponse("pass","");
-    }
+//    @Operation(summary = "이메일 중복확인", description = "이메일 중복확인")
+//    @PostMapping("/confirm-email")
+//    public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
+//        userService.checkEmail(checkEmailRequestDto);
+//        return ResponseMessage.SuccessResponse("pass","");
+//    }
 
     // 닉네임 중복
     @Operation(summary = "닉네임 중복확인", description = "닉네임 중복확인")
@@ -60,6 +61,21 @@ public class UserController {
         MailDto dto = userService.checkFindPw(checkFindPw);
         userService.mailSend(dto);
         return ResponseMessage.SuccessResponse("이메일로 임시 비밀번호를 보내드렸습니다.","");
+    }
+
+    @Operation(summary = "이메일 중복확인, 인증번호 이메일 발송", description = "이메일 중복확인, 인증번호 이메일 발송")
+    @PostMapping("/check/email")
+    public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
+        MailDto dto = userService.emailNumber(checkEmailRequestDto);
+        userService.mailSend(dto);
+        return ResponseMessage.SuccessResponse("이메일로 인증번호를 보내드렸습니다.","");
+    }
+
+    @Operation(summary = "", description = "이메일 중복확인")
+    @PostMapping("/check/number")
+    public ResponseEntity<ResponseMessage<String>> checkNumber(@RequestBody CheckNumberRequestDto checkNumberRequestDto) {
+        userService.numberCheck(checkNumberRequestDto);
+        return ResponseMessage.SuccessResponse("인증이 완료되었습니다","");
     }
 
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴")

@@ -12,6 +12,7 @@ import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import com.hanghae99.maannazan.global.jwt.JwtUtil;
 import com.hanghae99.maannazan.global.jwt.TokenDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -37,8 +38,10 @@ public class UserService {
     private final JwtUtil jwtUtil;
 
     private final RefreshTokenRepository refreshTokenRepository;
+
+    private final CertificationNumberRepository certificationNumberRepository;
     private final JavaMailSender mailSender;
-    private static final String FROM_ADDRESS = "sanha0630@naver.com";
+    private static final String FROM_ADDRESS = "ehdehdrnt123@naver.com";
 
 
 
@@ -57,17 +60,14 @@ public class UserService {
 
         Optional<User> foundNickName = userRepository.findByNickName(nickName);
         if (foundNickName.isPresent()) throw new CustomException(DUPLICATE_NICKNAME);
-
         Optional<User> foundEmail = userRepository.findByEmail(email);
         if (foundEmail.isPresent()) {
             throw new CustomException(DUPLICATE_EMAIL);
         }
-
         Optional<User> foundPhoneNumber = userRepository.findByPhoneNumber(phoneNumber);
         if (foundPhoneNumber.isPresent()) {
             throw new CustomException(DUPLICATE_PHONENUMBER);
         }
-
         User user = new User(userName, nickName, email, phoneNumber, password, birth);
         userRepository.save(user);
     }
@@ -101,8 +101,45 @@ public class UserService {
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
         response.addHeader(JwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
-        response.addHeader(JwtUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        response.addHeader(JwtUtil.REFRESH_TOKEN, cookie.toString().split("=")[1]);
     }
+
+    //이메일 찾기 서비스
+    public String checkFindEmail(CheckFindEmailRequestDto checkFindEmailRequestDto) {
+        String userName = checkFindEmailRequestDto.getUserName();
+        String phoneNumber = checkFindEmailRequestDto.getPhoneNumber();
+        User user = userRepository.findByUserNameAndPhoneNumber(userName,phoneNumber).orElseThrow(() ->new CustomException(EMAIL_AND_PHONENUMBER_NOT_FOUND));
+        return user.getEmail();
+    }
+
+    // 닉네임 중복 확인 서비스
+    @Transactional(readOnly = true)
+    public void checkNickName(CheckNickNameRequestDto checkNickNameRequestDto) {
+        String nickName = checkNickNameRequestDto.getNickName();
+        Optional<User> foundNickName = userRepository.findByNickName(nickName);
+        if (foundNickName.isPresent()) throw new CustomException(DUPLICATE_NICKNAME);
+    }
+
+    //인증번호 확인 서비스
+    @Transactional(readOnly = true)
+    public void numberCheck(CheckNumberRequestDto checkNumberRequestDto){
+        String str = checkNumberRequestDto.getStr();
+        Optional<CertificationNumber> foundCertificationNumber = certificationNumberRepository.findByStr(str);
+        if (foundCertificationNumber.isEmpty()) throw new CustomException(CERTIFICATIONNUMBER_NOT_FOUND);
+    }
+    //인증번호 발송, 유저이메일 중복확인 서비스
+    @Transactional
+    public MailDto emailNumber(CheckEmailRequestDto checkEmailRequestDto){
+        String email = checkEmailRequestDto.getEmail();
+        checkEmail(checkEmailRequestDto);
+        return emailCheck(email);
+    }
+
     // 유저이메일 중복 확인 서비스
     @Transactional(readOnly = true)
     public void checkEmail(CheckEmailRequestDto checkEmailRequestDto) {
@@ -112,13 +149,19 @@ public class UserService {
             throw new CustomException(DUPLICATE_EMAIL);
         }
     }
-    // 닉네임 중복 확인 서비스
-    @Transactional(readOnly = true)
-    public void checkNickName(CheckNickNameRequestDto checkNickNameRequestDto) {
-        String nickName = checkNickNameRequestDto.getNickName();
-        Optional<User> foundNickName = userRepository.findByNickName(nickName);
-        if (foundNickName.isPresent()) throw new CustomException(DUPLICATE_NICKNAME);
+    //인증번호 발송 서비스
+    @Transactional
+    public MailDto emailCheck(String email){
+        MailDto dto = new MailDto();
+        String str = getTempPassword();
+        CertificationNumber certificationNumber = new CertificationNumber(str);
+        dto.setAddress(email);
+        dto.setTitle("MannaZan 이메일 인증번호 확인 안내 이메일 입니다.");
+        dto.setMessage("안녕하세요. MannaZan 이메일 인증번호 확인 안내 이메일 입니다." + " 인정번호는 " +str+" 입니다. ");
+        certificationNumberRepository.save(certificationNumber);
+        return dto;
     }
+
 
     //비밀번호 이메일 전송
     @Transactional
@@ -138,6 +181,7 @@ public class UserService {
         return null;
     }
 
+    //임시비밀번호로 비밀번호 변경 서비스
     @Transactional
     public void updatePassword(String str, String email){
         String pw = passwordEncoder.encode(str);
@@ -145,6 +189,7 @@ public class UserService {
         user.update(pw, email);
     }
 
+    //임시비밀번호생성, 인증번호 생성
     public String getTempPassword(){
         char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
                 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
@@ -159,6 +204,7 @@ public class UserService {
         return str;
     }
 
+    //메일 전송 서비스
     public void mailSend(MailDto mailDto) {
         System.out.println("전송 완료!");
         SimpleMailMessage message = new SimpleMailMessage();
@@ -192,10 +238,5 @@ public class UserService {
         return ResponseMessage.SuccessResponse("회원탈퇴 성공", "");
     }
 
-    public String checkFindEmail(CheckFindEmailRequestDto checkFindEmailRequestDto) {
-        String userName = checkFindEmailRequestDto.getUserName();
-        String phoneNumber = checkFindEmailRequestDto.getPhoneNumber();
-        User user = userRepository.findByUserNameAndPhoneNumber(userName,phoneNumber).orElseThrow(() ->new CustomException(EMAIL_AND_PHONENUMBER_NOT_FOUND));
-        return user.getEmail();
-    }
+
 }

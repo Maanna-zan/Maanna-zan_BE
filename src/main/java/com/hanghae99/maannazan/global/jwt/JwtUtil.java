@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +32,7 @@ public class JwtUtil {
     private final RefreshTokenRepository refreshTokenRepository;
 
     private static final long ACCESS_TIME = 60 * 60 * 1000L;
-    private static final long REFRESH_TIME =  7 * 24 * 60 * 60 * 1000L;
+    public static final long REFRESH_TIME =  7 * 24 * 60 * 60 * 1000L;
     public static final String ACCESS_TOKEN = "Access_Token";
     public static final String REFRESH_TOKEN = "Refresh_Token";
 
@@ -60,16 +61,17 @@ public class JwtUtil {
         return new TokenDto(createToken(nickName, "Access"), createToken(nickName, "Refresh"));
     }
 
+
     public String createToken(String nickName, String type) {
         Date date = new Date();
         long time = type.equals("Access") ? ACCESS_TIME : REFRESH_TIME;
 
         return Jwts.builder()
-                        .setSubject(nickName)
-                        .setExpiration(new Date(date.getTime() + time))
-                        .setIssuedAt(date)
-                        .signWith(key, signatureAlgorithm)
-                        .compact();
+                .setSubject(nickName)
+                .setExpiration(new Date(date.getTime() + time))
+                .setIssuedAt(date)
+                .signWith(key, signatureAlgorithm)
+                .compact();
     }
 
     // 토큰 검증
