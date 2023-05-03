@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/check/findPw")
-    @Operation(summary = "비밀번호 중복확인", description = "비밀번호 중복확인")
+    @Operation(summary = "비밀번호 찾기(임시 비밀번호 전송)", description = "비밀번호 찾기(임시 비밀번호 전송)")
     public ResponseEntity<ResponseMessage<String>> checkFindPw(@Validated @RequestBody CheckFindPwRequestDto checkFindPw) {
         MailDto dto = userService.checkFindPw(checkFindPw);
         userService.mailSend(dto);
@@ -65,13 +65,20 @@ public class UserController {
 
     @Operation(summary = "이메일 중복확인, 인증번호 이메일 발송", description = "이메일 중복확인, 인증번호 이메일 발송")
     @PostMapping("/check/email")
-    public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
+    public ResponseEntity<ResponseMessage<String>> emailNumber(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
         MailDto dto = userService.emailNumber(checkEmailRequestDto);
         userService.mailSend(dto);
         return ResponseMessage.SuccessResponse("이메일로 인증번호를 보내드렸습니다.","");
     }
 
-    @Operation(summary = "", description = "이메일 중복확인")
+    @Operation(summary = "email 중복확인", description = "email 중복확인")
+    @PostMapping("/confirm-email")
+    public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
+        userService.checkEmail(checkEmailRequestDto);
+        return ResponseMessage.SuccessResponse("pass","");
+    }
+
+    @Operation(summary = "이메일 인증번호 확인", description = "이메일 인증번호 확인")
     @PostMapping("/check/number")
     public ResponseEntity<ResponseMessage<String>> checkNumber(@RequestBody CheckNumberRequestDto checkNumberRequestDto) {
         userService.numberCheck(checkNumberRequestDto);
