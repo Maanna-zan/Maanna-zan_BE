@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.hanghae99.maannazan.global.exception.CustomErrorCode.*;
@@ -126,11 +127,12 @@ public class UserService {
     }
 
     //인증번호 확인 서비스
-    @Transactional(readOnly = true)
+    @Transactional
     public void numberCheck(CheckNumberRequestDto checkNumberRequestDto){
         String str = checkNumberRequestDto.getStr();
         Optional<CertificationNumber> foundCertificationNumber = certificationNumberRepository.findByStr(str);
         if (foundCertificationNumber.isEmpty()) throw new CustomException(CERTIFICATIONNUMBER_NOT_FOUND);
+        certificationNumberRepository.delete(foundCertificationNumber.get());
     }
     //인증번호 발송, 유저이메일 중복확인 서비스
     @Transactional
