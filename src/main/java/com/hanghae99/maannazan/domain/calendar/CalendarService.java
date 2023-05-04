@@ -101,6 +101,9 @@ public class CalendarService {
     @Transactional
     public void createCalendarSchedule(MapRequestDto mapRequestDto, User user) {
         Kakao kakao = kakaoApiService.getAlkolByKakaoApiId(mapRequestDto.getApiId());
+        if(kakao==null){
+            throw new CustomException(CustomErrorCode.ALKOL_NOT_FOUND);
+        }
         Schedule schedule = new Schedule(kakao, user, mapRequestDto.getSelectedDate());
         scheduleRepository.save(schedule);
     }
@@ -108,7 +111,7 @@ public class CalendarService {
     //위치찾기 일정 조회
     @Transactional
     public List<MapResponseDto> getCalendarSchedules(User user) {
-        List<Schedule> scheduleList = scheduleRepository.findAllByUser(user);
+        List<Schedule> scheduleList = scheduleRepository.findAllByUser(user); //값이 없어서 예외처리 안하는 이유 : 없는 리스트 보내주면 돼서
         List<MapResponseDto> mapResponseDtoList = new ArrayList<>();
         for (Schedule schedule : scheduleList) {
             mapResponseDtoList.add(new MapResponseDto(schedule));
@@ -118,6 +121,9 @@ public class CalendarService {
     @Transactional
     public void deleteCalendarSchedule(Long scheduleId, User user) {
         Schedule schedule = scheduleRepository.findByIdAndUser(scheduleId, user);
+        if(schedule==null) {
+            throw new CustomException(CustomErrorCode.ALKOL_NOT_FOUND);
+        }
         scheduleRepository.delete(schedule);
     }
 }
