@@ -20,8 +20,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.hanghae99.maannazan.global.exception.CustomErrorCode.*;
@@ -101,12 +103,7 @@ public class UserService {
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
         response.addHeader(JwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
-                .secure(true)
-                .sameSite("None")
-                .httpOnly(true)
-                .build();
-        response.addHeader(JwtUtil.REFRESH_TOKEN, cookie.toString().split("=")[1]);
+        response.addHeader(JwtUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());
     }
 
     //이메일 찾기 서비스
@@ -126,11 +123,12 @@ public class UserService {
     }
 
     //인증번호 확인 서비스
-    @Transactional(readOnly = true)
+    @Transactional
     public void numberCheck(CheckNumberRequestDto checkNumberRequestDto){
         String str = checkNumberRequestDto.getStr();
         Optional<CertificationNumber> foundCertificationNumber = certificationNumberRepository.findByStr(str);
         if (foundCertificationNumber.isEmpty()) throw new CustomException(CERTIFICATIONNUMBER_NOT_FOUND);
+        certificationNumberRepository.delete(foundCertificationNumber.get());
     }
     //인증번호 발송, 유저이메일 중복확인 서비스
     @Transactional
