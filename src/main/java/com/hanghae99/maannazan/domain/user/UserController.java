@@ -39,19 +39,19 @@ public class UserController {
             return ResponseMessage.SuccessResponse("비밀번호 변경이 필요합니다", userService.login(loginRequestDto, response));
     }
 
-    // 유저이메일 중복
-//    @Operation(summary = "이메일 중복확인", description = "이메일 중복확인")
-//    @PostMapping("/confirm-email")
-//    public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
-//        userService.checkEmail(checkEmailRequestDto);
-//        return ResponseMessage.SuccessResponse("pass","");
-//    }
 
     // 닉네임 중복
     @Operation(summary = "닉네임 중복확인", description = "닉네임 중복확인")
     @PostMapping("/confirm-nickName")
     public ResponseEntity<ResponseMessage<String>> checkNickName(@Validated @RequestBody CheckNickNameRequestDto checkNickNameRequestDto) {
         userService.checkNickName(checkNickNameRequestDto);
+        return ResponseMessage.SuccessResponse("pass","");
+    }
+
+    @Operation(summary = "email 중복확인", description = "닉네임 중복확인")
+    @PostMapping("/confirm-email")
+    public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
+        userService.checkEmail(checkEmailRequestDto);
         return ResponseMessage.SuccessResponse("pass","");
     }
 
@@ -65,7 +65,7 @@ public class UserController {
 
     @Operation(summary = "이메일 중복확인, 인증번호 이메일 발송", description = "이메일 중복확인, 인증번호 이메일 발송")
     @PostMapping("/check/email")
-    public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
+    public ResponseEntity<ResponseMessage<String>> emailNumber(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
         MailDto dto = userService.emailNumber(checkEmailRequestDto);
         userService.mailSend(dto);
         return ResponseMessage.SuccessResponse("이메일로 인증번호를 보내드렸습니다.","");
