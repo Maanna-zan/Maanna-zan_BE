@@ -160,7 +160,7 @@ public class PostService {
 
 
     public List<Post> getPostList(){    // 게시글 전체 조회
-            return postRepository.findAll();
+            return postRepository.findAllByOrderByCreatedAtDesc();
     }
 
     public List<Post> getPostListOrderByLikecntDesc(){    // 게시글 좋아요순 조회

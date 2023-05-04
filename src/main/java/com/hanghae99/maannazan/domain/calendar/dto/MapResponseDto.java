@@ -11,6 +11,8 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 public class MapResponseDto {
+
+    private Long id;
     private String apiId;
     private String address_name;
 
@@ -39,6 +41,7 @@ public class MapResponseDto {
     private LocalDate selectedDate;
 
     public MapResponseDto(Schedule schedule) {
+        this.id = schedule.getId();
         this.apiId = schedule.getKakao().getApiId();
         this.address_name = schedule.getKakao().getAddressName();
         this.category_group_code = schedule.getKakao().getCategoryGroupCode();
