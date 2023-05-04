@@ -5,7 +5,6 @@ import com.hanghae99.maannazan.global.exception.ResponseMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -48,12 +47,6 @@ public class UserController {
         return ResponseMessage.SuccessResponse("pass","");
     }
 
-    @Operation(summary = "email 중복확인", description = "닉네임 중복확인")
-    @PostMapping("/confirm-email")
-    public ResponseEntity<ResponseMessage<String>> checkEmail(@Validated @RequestBody CheckEmailRequestDto checkEmailRequestDto) {
-        userService.checkEmail(checkEmailRequestDto);
-        return ResponseMessage.SuccessResponse("pass","");
-    }
 
     @PostMapping("/check/findPw")
     @Operation(summary = "비밀번호 찾기(임시 비밀번호 전송)", description = "비밀번호 찾기(임시 비밀번호 전송)")
