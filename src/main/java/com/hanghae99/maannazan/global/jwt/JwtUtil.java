@@ -67,11 +67,11 @@ public class JwtUtil {
         long time = type.equals("Access") ? ACCESS_TIME : REFRESH_TIME;
 
         return Jwts.builder()
-                .setSubject(nickName)
-                .setExpiration(new Date(date.getTime() + time))
-                .setIssuedAt(date)
-                .signWith(key, signatureAlgorithm)
-                .compact();
+                        .setSubject(nickName)
+                        .setExpiration(new Date(date.getTime() + time))
+                        .setIssuedAt(date)
+                        .signWith(key, signatureAlgorithm)
+                        .compact();
     }
 
     // 토큰 검증

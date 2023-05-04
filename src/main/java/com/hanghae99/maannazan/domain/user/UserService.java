@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
@@ -102,12 +103,7 @@ public class UserService {
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
         response.addHeader(JwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
-                .secure(true)
-                .sameSite("None")
-                .httpOnly(true)
-                .build();
-        response.addHeader(JwtUtil.REFRESH_TOKEN, cookie.toString().split("=")[1]);
+        response.addHeader(JwtUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());
     }
 
     //이메일 찾기 서비스
