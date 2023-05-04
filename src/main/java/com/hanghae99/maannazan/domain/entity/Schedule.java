@@ -2,6 +2,8 @@ package com.hanghae99.maannazan.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hanghae99.maannazan.domain.calendar.dto.MapRequestDto;
+import com.hanghae99.maannazan.global.exception.CustomErrorCode;
+import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +34,9 @@ public class Schedule {
     private LocalDate selectedDate;
 
     public Schedule(Kakao kakao, User user, LocalDate seselectedDate) {
+        if(selectedDate==null){
+            throw new CustomException(CustomErrorCode.DATE_IS_NULL);
+        }
         this.kakao =kakao;
         this.user = user;
         this.selectedDate = seselectedDate;

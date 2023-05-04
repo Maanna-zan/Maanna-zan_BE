@@ -32,6 +32,8 @@ public enum CustomErrorCode {
     SATISFACTION_VALUE_IS_FALSE(BAD_REQUEST, "평점(만족도) 형식이 잘못되었습니다"), //게시글 테이블
     SEARCH_WORD_IS_EMPTY(BAD_REQUEST, "평점(만족도) 형식이 잘못되었습니다"), //게시글 테이블
     X1_CAN_NOT_BE_NULL(BAD_REQUEST, "두명 이상 검색해주세요"), // 위치검색
+    DATE_IS_NULL(BAD_REQUEST, "날짜를 선택해주세요"), // 위치검색
+
 
 
 
