@@ -33,13 +33,13 @@ public class Schedule {
     @DateTimeFormat(pattern="yyyyMMdd")
     private LocalDate selectedDate;
 
-    public Schedule(Kakao kakao, User user, LocalDate seselectedDate) {
+    public Schedule(Kakao kakao, User user, LocalDate selectedDate) {
         if(selectedDate==null){
             throw new CustomException(CustomErrorCode.DATE_IS_NULL);
         }
         this.kakao =kakao;
         this.user = user;
-        this.selectedDate = seselectedDate;
+        this.selectedDate = selectedDate;
 
     }
 }
