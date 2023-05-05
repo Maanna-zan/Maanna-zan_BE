@@ -155,7 +155,7 @@ public class UserService {
         CertificationNumber certificationNumber = new CertificationNumber(str);
         dto.setAddress(email);
         dto.setTitle("MannaZan 이메일 인증번호 확인 안내 이메일 입니다.");
-        dto.setMessage("안녕하세요. MannaZan 이메일 인증번호 확인 안내 이메일 입니다." + " 인정번호는 " +str+" 입니다. ");
+        dto.setMessage("안녕하세요. MannaZan 이메일 인증번호 확인 안내 이메일 입니다." + " 인증번호는 " +str+" 입니다. ");
         certificationNumberRepository.save(certificationNumber);
         return dto;
     }
