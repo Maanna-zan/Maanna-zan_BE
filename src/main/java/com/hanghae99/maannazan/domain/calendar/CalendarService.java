@@ -48,7 +48,7 @@ public class CalendarService {
         if (calendar == null) {
             throw new CustomException(CustomErrorCode.CALENDAR_NOT_FOUND);
         }
-        if (!calendar.getUser().equals(user)) {
+        if (!calendar.getUser().getId().equals(user.getId())) {
             throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
         return new CalendarResponseDto(calendar);
