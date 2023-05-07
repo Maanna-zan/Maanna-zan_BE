@@ -48,6 +48,7 @@ public class WebSecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/users/**").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/kakaoApi").permitAll()
                 .antMatchers("/find").permitAll()
                 .antMatchers("/find/**").permitAll()

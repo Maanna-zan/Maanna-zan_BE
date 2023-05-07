@@ -27,11 +27,17 @@ public class Station {
     private String y;
     private String createDate;
 
-    public Station(long l, String stationName, String createDate, String y, Long stationLine, String x,  Long stationNum) {
-        this.id = l;
+    public Station( String stationName, String createDate, String y, Long stationLine, String x,  Long stationNum) {
         this.stationName = stationName;
         this.stationLine = stationLine;
         this.stationNum = stationNum;
+        this.x = x;
+        this.y = y;
+        this.createDate = createDate;
+    }
+
+    public Station(String stationName, String createDate, String y, String x) {
+        this.stationName = stationName;
         this.x = x;
         this.y = y;
         this.createDate = createDate;
