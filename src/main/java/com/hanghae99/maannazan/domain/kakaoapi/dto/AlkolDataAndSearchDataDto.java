@@ -16,13 +16,17 @@ import java.util.List;
         private List<AlkolResponseDto> alkolResponseDtoList = new ArrayList<>();
         private List<SearchDto> searchDtoList = new ArrayList<>();
 
+        private long TotalElements;
 
-        public AlkolDataAndSearchDataDto(List<AlkolResponseDto> alkolResponseDtoList, List<SearchDto> searchDtoList){ //user가 null이 아닐 때
+
+        public AlkolDataAndSearchDataDto(List<AlkolResponseDto> alkolResponseDtoList, List<SearchDto> searchDtoList, long TotalElements){ //user가 null이 아닐 때
             this.alkolResponseDtoList = alkolResponseDtoList;
             this.searchDtoList = searchDtoList;
+            this.TotalElements = TotalElements;
         }
-        public AlkolDataAndSearchDataDto(List<AlkolResponseDto> alkolResponseDtoList){    //user가 null 일 때 
+        public AlkolDataAndSearchDataDto(List<AlkolResponseDto> alkolResponseDtoList,long TotalElements){    //user가 null 일 때
             this.alkolResponseDtoList = alkolResponseDtoList;
+            this.TotalElements = TotalElements;
         }
 
 
