@@ -82,6 +82,7 @@ public class AlkolResponseDto {
         this.roomLikecnt = kakao.getRoomLikecnt();
         this.roomLike = roomLike;
         this.postList = postImageResponseDtoList;
+
     }
 
     public AlkolResponseDto(Kakao kakao, int numberOfPosts, boolean roomLike, List<PostImageResponseDto> postImageResponseDtoList){
