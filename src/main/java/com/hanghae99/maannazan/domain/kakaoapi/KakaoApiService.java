@@ -209,7 +209,7 @@ public class KakaoApiService {
             searchDtoList = searchList.stream().map(search -> new SearchDto(search.getSearchWord())).collect(Collectors.toList());
         }
 
-        return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList);
+        return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList, kakaoSearchList.getTotalElements());
     }
 
 
@@ -265,7 +265,7 @@ public class KakaoApiService {
                     for (Search searchWord : searchList) { //User정보까지 보내주기에 Dto에 searchWord만 저장해서 보내줌
                         searchDtoList.add(new SearchDto(searchWord.getSearchWord()));
                     }
-                    return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList);
+                    return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList, kakaoSearchList.getTotalElements());
                 } else if (searchList.size() == 5 && user != null) {
                     searchRepository.delete(searchList.get(0));
                     Search search = new Search(placeName, user);
@@ -275,10 +275,10 @@ public class KakaoApiService {
                     for (Search searchWord : searchList) { //User정보까지 보내주기에 Dto에 searchWord만 저장해서 보내줌
                         searchDtoList.add(new SearchDto(searchWord.getSearchWord()));
                     }
-                    return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList);
+                    return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList, kakaoSearchList.getTotalElements());
                 }
 
-            }return new AlkolDataAndSearchDataDto(AlkolResponseDtoList);
+            }return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, kakaoSearchList.getTotalElements());
 
         }
         Page<Kakao> entityPage = kakaoApiRepository.findAll(pageable);
@@ -302,9 +302,9 @@ public class KakaoApiService {
             for (Search search : searchList) {    //User정보까지 보내주기에 Dto에 searchWord만 저장해서 보내줌
                 searchDtoList.add(new SearchDto(search.getSearchWord()));
             }
-            return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList);
+            return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, searchDtoList, entityPage.getTotalElements());
         }
-        return new AlkolDataAndSearchDataDto(AlkolResponseDtoList);
+        return new AlkolDataAndSearchDataDto(AlkolResponseDtoList, entityPage.getTotalElements());
     }
 
 
