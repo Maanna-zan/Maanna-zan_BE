@@ -1,22 +1,19 @@
 package com.hanghae99.maannazan.domain.post.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
 import java.util.List;
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class PostRequestDto {
 
     private String title;      // 제목
     private String description;
-    private boolean soju;
-    private boolean beer;
-    private String fileTitle;
     private String s3Url;
     private MultipartFile file;
     private String fileName;  //이걸로 수정 삭제

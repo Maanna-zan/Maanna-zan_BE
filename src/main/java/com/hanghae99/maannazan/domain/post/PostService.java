@@ -116,7 +116,7 @@ public class PostService {
         if (!(user.getId().equals(post.getUser().getId()))) {
             throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
-        Likes likes = likeService.getPostLikes(post, user);
+        Likes likes = likeService.getPostLikes(post);
 
         try {
             String realName = post.getS3Url().split("/")[3];

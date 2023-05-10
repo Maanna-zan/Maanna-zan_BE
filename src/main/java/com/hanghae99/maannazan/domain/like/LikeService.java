@@ -18,7 +18,6 @@ public class LikeService {
 
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
-    private final CommentRepository commentRepository;
     private final KakaoApiRepository kakaoApiRepository;
     private final KakaoLikeRepository kakaoLikeRepository;
 
@@ -106,8 +105,8 @@ public class LikeService {
         return likeRepository.findByUserId(id);
     }
 
-    public Likes getPostLikes(Post post, User user){    // 게시글 좋아요 삭제를 위한 조회
-        return likeRepository.findByPostIdAndUserId(post.getId(), user.getId());
+    public Likes getPostLikes(Post post){    // 게시글 좋아요 삭제를 위한 조회
+        return likeRepository.findByPostId(post.getId());
     }
 
     public KakaoLikes getAlkolLikes(Kakao kakao, User user){    // 게시글 좋아요 삭제를 위한 조회
