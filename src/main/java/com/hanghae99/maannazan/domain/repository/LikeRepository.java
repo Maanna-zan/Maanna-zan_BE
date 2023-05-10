@@ -12,7 +12,7 @@ public interface LikeRepository extends JpaRepository<Likes, Long> {
 
     boolean existsByPostIdAndUser(Long postId, User user);
 
-    Likes findByPostIdAndUserId(Long PostId, Long UserId);
+    List<Likes> findByPostId(Long PostId);
 
 
     List<Likes> findByUserId(Long id);

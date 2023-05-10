@@ -106,8 +106,8 @@ public class LikeService {
         return likeRepository.findByUserId(id);
     }
 
-    public Likes getPostLikes(Post post, User user){    // 게시글 좋아요 삭제를 위한 조회
-        return likeRepository.findByPostIdAndUserId(post.getId(), user.getId());
+    public List<Likes> getPostLikes(Long postId){    // 게시글 좋아요 삭제를 위한 조회
+        return likeRepository.findByPostId(postId);
     }
 
     public KakaoLikes getAlkolLikes(Kakao kakao, User user){    // 게시글 좋아요 삭제를 위한 조회

@@ -116,8 +116,8 @@ public class PostService {
         if (!(user.getId().equals(post.getUser().getId()))) {
             throw new CustomException(CustomErrorCode.NOT_AUTHOR);
         }
-        Likes likes = likeService.getPostLikes(post, user);
-
+        List<Likes> likes = likeService.getPostLikes(postId);
+        System.out.println(likes);
         try {
             String realName = post.getS3Url().split("/")[3];
             boolean isObjectExist = amazonS3.doesObjectExist(bucket, realName);
@@ -129,8 +129,8 @@ public class PostService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (likes != null) {
-            likeService.deleteLikes(likes);
+        if (!likes.isEmpty()) {
+            likeService.deleteLikesAll(likes);
         }
         Kakao kakao = kakaoApiRepository.findByApiId(post.getKakao().getApiId()).orElseThrow(() -> new CustomException(CustomErrorCode.POST_NOT_FOUND));
         kakao.postCount(kakao.getNumberOfPosts() - 1);
