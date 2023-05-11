@@ -20,11 +20,13 @@
 
 <br/>
 
-## 📌 링크
+## 📌 링크(서비스 이용하기)
 <div>
   만나잔 : https://maanna-zan-fe-1.vercel.app/
   
   노션 :  https://www.notion.so/b5f8fe8ca53a486b8d0bfb681135f626
+  
+  API명세 : http://mannazan.shop/swagger-ui/index.html
 </div>
 <br/>
 
