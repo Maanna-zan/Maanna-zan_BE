@@ -50,7 +50,7 @@
 <br/>
 
 ## 🎅 아키텍쳐 다이어그램
-![image](https://user-images.githubusercontent.com/100390051/233705862-8f28a344-c138-4c06-b77e-3d5298f1876b.png)
+![architecture](https://github.com/Maanna-zan/Maanna-zan_BE/assets/95731331/61d66d79-4d1a-4ee5-a07c-f406859f989c)
 
 <br/>
 
