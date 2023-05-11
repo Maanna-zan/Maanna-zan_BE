@@ -10,6 +10,8 @@
 
 ### 저희 **만나잔**은 자신과 상대방의 중간 위치📐를 찾아 약속 장소를 좀 더 공평하고 쉽게 정할 수 있도록 도움을 주는 서비스입니다.👨‍👩‍👧‍👦 
 
+### [서비스 이용해보기](https://maanna-zan-fe-1.vercel.app/)
+
 <br/>
 
 
@@ -21,13 +23,11 @@
 <br/>
 
 ## 📌 링크(서비스 이용하기)
-<div>
-  만나잔 : https://maanna-zan-fe-1.vercel.app/
-  
-  노션 :  https://www.notion.so/b5f8fe8ca53a486b8d0bfb681135f626
-  
-  API명세 : http://mannazan.shop/swagger-ui/index.html
-</div>
+
+  ### [만나잔 API 명세서](http://mannazan.shop/swagger-ui/index.html) <br/>
+  ### [만나잔 서비스 링크](https://maanna-zan-fe-1.vercel.app/) <br/>
+   ### [노션](https://www.notion.so/b5f8fe8ca53a486b8d0bfb681135f626) <br/>
+
 <br/>
 
 ## 💻 Stack
@@ -48,6 +48,7 @@
 <img src="https://img.shields.io/badge/AMAZON ROUTER 53-FFBB00?style=flat-square&logo=AMAZON ROUTER 53&logoColor=white"/>
 <img src="https://img.shields.io/badge/JWT-000000?style=flat-square&logo=JWT&logoColor=white"/>
 <img src="https://img.shields.io/badge/HTTPS-FF5E00?style=flat-square&logo=HTTPS&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Grapana-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
 </div>
 <br/>
 
