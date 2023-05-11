@@ -60,7 +60,7 @@
 <br/>
 
 ## 🎅 아키텍쳐 다이어그램
-![architecture](https://github.com/Maanna-zan/Maanna-zan_BE/assets/95731331/61d66d79-4d1a-4ee5-a07c-f406859f989c)
+![KakaoTalk_20230509_011024298](https://github.com/Maanna-zan/Maanna-zan_BE/assets/124052204/5506f59d-d4c9-4628-9db3-abc85ce7f27d)
 
 <br/>
 
