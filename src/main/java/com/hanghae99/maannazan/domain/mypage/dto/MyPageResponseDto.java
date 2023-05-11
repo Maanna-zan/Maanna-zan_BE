@@ -17,7 +17,7 @@ public class MyPageResponseDto {
 
     private String phoneNumber;
     private String birth;
-    private int postCnt;
+    private long postCnt;
 
     private List<MyPagePostResponseDto> posts;
 
@@ -29,6 +29,17 @@ public class MyPageResponseDto {
         this.phoneNumber = user.getPhoneNumber();
         this.birth = user.getBirth();
         this.postCnt = posts.size();
+        this.posts = posts;
+    }
+
+    public MyPageResponseDto(User user, List<MyPagePostResponseDto> posts,long count) {
+        this.id = user.getId();
+        this.userName = user.getUserName();
+        this.nickName = user.getNickName();
+        this.email = user.getEmail();
+        this.phoneNumber = user.getPhoneNumber();
+        this.birth = user.getBirth();
+        this.postCnt = count;
         this.posts = posts;
     }
 
