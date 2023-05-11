@@ -43,13 +43,14 @@ public class MyPageService {
     public MyPageResponseDto getMyPage(User user, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Post> entityPage = postService.getPostOrderByCreatedAtDesc(user, pageable);
+        long count = entityPage.getTotalElements();
         List<Post> entityList = entityPage.getContent();
         List<MyPagePostResponseDto> myPagePostResponseDtos = new ArrayList<>();
         for (Post post : entityList) {
             boolean like = likeService.getPostLike(post, user);
             myPagePostResponseDtos.add(new MyPagePostResponseDto(post, like));
         }
-        return new MyPageResponseDto(user, myPagePostResponseDtos);
+        return new MyPageResponseDto(user, myPagePostResponseDtos, count);
     }
 
     @Transactional
