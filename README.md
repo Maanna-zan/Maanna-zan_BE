@@ -65,4 +65,7 @@
 <br/>
 
 ## 🔐 ERD (Entity Relationship Diagram) 
-![스크린샷 2023-04-22 023310](https://user-images.githubusercontent.com/124052204/233699578-c36361ec-0410-4209-b44d-f89cfc058be1.png)
+![스크린샷(815)](https://github.com/Maanna-zan/Maanna-zan_BE/assets/100390051/fdd8fa24-5a57-4d06-b891-9d2493d56271)
+
+
+
