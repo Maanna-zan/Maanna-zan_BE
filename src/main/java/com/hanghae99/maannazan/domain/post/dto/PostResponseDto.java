@@ -1,14 +1,20 @@
 package com.hanghae99.maannazan.domain.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.hanghae99.maannazan.domain.comment.dto.CommentResponseDto;
-
 import com.hanghae99.maannazan.domain.entity.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.Parser;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +32,13 @@ public class PostResponseDto {
     private String nickname;   //Post 작성자
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern="yyyyMMdd")
+    @DateTimeFormat(pattern = "yyyyMMdd")
     private LocalDateTime modifiedAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    @DateTimeFormat(pattern="yyyyMMdd")
+    @DateTimeFormat(pattern = "yyyyMMdd")
     private LocalDateTime createAt;
+
 
     private String s3Url;
     private List<CommentResponseDto> commentList = new ArrayList<>();
@@ -131,7 +138,17 @@ public class PostResponseDto {
         this.satisfaction = post.getSatisfaction();
         this.postStarAvg = (taste+service+atmosphere+satisfaction)/4;
     }
+    public void setModifiedAt(String modifiedAt) {
+        LocalDate date = LocalDate.parse(modifiedAt, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDateTime dateTime = date.atStartOfDay();
+        this.modifiedAt = dateTime;
+    }
 
+    public void setCreateAt(String createAt) {
+        LocalDate date = LocalDate.parse(createAt, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDateTime dateTime = date.atStartOfDay();
+        this.modifiedAt = dateTime;
+    }
 }
 
 

@@ -14,6 +14,7 @@ import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,7 @@ public class PostService {
 
 
     @Transactional
+    @Cacheable(cacheNames = "Post", key = "#postId", unless = "#result == null")
     public PostResponseDto getPostOne(Long postId, User user) { //단일 게시글 조회
         Post post = getPostByPostId(postId);
         post.viewCount(post.getViewCount() + 1);

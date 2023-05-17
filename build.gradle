@@ -21,6 +21,9 @@ repositories {
 jar {
 	enabled = false
 }
+test{
+	useJUnitPlatform()
+}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -53,6 +56,12 @@ dependencies {
 
 	//공공데이터
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// Jackson JSR310 모듈 추가
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 tasks.named('test') {

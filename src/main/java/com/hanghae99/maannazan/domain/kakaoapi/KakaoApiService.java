@@ -14,6 +14,7 @@ import com.hanghae99.maannazan.domain.search.dto.SearchDto;
 import com.hanghae99.maannazan.global.exception.CustomErrorCode;
 import com.hanghae99.maannazan.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -67,6 +68,7 @@ public class KakaoApiService {
 
     // 상세 술집 페이지
     @Transactional
+    @Cacheable(cacheNames = "Alkol", key = "#apiId", unless = "#result == null")
     public List<KakaoResponseDto> getAlkol(String apiId, User user) {
         Kakao kakaoView = getAlkolByKakaoApiId(apiId);
         kakaoView.roomViewCount(kakaoView.getRoomViewCount()+1);
