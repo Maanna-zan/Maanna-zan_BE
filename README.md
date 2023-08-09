@@ -16,7 +16,7 @@
 
 
 ## 🧙 Team
-|이산하|이용현|장동희|이승빈
+|이산하|이용현|이승빈|장동희
 |---|---|---|---|
 |BE / Spring|BE / Spring|BE / Spring|BE / Spring|
 
