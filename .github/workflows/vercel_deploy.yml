@@ -10,13 +10,8 @@ jobs:
     container: pandoc/latex
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '14'  # Node.js 버전을 필요에 따라 조절
       - name: Install mustache (to update the date)
-        run: |
-          npm install -g mustache
+        run: apk add ruby && gem install mustache
       - name: creates output
         run: sh ./build.sh
       - name: Pushes to another repository
